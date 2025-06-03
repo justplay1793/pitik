@@ -351,69 +351,35 @@
             }
         }
       
-      function perkiraanSetelPopulasi() {
-            if (document.getElementById("produkSetelPopulasi").value === "") {
-                document.getElementById("produkSetelHasil").value = "";
-                document.getElementById("produkEtrePopulasi").disabled = false;
-                document.getElementById("labelProdukSetelHasil").innerHTML = "Perkiraan Populasi";
-            }
-            else {
-                document.getElementById("produkEtrePopulasi").disabled = true;
-                var input = parseFloat(document.getElementById("produkSetelPopulasi").value.replace(/[,.]/g, ""));
+        function tebakPopulasi(){
+            var inputEtre = document.getElementById("produkEtrePopulasi");
+            var inputSetel = document.getElementById("produkSetelPopulasi");
+            var persen = document.getElementById("penebakPop").value;
+            var hasilPop = document.getElementById("produkSetelHasil");
+            var labelHasil = document.getElementById("labelProdukSetelHasil"); //innerhtml
+
+            if (inputSetel.value !== "") {
+                inputEtre.disabled = true;
+                var input = parseFloat(inputSetel.value.replace(/[,.]/g, ""));
                 var endog = input * 8 * 30;
-                var n60 = Math.round((endog * 100) / 60);
-                var n65 = Math.round((endog * 100) / 65);
-                var n70 = Math.round((endog * 100) / 70);
-                var n75 = Math.round((endog * 100) / 75);
-                var n80 = Math.round((endog * 100) / 80);
-                var n85 = Math.round((endog * 100) / 85);
-                var n90 = Math.round((endog * 100) / 90);
-                var n95 = Math.round((endog * 100) / 95);
-
-                document.getElementById("produkSetelHasil").value = 
-                "Persen\t| Populasi\n" + 
-                "60%\t\t| " + n60.toLocaleString() + " Ekor\n" +
-                "65%\t\t| " + n65.toLocaleString() + " Ekor\n" +
-                "70%\t\t| " + n70.toLocaleString() + " Ekor\n" +
-                "75%\t\t| " + n75.toLocaleString() + " Ekor\n" +
-                "80%\t\t| " + n80.toLocaleString() + " Ekor\n" +
-                "85%\t\t| " + n85.toLocaleString() + " Ekor\n" +
-                "90%\t\t| " + n90.toLocaleString() + " Ekor\n" +
-                "95%\t\t| " + n95.toLocaleString() + " Ekor";
-                document.getElementById("labelProdukSetelHasil").innerHTML = endog.toLocaleString() + " butir";
+                var hasil = Math.round((endog * 100) / persen);
+                hasilPop.value = hasil.toLocaleString() + " ekor";
+                labelHasil.innerHTML = endog.toLocaleString() + " butir";
             }
-        }
-
-        function perkiraanEtrePopulasi() {
-            if (document.getElementById("produkEtrePopulasi").value === "") {
-                document.getElementById("produkSetelHasil").value = "";
-                document.getElementById("produkSetelPopulasi").disabled = false;
-                document.getElementById("labelProdukSetelHasil").innerHTML = "Perkiraan Populasi";
+            else if (inputEtre.value !== "") {
+                inputSetel.disabled = true;
+                var input = parseFloat(inputEtre.value.replace(/[,.]/g, ""));
+                var endog = input * 30;
+                var hasil = Math.round((endog * 100) / persen);
+                hasilPop.value = hasil.toLocaleString() + " ekor";
+                labelHasil.innerHTML = endog.toLocaleString() + " butir";
             }
             else {
-                document.getElementById("produkSetelPopulasi").disabled = true;
-                var input = parseFloat(document.getElementById("produkEtrePopulasi").value.replace(/[,.]/g, ""));
-                var endog = input * 30;
-                var n60 = Math.round((endog * 100) / 60);
-                var n65 = Math.round((endog * 100) / 65);
-                var n70 = Math.round((endog * 100) / 70);
-                var n75 = Math.round((endog * 100) / 75);
-                var n80 = Math.round((endog * 100) / 80);
-                var n85 = Math.round((endog * 100) / 85);
-                var n90 = Math.round((endog * 100) / 90);
-                var n95 = Math.round((endog * 100) / 95);
-
-                document.getElementById("produkSetelHasil").value = 
-                "Persen\t| Populasi\n" + 
-                "60%\t\t| " + n60.toLocaleString() + " Ekor\n" +
-                "65%\t\t| " + n65.toLocaleString() + " Ekor\n" +
-                "70%\t\t| " + n70.toLocaleString() + " Ekor\n" +
-                "75%\t\t| " + n75.toLocaleString() + " Ekor\n" +
-                "80%\t\t| " + n80.toLocaleString() + " Ekor\n" +
-                "85%\t\t| " + n85.toLocaleString() + " Ekor\n" +
-                "90%\t\t| " + n90.toLocaleString() + " Ekor\n" +
-                "95%\t\t| " + n95.toLocaleString() + " Ekor";
-                document.getElementById("labelProdukSetelHasil").innerHTML = endog.toLocaleString() + " butir";
+                document.getElementById("produkSetelPopulasi").disabled = false;
+                document.getElementById("produkEtrePopulasi").disabled = false;
+                document.getElementById("produkSetelPopulasi").value = "";
+                document.getElementById("produkEtrePopulasi").value = "";
+                document.getElementById("labelProdukSetelHasil").innerHTML = "Perkiraan Populasi";
             }
         }
 
@@ -938,31 +904,40 @@
               </h2>
               <div id="acc2-4" class="accordion-collapse collapse p-2" data-bs-parent="#accordion2">
                 <form action="">
-                    <div class="alert alert-info alert-dismissible fade show" role="alert">
-                        Menebak Populasi Berdasarkan Produksi
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>  
                     <div class="input-group mt-1">
                         <div class="form-floating">
                             <input class="form-control text-white" autocomplete="off" inputmode="numeric"
-                                id="produkSetelPopulasi" oninput="perkiraanSetelPopulasi(); formatInput(this);" placeholder="Setel">
+                            id="produkSetelPopulasi" oninput="tebakPopulasi(); formatInput(this);" placeholder="Setel">
                             <label for="produkSetelPopulasi" id="">Setel PerHari</label>
                         </div>
-                        <span class="input-group-text">atau</span>
+                        <button onclick="CperkiraanPopulasi()" type="reset" class="btn btn-danger" tabindex="-1">atau</button>
                         <div class="form-floating">
                             <input class="form-control text-white" autocomplete="off" inputmode="numeric"
-                                id="produkEtrePopulasi" oninput="perkiraanEtrePopulasi(); formatInput(this);" placeholder="Etre">
+                            id="produkEtrePopulasi" oninput="tebakPopulasi(); formatInput(this);" placeholder="Etre">
                             <label for="produkEtrePopulasi" id="">Etre PerHari</label>
                         </div>
                     </div>
-                    <div class="form-floating">
-                        <textarea class="form-control fs-5 mt-1 text-info" placeholder="" id="produkSetelHasil"
-                            style="height: 300px" disabled></textarea>
-                        <label id="labelProdukSetelHasil" for="produkSetelHasil" style="font-size: 14pt;" class="fw-bold">Perkiraan Populasi</label>
+                    <div class="input-group mt-1">
+                        <div class="form-floating" style="width: 60%;">
+                            <input class="form-control text-info text-center fs-5 fw-bold" autocomplete="off" style="height: 75px;"
+                            id="produkSetelHasil" placeholder="Perkiraan Populasi" disabled>
+                            <label id="labelProdukSetelHasil" for="produkSetelHasil" style="font-size: 12pt;" class="fw-bold text-warning">Perkiraan Populasi</label>
+                        </div>
+                        <select class="form-select" aria-label="Default select example" id="penebakPop" onchange="tebakPopulasi()" style="height: 75px;">
+                            <option value="60">60%</option>
+                            <option value="65">65%</option>
+                            <option value="70">70%</option>
+                            <option value="75">75%</option>
+                            <option value="80" selected>80%</option>
+                            <option value="85">85%</option>
+                            <option value="90">90%</option>
+                            <option value="95">95%</option>
+                        </select>
                     </div>
-                    <div class="col text-center mt-1">
-                        <button onclick="CperkiraanPopulasi()" type="reset" class="btn btn-danger" tabindex="-1">RESET</button>
-                    </div>
+                    <div class="mt-1 alert alert-info alert-dismissible fade show" role="alert">
+                        Menebak Populasi Berdasarkan Produksi
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>  
                 </form>
               </div>
             </div>
