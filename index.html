@@ -1,591 +1,587 @@
-
+<!DOCTYPE html>
 <html data-bs-theme="dark" lang="en">
-
 <head>
-    <meta charset="UTF-8"></meta>
-    <meta content="IE=edge" http-equiv="X-UA-Compatible"></meta>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport"></meta>
-    <title>Pitik</title>
-    <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" rel="stylesheet"></link>
-    <script type="text/javascript">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pitik</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script type="text/javascript">
 
-        function convertNumber(input) {
-            return input.replace(/,/g, ".");
+    function convertNumber(input) {
+        return input.replace(/,/g, ".");
+    }
+
+    function formatInput(input) {
+        // Remove non-digit characters from the input value
+        let value = input.value.replace(/\D/g, '');
+
+        // Format the number with thousand separators
+        value = Number(value).toLocaleString();
+
+        // Set the formatted value back to the input
+        input.value = value;
+    }
+  
+  function clearCopy(){
+        document.getElementById("forcopy").value = "";
+    }
+
+    function copyText(){
+        if (document.getElementById("forcopy").value === "") {
+            alert("Kosong!");
+        }
+        else {
+        var salin = document.getElementById("forcopy");
+        salin.select();
+        salin.setSelectionRange(0, 99999);
+        navigator.clipboard.writeText(salin.value);
+        alert(salin.value + " Disalin");
+        }
+    }
+
+    function calculate() {
+        if (document.getElementById("setel").value === "" || document.getElementById("harga").value === "") {
+            document.getElementById("total").value = "";
+        }
+        else if (document.getElementById("harga").value.includes(".") || document.getElementById("harga").value.includes(",")) {
+            var num1 = parseFloat(convertNumber(document.getElementById("setel").value));
+            var num2 = parseFloat(convertNumber(document.getElementById("harga").value));
+            var rego = (num2 * 1000);
+            var result = num1 * 15 * rego;
+            document.getElementById("total").value = "Rp " + result.toLocaleString();
+        }
+        else if (document.getElementById("harga").value.length === 1 || document.getElementById("harga").value.length === 2) {
+            var num1 = parseFloat(convertNumber(document.getElementById("setel").value));
+            var num2 = parseFloat(convertNumber(document.getElementById("harga").value));
+            var rego = (num2 * 1000);
+            var result = num1 * 15 * rego;
+            document.getElementById("total").value = "Rp " + result.toLocaleString();
+        }
+        else if (document.getElementById("harga").value.length === 3 && (!document.getElementById("harga").value.includes(".") || !document.getElementById("harga").value.includes(","))) {
+            var num1 = parseFloat(document.getElementById("setel").value);
+            var num2 = parseFloat(document.getElementById("harga").value);
+            var dig2 = num2.toString().substring(0, 2);
+            var dig1 = num2 % 10;
+            var result = num1 * 15 * ((dig2 * 1000) + (dig1 * 100));
+            document.getElementById("total").value = "Rp " + result.toLocaleString();
+        }
+        else {
+            var num1 = parseFloat(document.getElementById("setel").value);
+            var num2 = parseFloat(document.getElementById("harga").value);
+            var result = num1 * 15 * num2;
+            document.getElementById("total").value = "Rp " + result.toLocaleString();
         }
 
-        function formatInput(input) {
-            // Remove non-digit characters from the input value
-            let value = input.value.replace(/\D/g, '');
-
-            // Format the number with thousand separators
-            value = Number(value).toLocaleString();
-
-            // Set the formatted value back to the input
-            input.value = value;
-        }
-      
-      function clearCopy(){
-            document.getElementById("forcopy").value = "";
-        }
-
-        function copyText(){
-            if (document.getElementById("forcopy").value === "") {
-                alert("Kosong!");
-            }
-            else {
-            var salin = document.getElementById("forcopy");
-            salin.select();
-            salin.setSelectionRange(0, 99999);
-            navigator.clipboard.writeText(salin.value);
-            alert(salin.value + " Disalin");
-            }
-        }
-
-        function calculate() {
-            if (document.getElementById("setel").value === "" || document.getElementById("harga").value === "") {
-                document.getElementById("total").value = "";
-            }
-            else if (document.getElementById("harga").value.includes(".") || document.getElementById("harga").value.includes(",")) {
-                var num1 = parseFloat(convertNumber(document.getElementById("setel").value));
-                var num2 = parseFloat(convertNumber(document.getElementById("harga").value));
-                var rego = (num2 * 1000);
-                var result = num1 * 15 * rego;
-                document.getElementById("total").value = "Rp " + result.toLocaleString();
-            }
-            else if (document.getElementById("harga").value.length === 1 || document.getElementById("harga").value.length === 2) {
-                var num1 = parseFloat(convertNumber(document.getElementById("setel").value));
-                var num2 = parseFloat(convertNumber(document.getElementById("harga").value));
-                var rego = (num2 * 1000);
-                var result = num1 * 15 * rego;
-                document.getElementById("total").value = "Rp " + result.toLocaleString();
-            }
-            else if (document.getElementById("harga").value.length === 3 && (!document.getElementById("harga").value.includes(".") || !document.getElementById("harga").value.includes(","))) {
-                var num1 = parseFloat(document.getElementById("setel").value);
-                var num2 = parseFloat(document.getElementById("harga").value);
-                var dig2 = num2.toString().substring(0, 2);
-                var dig1 = num2 % 10;
-                var result = num1 * 15 * ((dig2 * 1000) + (dig1 * 100));
-                document.getElementById("total").value = "Rp " + result.toLocaleString();
-            }
-            else {
-                var num1 = parseFloat(document.getElementById("setel").value);
-                var num2 = parseFloat(document.getElementById("harga").value);
-                var result = num1 * 15 * num2;
-                document.getElementById("total").value = "Rp " + result.toLocaleString();
-            }
-
-        }
-      
-      function kiloEndog() {
-            if (document.getElementById("setel").value === "") {
-                document.getElementById("kiloneEndog").innerHTML = "Setel";
-            }
-            else {
-                var kilone = parseFloat(document.getElementById("setel").value.replace(/[,.]/g, "")) * 15;
-                document.getElementById("kiloneEndog").innerHTML = kilone.toLocaleString() + " Kg";
-            }
-        }
-
-        function resetSetEndog() {
+    }
+  
+  function kiloEndog() {
+        if (document.getElementById("setel").value === "") {
             document.getElementById("kiloneEndog").innerHTML = "Setel";
-            document.getElementById("totalHutang").value = "";
-            document.getElementById("sisaHutang").value = "";
-            document.getElementById("etreHitungTotal").value = "";
-            document.getElementById("lblEtreHitungTotal").innerHTML = "Total EggTry";
-          document.getElementById("etreHitungTotal").style.height = "75px";
         }
+        else {
+            var kilone = parseFloat(document.getElementById("setel").value.replace(/[,.]/g, "")) * 15;
+            document.getElementById("kiloneEndog").innerHTML = kilone.toLocaleString() + " Kg";
+        }
+    }
 
-        function etre() {
-          var satuan = document.getElementById("anEtre").value;
-            if (document.getElementById("setel").value === "") {
-                document.getElementById("etreTotal").value = "";
-            }
-            else {
-                    var etreIn = parseFloat(document.getElementById("setel").value.replace(/[,.]/g, ""));
-                    var lembar, total, setel;
-                    setel = etreIn * satuan;
-                    total = Math.floor(setel / 70);
-                    lembar = setel % 70;
-                    if (lembar === 0) {
-                        document.getElementById("etreTotal").value = total.toLocaleString() + " ikat";
-                    }
-                    else if (setel < 70) {
-                        document.getElementById("etreTotal").value = lembar.toLocaleString() + " lembar";
-                    }
-                    else {
-                        document.getElementById("etreTotal").value = total.toLocaleString() + " ikat + " + lembar.toLocaleString() + " lembar";
+    function resetSetEndog() {
+        document.getElementById("kiloneEndog").innerHTML = "Setel";
+        document.getElementById("totalHutang").value = "";
+        document.getElementById("sisaHutang").value = "";
+        document.getElementById("etreHitungTotal").value = "";
+        document.getElementById("lblEtreHitungTotal").innerHTML = "Total EggTry";
+      document.getElementById("etreHitungTotal").style.height = "75px";
+    }
+
+    function etre() {
+      var satuan = document.getElementById("anEtre").value;
+        if (document.getElementById("setel").value === "") {
+            document.getElementById("etreTotal").value = "";
+        }
+        else {
+                var etreIn = parseFloat(document.getElementById("setel").value.replace(/[,.]/g, ""));
+                var lembar, total, setel;
+                setel = etreIn * satuan;
+                total = Math.floor(setel / 70);
+                lembar = setel % 70;
+                if (lembar === 0) {
+                    document.getElementById("etreTotal").value = total.toLocaleString() + " ikat";
                 }
-
-            }
-        }
-
-        function prosesPakan() {
-
-            if (document.getElementById("hargaPremix").value === "" || document.getElementById("upah").value === "") {
-                var kiloJagung, hargaJagung, totalJagung;
-                kiloJagung = parseFloat(document.getElementById("kiloJagung").value.replace(/[,.]/g, ""));
-                hargaJagung = parseFloat(document.getElementById("hargaJagung").value.replace(/[,.]/g, ""));
-                totalJagung = kiloJagung * hargaJagung;
-                document.getElementById("totalJagung").value = totalJagung.toLocaleString();
-
-                var kiloKatul, hargaKatul, totalKatul;
-                kiloKatul = parseFloat(document.getElementById("kiloKatul").value.replace(/[,.]/g, ""));
-                hargaKatul = parseFloat(document.getElementById("hargaKatul").value.replace(/[,.]/g, ""));
-                totalKatul = kiloKatul * hargaKatul;
-                document.getElementById("totalKatul").value = totalKatul.toLocaleString();
-
-                var beratLayer, hargaLayer, hargaPremix, totalHarga, perKilo, upah, jg, kt, br, tjg, tkt;
-
-                beratLayer = 50;
-                hargaLayer = parseFloat(document.getElementById("hargaLayer").value.replace(/[,.]/g, ""));
-                hargaPremix = parseFloat(document.getElementById("hargaPremix").value.replace(/[,.]/g, ""));
-                upah = parseFloat(document.getElementById("upah").value.replace(/[,.]/g, ""));
-
-                jg = parseFloat(document.getElementById("kiloJagung").value);
-                kt = parseFloat(document.getElementById("kiloKatul").value);
-                br = jg + kt + beratLayer;
-                tjg = parseFloat(document.getElementById("totalJagung").value.replace(/[,.]/g, ""));
-                tkt = parseFloat(document.getElementById("totalKatul").value.replace(/[,.]/g, ""));
-                totalHarga = hargaLayer + tjg + tkt;
-                perKilo = Math.round(totalHarga / br);
-                var bulat = Math.ceil(perKilo / 100) * 100;
-
-                document.getElementById("totalBerat").value = br.toLocaleString() + " Kg";
-                document.getElementById("totalHarga").value = "Rp " + totalHarga.toLocaleString();
-                document.getElementById("perKilo").value = "Rp " + perKilo.toLocaleString();
-                document.getElementById("bulat").value = "Rp " + bulat.toLocaleString();
-            }
-            else {
-                var kiloJagung, hargaJagung, totalJagung;
-                kiloJagung = parseFloat(document.getElementById("kiloJagung").value.replace(/[,.]/g, ""));
-                hargaJagung = parseFloat(document.getElementById("hargaJagung").value.replace(/[,.]/g, ""));
-                totalJagung = kiloJagung * hargaJagung;
-                document.getElementById("totalJagung").value = totalJagung.toLocaleString();
-
-                var kiloKatul, hargaKatul, totalKatul;
-                kiloKatul = parseFloat(document.getElementById("kiloKatul").value.replace(/[,.]/g, ""));
-                hargaKatul = parseFloat(document.getElementById("hargaKatul").value.replace(/[,.]/g, ""));
-                totalKatul = kiloKatul * hargaKatul;
-                document.getElementById("totalKatul").value = totalKatul.toLocaleString();
-
-                var beratLayer, hargaLayer, hargaPremix, totalHarga, perKilo, upah, jg, kt, br, tjg, tkt;
-
-                beratLayer = 50;
-                hargaLayer = parseFloat(document.getElementById("hargaLayer").value.replace(/[,.]/g, ""));
-                hargaPremix = parseFloat(document.getElementById("hargaPremix").value.replace(/[,.]/g, ""));
-                upah = parseFloat(document.getElementById("upah").value.replace(/[,.]/g, ""));
-
-                jg = parseFloat(document.getElementById("kiloJagung").value);
-                kt = parseFloat(document.getElementById("kiloKatul").value);
-                br = jg + kt + beratLayer;
-                tjg = parseFloat(document.getElementById("totalJagung").value.replace(/[,.]/g, ""));
-                tkt = parseFloat(document.getElementById("totalKatul").value.replace(/[,.]/g, ""));
-                totalHarga = hargaLayer + hargaPremix + tjg + tkt + upah;
-                perKilo = Math.round(totalHarga / br);
-                var bulat = Math.ceil(perKilo / 100) * 100;
-
-                document.getElementById("totalBerat").value = br.toLocaleString() + " Kg";
-                document.getElementById("totalHarga").value = "Rp " + totalHarga.toLocaleString();
-                document.getElementById("perKilo").value = "Rp " + perKilo.toLocaleString();
-                document.getElementById("bulat").value = "Rp " + bulat.toLocaleString();
-            }
-
-        }
-
-        function konsumsiPakan() {
-            if (document.getElementById("populasi").value === "" || document.getElementById("konsumsi").value === "") {
-                document.getElementById("beratPakan").value = "";
-              document.getElementById("setelanPakan").value = "";
-            }
-            else {
-                var populasi, konsumsi, beratPakan;
-                populasi = parseFloat(document.getElementById("populasi").value.replace(/[,.]/g, ""));
-                konsumsi = parseFloat(document.getElementById("konsumsi").value.replace(/[,.]/g, ""));
-                beratPakan = Math.round(populasi * konsumsi / 1000);
-                document.getElementById("beratPakan").value = beratPakan.toLocaleString() + " Kg";
-              
-              var setelan = Math.floor(beratPakan / 150);
-                var lebih = Math.floor(beratPakan % 150);
-                if (lebih === 0) {
-                    document.getElementById("setelanPakan").value = setelan.toLocaleString() + " Setel";
-                }
-                else if (beratPakan < 150) {
-                    document.getElementById("setelanPakan").value = lebih.toLocaleString() + " Kg";
+                else if (setel < 70) {
+                    document.getElementById("etreTotal").value = lembar.toLocaleString() + " lembar";
                 }
                 else {
-                    document.getElementById("setelanPakan").value = setelan.toLocaleString() + " Setel + " + lebih.toLocaleString() + " Kg";
-                }
+                    document.getElementById("etreTotal").value = total.toLocaleString() + " ikat + " + lembar.toLocaleString() + " lembar";
             }
+
+        }
+    }
+
+    function prosesPakan() {
+
+        if (document.getElementById("hargaPremix").value === "" || document.getElementById("upah").value === "") {
+            var kiloJagung, hargaJagung, totalJagung;
+            kiloJagung = parseFloat(document.getElementById("kiloJagung").value.replace(/[,.]/g, ""));
+            hargaJagung = parseFloat(document.getElementById("hargaJagung").value.replace(/[,.]/g, ""));
+            totalJagung = kiloJagung * hargaJagung;
+            document.getElementById("totalJagung").value = totalJagung.toLocaleString();
+
+            var kiloKatul, hargaKatul, totalKatul;
+            kiloKatul = parseFloat(document.getElementById("kiloKatul").value.replace(/[,.]/g, ""));
+            hargaKatul = parseFloat(document.getElementById("hargaKatul").value.replace(/[,.]/g, ""));
+            totalKatul = kiloKatul * hargaKatul;
+            document.getElementById("totalKatul").value = totalKatul.toLocaleString();
+
+            var beratLayer, hargaLayer, hargaPremix, totalHarga, perKilo, upah, jg, kt, br, tjg, tkt;
+
+            beratLayer = 50;
+            hargaLayer = parseFloat(document.getElementById("hargaLayer").value.replace(/[,.]/g, ""));
+            hargaPremix = parseFloat(document.getElementById("hargaPremix").value.replace(/[,.]/g, ""));
+            upah = parseFloat(document.getElementById("upah").value.replace(/[,.]/g, ""));
+
+            jg = parseFloat(document.getElementById("kiloJagung").value);
+            kt = parseFloat(document.getElementById("kiloKatul").value);
+            br = jg + kt + beratLayer;
+            tjg = parseFloat(document.getElementById("totalJagung").value.replace(/[,.]/g, ""));
+            tkt = parseFloat(document.getElementById("totalKatul").value.replace(/[,.]/g, ""));
+            totalHarga = hargaLayer + tjg + tkt;
+            perKilo = Math.round(totalHarga / br);
+            var bulat = Math.ceil(perKilo / 100) * 100;
+
+            document.getElementById("totalBerat").value = br.toLocaleString() + " Kg";
+            document.getElementById("totalHarga").value = "Rp " + totalHarga.toLocaleString();
+            document.getElementById("perKilo").value = "Rp " + perKilo.toLocaleString();
+            document.getElementById("bulat").value = "Rp " + bulat.toLocaleString();
+        }
+        else {
+            var kiloJagung, hargaJagung, totalJagung;
+            kiloJagung = parseFloat(document.getElementById("kiloJagung").value.replace(/[,.]/g, ""));
+            hargaJagung = parseFloat(document.getElementById("hargaJagung").value.replace(/[,.]/g, ""));
+            totalJagung = kiloJagung * hargaJagung;
+            document.getElementById("totalJagung").value = totalJagung.toLocaleString();
+
+            var kiloKatul, hargaKatul, totalKatul;
+            kiloKatul = parseFloat(document.getElementById("kiloKatul").value.replace(/[,.]/g, ""));
+            hargaKatul = parseFloat(document.getElementById("hargaKatul").value.replace(/[,.]/g, ""));
+            totalKatul = kiloKatul * hargaKatul;
+            document.getElementById("totalKatul").value = totalKatul.toLocaleString();
+
+            var beratLayer, hargaLayer, hargaPremix, totalHarga, perKilo, upah, jg, kt, br, tjg, tkt;
+
+            beratLayer = 50;
+            hargaLayer = parseFloat(document.getElementById("hargaLayer").value.replace(/[,.]/g, ""));
+            hargaPremix = parseFloat(document.getElementById("hargaPremix").value.replace(/[,.]/g, ""));
+            upah = parseFloat(document.getElementById("upah").value.replace(/[,.]/g, ""));
+
+            jg = parseFloat(document.getElementById("kiloJagung").value);
+            kt = parseFloat(document.getElementById("kiloKatul").value);
+            br = jg + kt + beratLayer;
+            tjg = parseFloat(document.getElementById("totalJagung").value.replace(/[,.]/g, ""));
+            tkt = parseFloat(document.getElementById("totalKatul").value.replace(/[,.]/g, ""));
+            totalHarga = hargaLayer + hargaPremix + tjg + tkt + upah;
+            perKilo = Math.round(totalHarga / br);
+            var bulat = Math.ceil(perKilo / 100) * 100;
+
+            document.getElementById("totalBerat").value = br.toLocaleString() + " Kg";
+            document.getElementById("totalHarga").value = "Rp " + totalHarga.toLocaleString();
+            document.getElementById("perKilo").value = "Rp " + perKilo.toLocaleString();
+            document.getElementById("bulat").value = "Rp " + bulat.toLocaleString();
         }
 
-        function untung() {
-            if (document.getElementById("berapaHari").value === "") {
-                if (
-                    document.getElementById("setel2").value === "" ||
-                    document.getElementById("pakanSelisih").value === "" ||
-                    document.getElementById("hargaSetel2").value === "" ||
-                    document.getElementById("hargaPakanSelisih").value === ""
-                ) {
-                    document.getElementById("totalTelur").value = "";
-                    document.getElementById("totalPakanSelisih").value = "";
-                    document.getElementById("selisih").value = "";
-                    document.getElementById("setel2Lbl").innerHTML = "Telur (Setel)";
-                    document.getElementById("pakanSelisihLbl").innerHTML = "Pakan (Kg)";
-                }
-                else {
-                    var setel2, pakanSelisih, hargaSetel2, hargaPakanSelisih;
-                    var totalTelur, totalPakanSelisih, selisih;
-                    setel2 = parseFloat(convertNumber(document.getElementById("setel2").value));
-                    pakanSelisih = parseFloat(document.getElementById("pakanSelisih").value.replace(/[,.]/g, ""));
-                    hargaSetel2 = parseFloat(document.getElementById("hargaSetel2").value.replace(/[,.]/g, ""));
-                    hargaPakanSelisih = parseFloat(document.getElementById("hargaPakanSelisih").value.replace(/[,.]/g, ""));
-                    totalTelur = setel2 * 15 * hargaSetel2;
-                    totalPakanSelisih = pakanSelisih * hargaPakanSelisih;
-                    selisih = totalTelur - totalPakanSelisih;
-                    document.getElementById("totalTelur").value = "Rp " + totalTelur.toLocaleString();
-                    document.getElementById("totalPakanSelisih").value = "Rp " + totalPakanSelisih.toLocaleString();
-                    document.getElementById("selisih").value = "Rp " + selisih.toLocaleString();
-                    document.getElementById("setel2Lbl").innerHTML = "Telur (Setel)";
-                    document.getElementById("pakanSelisihLbl").innerHTML = "Pakan (Kg)";
-                }
-            }
-            else {
-                if (
-                    document.getElementById("setel2").value === "" ||
-                    document.getElementById("pakanSelisih").value === "" ||
-                    document.getElementById("hargaSetel2").value === "" ||
-                    document.getElementById("hargaPakanSelisih").value === ""
-                ) {
-                    document.getElementById("totalTelur").value = "";
-                    document.getElementById("totalPakanSelisih").value = "";
-                    document.getElementById("selisih").value = "";
-                    document.getElementById("setel2Lbl").innerHTML = "Telur (Setel)";
-                    document.getElementById("pakanSelisihLbl").innerHTML = "Pakan (Kg)";
-                }
-                else {
-                    var setel2, pakanSelisih, hargaSetel2, hargaPakanSelisih;
-                    var totalTelur, totalPakanSelisih, selisih, harinya, setel2Lbl, pakanSelisihLbl;
-                    setel2 = parseFloat(convertNumber(document.getElementById("setel2").value));
-                    pakanSelisih = parseFloat(document.getElementById("pakanSelisih").value.replace(/[,.]/g, ""));
-                    hargaSetel2 = parseFloat(document.getElementById("hargaSetel2").value.replace(/[,.]/g, ""));
-                    hargaPakanSelisih = parseFloat(document.getElementById("hargaPakanSelisih").value.replace(/[,.]/g, ""));
-                    harinya = parseFloat(document.getElementById("berapaHari").value.replace(/[,.]/g, ""));
-                    totalTelur = (setel2 * 15 * hargaSetel2) * harinya;
-                    totalPakanSelisih = (pakanSelisih * hargaPakanSelisih) * harinya;
-                    selisih = totalTelur - totalPakanSelisih;
-                    document.getElementById("totalTelur").value = "Rp " + totalTelur.toLocaleString();
-                    document.getElementById("totalPakanSelisih").value = "Rp " + totalPakanSelisih.toLocaleString();
-                    document.getElementById("selisih").value = "Rp " + selisih.toLocaleString() + " (" + harinya + " Hari)";
-                    setel2Lbl = setel2 * harinya;
-                    pakanSelisihLbl = pakanSelisih * harinya;
-                    document.getElementById("setel2Lbl").innerHTML = setel2Lbl + " Setel";
-                    document.getElementById("pakanSelisihLbl").innerHTML = pakanSelisihLbl.toLocaleString() + " Kg";
-                }
-            }
-        }
-      
-      function resetLblUntung() {
-            document.getElementById("setel2Lbl").innerHTML = "Telur (Setel)";
-            document.getElementById("pakanSelisihLbl").innerHTML = "Pakan (Kg)";
-        }
+    }
 
-        function perkiraan() {
-            if (document.getElementById("produkPopulasi").value === "" || document.getElementById("produkPersen").value === "") {
-                document.getElementById("produkButiran").value = "";
-                document.getElementById("produkEtre").value = "";
-                document.getElementById("produkSetel").value = "";
+    function konsumsiPakan() {
+        if (document.getElementById("populasi").value === "" || document.getElementById("konsumsi").value === "") {
+            document.getElementById("beratPakan").value = "";
+          document.getElementById("setelanPakan").value = "";
+        }
+        else {
+            var populasi, konsumsi, beratPakan;
+            populasi = parseFloat(document.getElementById("populasi").value.replace(/[,.]/g, ""));
+            konsumsi = parseFloat(document.getElementById("konsumsi").value.replace(/[,.]/g, ""));
+            beratPakan = Math.round(populasi * konsumsi / 1000);
+            document.getElementById("beratPakan").value = beratPakan.toLocaleString() + " Kg";
+          
+          var setelan = Math.floor(beratPakan / 150);
+            var lebih = Math.floor(beratPakan % 150);
+            if (lebih === 0) {
+                document.getElementById("setelanPakan").value = setelan.toLocaleString() + " Setel";
+            }
+            else if (beratPakan < 150) {
+                document.getElementById("setelanPakan").value = lebih.toLocaleString() + " Kg";
             }
             else {
-                var produkPopulasi, produkPersen, produkButiran, produkEtre, produkSetel, sisaTre, sisaButir;
-                produkPopulasi = parseFloat(document.getElementById("produkPopulasi").value.replace(/[,.]/g, ""));
-                // produkPersen = parseFloat(document.getElementById("produkPersen").value.replace(/[,.]/g, ""));
-                produkPersen = parseFloat(convertNumber(document.getElementById("produkPersen").value));
-                produkButiran = Math.floor(produkPopulasi * (produkPersen / 100));
-                produkEtre = Math.floor(produkButiran / 30);
-                produkSetel = Math.floor(produkEtre / 8);
-                sisaButir = produkButiran % 30;
-                sisaTre = produkEtre % 8;
-                document.getElementById("produkButiran").value = produkButiran.toLocaleString() + " Butir";
-                if (sisaButir === 0) {
-                    document.getElementById("produkEtre").value = produkEtre.toLocaleString() + " Etre";
-                }
-                else {
-                    document.getElementById("produkEtre").value = produkEtre.toLocaleString() + " Etre + " + sisaButir.toLocaleString() + " Butir";
-                }
-                if (sisaTre === 0) {
-                    document.getElementById("produkSetel").value = produkSetel.toLocaleString() + " Setel";
-                }
-                else {
-                    document.getElementById("produkSetel").value = produkSetel.toLocaleString() + " Setel + " + sisaTre.toLocaleString() + " Etre";
-                }
+                document.getElementById("setelanPakan").value = setelan.toLocaleString() + " Setel + " + lebih.toLocaleString() + " Kg";
             }
         }
-      
-      function perkiraanEtre() {
-            if (document.getElementById("kiraEtrePop").value === "" || document.getElementById("kiraEtreEtre").value === "") {
-                document.getElementById("kiraEtrePersen").value = "";
-            }
-            else {
-                var kiraEtrePop, kiraEtreEtre, kiraEtrePersen, bulatDesimal, jadiPersen;
-                kiraEtrePop = parseFloat(document.getElementById("kiraEtrePop").value.replace(/[,.]/g, ""));
-                kiraEtreEtre = parseFloat(document.getElementById("kiraEtreEtre").value.replace(/[,.]/g, ""));
-                bulatDesimal = (kiraEtreEtre * 30) / kiraEtrePop;
-                jadiPersen = Math.round(bulatDesimal * 100);
-                document.getElementById("kiraEtrePersen").value = jadiPersen.toLocaleString() + "%";
-            }
-        }
-      
-      function perkiraanSetel() {
-            if (document.getElementById("kiraSetelPop").value === "" || document.getElementById("kiraSetelSetel").value === "") {
-                document.getElementById("kiraSetelPersen").value = "";
-                document.getElementById("kiraSetelEtre").value = "";
-            }
-            else {
-                var kiraSetelPop = parseFloat(document.getElementById("kiraSetelPop").value.replace(/[,.]/g, ""));
-                var kiraSetelSetel = parseFloat(document.getElementById("kiraSetelSetel").value.replace(/[,.]/g, ""));
-                var bulatDesimal = ((kiraSetelSetel * 8) * 30) / kiraSetelPop;
-                var jadiPersen = Math.round(bulatDesimal * 100);
-                document.getElementById("kiraSetelPersen").value = jadiPersen.toLocaleString() + "%";
-                var totalEtre = kiraSetelSetel * 8;
-                document.getElementById("kiraSetelEtre").value = totalEtre.toLocaleString() + " Etre";
-            }
-        }
-      
-        function tebakPopulasi(){
-            var inputEtre = document.getElementById("produkEtrePopulasi");
-            var inputSetel = document.getElementById("produkSetelPopulasi");
-            var persen = document.getElementById("penebakPop").value;
-            var hasilPop = document.getElementById("produkSetelHasil");
-            var labelHasil = document.getElementById("labelProdukSetelHasil"); //innerhtml
+    }
 
-            if (inputSetel.value !== "") {
-                inputEtre.disabled = true;
-                var input = parseFloat(inputSetel.value.replace(/[,.]/g, ""));
-                var endog = input * 8 * 30;
-                var hasil = Math.round((endog * 100) / persen);
-                hasilPop.value = hasil.toLocaleString() + " ekor";
-                labelHasil.innerHTML = endog.toLocaleString() + " butir";
-            }
-            else if (inputEtre.value !== "") {
-                inputSetel.disabled = true;
-                var input = parseFloat(inputEtre.value.replace(/[,.]/g, ""));
-                var endog = input * 30;
-                var hasil = Math.round((endog * 100) / persen);
-                hasilPop.value = hasil.toLocaleString() + " ekor";
-                labelHasil.innerHTML = endog.toLocaleString() + " butir";
+    function untung() {
+        if (document.getElementById("berapaHari").value === "") {
+            if (
+                document.getElementById("setel2").value === "" ||
+                document.getElementById("pakanSelisih").value === "" ||
+                document.getElementById("hargaSetel2").value === "" ||
+                document.getElementById("hargaPakanSelisih").value === ""
+            ) {
+                document.getElementById("totalTelur").value = "";
+                document.getElementById("totalPakanSelisih").value = "";
+                document.getElementById("selisih").value = "";
+                document.getElementById("setel2Lbl").innerHTML = "Telur (Setel)";
+                document.getElementById("pakanSelisihLbl").innerHTML = "Pakan (Kg)";
             }
             else {
-                document.getElementById("produkSetelPopulasi").disabled = false;
-                document.getElementById("produkEtrePopulasi").disabled = false;
-                document.getElementById("produkSetelPopulasi").value = "";
-                document.getElementById("produkEtrePopulasi").value = "";
-                document.getElementById("labelProdukSetelHasil").innerHTML = "Perkiraan Populasi";
+                var setel2, pakanSelisih, hargaSetel2, hargaPakanSelisih;
+                var totalTelur, totalPakanSelisih, selisih;
+                setel2 = parseFloat(convertNumber(document.getElementById("setel2").value));
+                pakanSelisih = parseFloat(document.getElementById("pakanSelisih").value.replace(/[,.]/g, ""));
+                hargaSetel2 = parseFloat(document.getElementById("hargaSetel2").value.replace(/[,.]/g, ""));
+                hargaPakanSelisih = parseFloat(document.getElementById("hargaPakanSelisih").value.replace(/[,.]/g, ""));
+                totalTelur = setel2 * 15 * hargaSetel2;
+                totalPakanSelisih = pakanSelisih * hargaPakanSelisih;
+                selisih = totalTelur - totalPakanSelisih;
+                document.getElementById("totalTelur").value = "Rp " + totalTelur.toLocaleString();
+                document.getElementById("totalPakanSelisih").value = "Rp " + totalPakanSelisih.toLocaleString();
+                document.getElementById("selisih").value = "Rp " + selisih.toLocaleString();
+                document.getElementById("setel2Lbl").innerHTML = "Telur (Setel)";
+                document.getElementById("pakanSelisihLbl").innerHTML = "Pakan (Kg)";
             }
         }
+        else {
+            if (
+                document.getElementById("setel2").value === "" ||
+                document.getElementById("pakanSelisih").value === "" ||
+                document.getElementById("hargaSetel2").value === "" ||
+                document.getElementById("hargaPakanSelisih").value === ""
+            ) {
+                document.getElementById("totalTelur").value = "";
+                document.getElementById("totalPakanSelisih").value = "";
+                document.getElementById("selisih").value = "";
+                document.getElementById("setel2Lbl").innerHTML = "Telur (Setel)";
+                document.getElementById("pakanSelisihLbl").innerHTML = "Pakan (Kg)";
+            }
+            else {
+                var setel2, pakanSelisih, hargaSetel2, hargaPakanSelisih;
+                var totalTelur, totalPakanSelisih, selisih, harinya, setel2Lbl, pakanSelisihLbl;
+                setel2 = parseFloat(convertNumber(document.getElementById("setel2").value));
+                pakanSelisih = parseFloat(document.getElementById("pakanSelisih").value.replace(/[,.]/g, ""));
+                hargaSetel2 = parseFloat(document.getElementById("hargaSetel2").value.replace(/[,.]/g, ""));
+                hargaPakanSelisih = parseFloat(document.getElementById("hargaPakanSelisih").value.replace(/[,.]/g, ""));
+                harinya = parseFloat(document.getElementById("berapaHari").value.replace(/[,.]/g, ""));
+                totalTelur = (setel2 * 15 * hargaSetel2) * harinya;
+                totalPakanSelisih = (pakanSelisih * hargaPakanSelisih) * harinya;
+                selisih = totalTelur - totalPakanSelisih;
+                document.getElementById("totalTelur").value = "Rp " + totalTelur.toLocaleString();
+                document.getElementById("totalPakanSelisih").value = "Rp " + totalPakanSelisih.toLocaleString();
+                document.getElementById("selisih").value = "Rp " + selisih.toLocaleString() + " (" + harinya + " Hari)";
+                setel2Lbl = setel2 * harinya;
+                pakanSelisihLbl = pakanSelisih * harinya;
+                document.getElementById("setel2Lbl").innerHTML = setel2Lbl + " Setel";
+                document.getElementById("pakanSelisihLbl").innerHTML = pakanSelisihLbl.toLocaleString() + " Kg";
+            }
+        }
+    }
+  
+  function resetLblUntung() {
+        document.getElementById("setel2Lbl").innerHTML = "Telur (Setel)";
+        document.getElementById("pakanSelisihLbl").innerHTML = "Pakan (Kg)";
+    }
 
-        function CperkiraanPopulasi() {
+    function perkiraan() {
+        if (document.getElementById("produkPopulasi").value === "" || document.getElementById("produkPersen").value === "") {
+            document.getElementById("produkButiran").value = "";
+            document.getElementById("produkEtre").value = "";
+            document.getElementById("produkSetel").value = "";
+        }
+        else {
+            var produkPopulasi, produkPersen, produkButiran, produkEtre, produkSetel, sisaTre, sisaButir;
+            produkPopulasi = parseFloat(document.getElementById("produkPopulasi").value.replace(/[,.]/g, ""));
+            // produkPersen = parseFloat(document.getElementById("produkPersen").value.replace(/[,.]/g, ""));
+            produkPersen = parseFloat(convertNumber(document.getElementById("produkPersen").value));
+            produkButiran = Math.floor(produkPopulasi * (produkPersen / 100));
+            produkEtre = Math.floor(produkButiran / 30);
+            produkSetel = Math.floor(produkEtre / 8);
+            sisaButir = produkButiran % 30;
+            sisaTre = produkEtre % 8;
+            document.getElementById("produkButiran").value = produkButiran.toLocaleString() + " Butir";
+            if (sisaButir === 0) {
+                document.getElementById("produkEtre").value = produkEtre.toLocaleString() + " Etre";
+            }
+            else {
+                document.getElementById("produkEtre").value = produkEtre.toLocaleString() + " Etre + " + sisaButir.toLocaleString() + " Butir";
+            }
+            if (sisaTre === 0) {
+                document.getElementById("produkSetel").value = produkSetel.toLocaleString() + " Setel";
+            }
+            else {
+                document.getElementById("produkSetel").value = produkSetel.toLocaleString() + " Setel + " + sisaTre.toLocaleString() + " Etre";
+            }
+        }
+    }
+  
+  function perkiraanEtre() {
+        if (document.getElementById("kiraEtrePop").value === "" || document.getElementById("kiraEtreEtre").value === "") {
+            document.getElementById("kiraEtrePersen").value = "";
+        }
+        else {
+            var kiraEtrePop, kiraEtreEtre, kiraEtrePersen, bulatDesimal, jadiPersen;
+            kiraEtrePop = parseFloat(document.getElementById("kiraEtrePop").value.replace(/[,.]/g, ""));
+            kiraEtreEtre = parseFloat(document.getElementById("kiraEtreEtre").value.replace(/[,.]/g, ""));
+            bulatDesimal = (kiraEtreEtre * 30) / kiraEtrePop;
+            jadiPersen = Math.round(bulatDesimal * 100);
+            document.getElementById("kiraEtrePersen").value = jadiPersen.toLocaleString() + "%";
+        }
+    }
+  
+  function perkiraanSetel() {
+        if (document.getElementById("kiraSetelPop").value === "" || document.getElementById("kiraSetelSetel").value === "") {
+            document.getElementById("kiraSetelPersen").value = "";
+            document.getElementById("kiraSetelEtre").value = "";
+        }
+        else {
+            var kiraSetelPop = parseFloat(document.getElementById("kiraSetelPop").value.replace(/[,.]/g, ""));
+            var kiraSetelSetel = parseFloat(document.getElementById("kiraSetelSetel").value.replace(/[,.]/g, ""));
+            var bulatDesimal = ((kiraSetelSetel * 8) * 30) / kiraSetelPop;
+            var jadiPersen = Math.round(bulatDesimal * 100);
+            document.getElementById("kiraSetelPersen").value = jadiPersen.toLocaleString() + "%";
+            var totalEtre = kiraSetelSetel * 8;
+            document.getElementById("kiraSetelEtre").value = totalEtre.toLocaleString() + " Etre";
+        }
+    }
+  
+    function tebakPopulasi(){
+        var inputEtre = document.getElementById("produkEtrePopulasi");
+        var inputSetel = document.getElementById("produkSetelPopulasi");
+        var persen = document.getElementById("penebakPop").value;
+        var hasilPop = document.getElementById("produkSetelHasil");
+        var labelHasil = document.getElementById("labelProdukSetelHasil"); //innerhtml
+
+        if (inputSetel.value !== "") {
+            inputEtre.disabled = true;
+            var input = parseFloat(inputSetel.value.replace(/[,.]/g, ""));
+            var endog = input * 8 * 30;
+            var hasil = Math.round((endog * 100) / persen);
+            hasilPop.value = hasil.toLocaleString() + " ekor";
+            labelHasil.innerHTML = endog.toLocaleString() + " butir";
+        }
+        else if (inputEtre.value !== "") {
+            inputSetel.disabled = true;
+            var input = parseFloat(inputEtre.value.replace(/[,.]/g, ""));
+            var endog = input * 30;
+            var hasil = Math.round((endog * 100) / persen);
+            hasilPop.value = hasil.toLocaleString() + " ekor";
+            labelHasil.innerHTML = endog.toLocaleString() + " butir";
+        }
+        else {
             document.getElementById("produkSetelPopulasi").disabled = false;
             document.getElementById("produkEtrePopulasi").disabled = false;
             document.getElementById("produkSetelPopulasi").value = "";
             document.getElementById("produkEtrePopulasi").value = "";
             document.getElementById("labelProdukSetelHasil").innerHTML = "Perkiraan Populasi";
         }
-      
-      function hitungcepat() {
-            var hiceHasil, hicePakan, hicePop, hicePro, hiceTelur;
-            hicePakan = parseFloat(document.getElementById("hicePakan").value.replace(/[,.]/g, ""));
-            hicePop = parseFloat(document.getElementById("hicePop").value.replace(/[,.]/g, ""));
-            hicePro = parseFloat(convertNumber(document.getElementById("hicePro").value));
-            hiceTelur = parseFloat(document.getElementById("hiceTelur").value.replace(/[,.]/g, ""));
-            var feed = document.getElementById("feedIntake").value;
-            var lama = document.getElementById("hiceHari").value;
-            if (
-                document.getElementById("hicePop").value === "" ||
-                document.getElementById("hicePakan").value === "" ||
-                document.getElementById("hiceTelur").value === "" ||
-                document.getElementById("hicePro").value === ""
-            ) {
-                document.getElementById("hiceHasil").value = "";
-            }
-            else {
-                if (lama == "1") {
-                    var setel = Math.floor((((hicePop * (hicePro / 100)) / 30) / 8));
-                    var punjul = Math.floor((((hicePop * (hicePro / 100)) / 30) % 8));
-                    var kpakan = Math.ceil((hicePop * feed / 1000) / 5) * 5;
-                    var tpakan = kpakan * hicePakan;
-                    var omzet = setel * 15 * hiceTelur;
-                    var selisih = omzet - tpakan;
+    }
 
-                    if (punjul === 0) {
-                        document.getElementById("hiceHasil").value =
-                            "~Per Hari~" + "\n" +
-                            "Telur\t " + setel.toLocaleString() + " Setel" + "\n" +
-                            "Pakan\t " + kpakan.toLocaleString() + " kg" + "\n" +
-                            "Biaya\t Rp " + tpakan.toLocaleString() + "\n" +
-                            "Omset\t Rp " + omzet.toLocaleString() + "\n" +
-                            "Selisih\t Rp " + selisih.toLocaleString();
-                    }
-                    else {
-                        document.getElementById("hiceHasil").value =
-                            "~Per Hari~" + "\n" +
-                            "Telur\t " + setel.toLocaleString() + " Setel (+ " + punjul.toLocaleString() + " Etre)" + "\n" +
-                            "Pakan\t " + kpakan.toLocaleString() + " kg" + "\n" +
-                            "Biaya\t Rp " + tpakan.toLocaleString() + "\n" +
-                            "Omset\t Rp " + omzet.toLocaleString() + "\n" +
-                            "Selisih\t Rp " + selisih.toLocaleString();
-                    }
-                }
-                else {
-                    var punjul = (Math.floor((hicePop * (hicePro / 100)) / 30)) * lama;
-                    var setel = Math.floor(punjul / 8);
-                    var kpakan = Math.ceil(((Math.round(hicePop * feed / 1000)) * lama) / 5) * 5;
-                    var tpakan = kpakan * hicePakan;
-                    var omzet = setel * 15 * hiceTelur;
-                    var selisih = omzet - tpakan;
-                    var per = Math.floor((selisih / lama) / 500) * 500;
+    function CperkiraanPopulasi() {
+        document.getElementById("produkSetelPopulasi").disabled = false;
+        document.getElementById("produkEtrePopulasi").disabled = false;
+        document.getElementById("produkSetelPopulasi").value = "";
+        document.getElementById("produkEtrePopulasi").value = "";
+        document.getElementById("labelProdukSetelHasil").innerHTML = "Perkiraan Populasi";
+    }
+  
+  function hitungcepat() {
+        var hiceHasil, hicePakan, hicePop, hicePro, hiceTelur;
+        hicePakan = parseFloat(document.getElementById("hicePakan").value.replace(/[,.]/g, ""));
+        hicePop = parseFloat(document.getElementById("hicePop").value.replace(/[,.]/g, ""));
+        hicePro = parseFloat(convertNumber(document.getElementById("hicePro").value));
+        hiceTelur = parseFloat(document.getElementById("hiceTelur").value.replace(/[,.]/g, ""));
+        var feed = document.getElementById("feedIntake").value;
+        var lama = document.getElementById("hiceHari").value;
+        if (
+            document.getElementById("hicePop").value === "" ||
+            document.getElementById("hicePakan").value === "" ||
+            document.getElementById("hiceTelur").value === "" ||
+            document.getElementById("hicePro").value === ""
+        ) {
+            document.getElementById("hiceHasil").value = "";
+        }
+        else {
+            if (lama == "1") {
+                var setel = Math.floor((((hicePop * (hicePro / 100)) / 30) / 8));
+                var punjul = Math.floor((((hicePop * (hicePro / 100)) / 30) % 8));
+                var kpakan = Math.ceil((hicePop * feed / 1000) / 5) * 5;
+                var tpakan = kpakan * hicePakan;
+                var omzet = setel * 15 * hiceTelur;
+                var selisih = omzet - tpakan;
 
+                if (punjul === 0) {
                     document.getElementById("hiceHasil").value =
-                        "~" + lama.toLocaleString() + " Hari~" + "\n" +
+                        "~Per Hari~" + "\n" +
                         "Telur\t " + setel.toLocaleString() + " Setel" + "\n" +
                         "Pakan\t " + kpakan.toLocaleString() + " kg" + "\n" +
                         "Biaya\t Rp " + tpakan.toLocaleString() + "\n" +
                         "Omset\t Rp " + omzet.toLocaleString() + "\n" +
-                        "Selisih\t Rp " + selisih.toLocaleString() + "\n" +
-                        "(1 Hari)\t (Rp " + per.toLocaleString() + ")";
+                        "Selisih\t Rp " + selisih.toLocaleString();
+                }
+                else {
+                    document.getElementById("hiceHasil").value =
+                        "~Per Hari~" + "\n" +
+                        "Telur\t " + setel.toLocaleString() + " Setel (+ " + punjul.toLocaleString() + " Etre)" + "\n" +
+                        "Pakan\t " + kpakan.toLocaleString() + " kg" + "\n" +
+                        "Biaya\t Rp " + tpakan.toLocaleString() + "\n" +
+                        "Omset\t Rp " + omzet.toLocaleString() + "\n" +
+                        "Selisih\t Rp " + selisih.toLocaleString();
                 }
             }
-        }
-      
-      function hutang(){
-            var uangtelur = parseFloat(document.getElementById("total").value.replace(/[^0-9]/g, ""));
-            var totalHutang = parseFloat(document.getElementById("totalHutang").value.replace(/[,.]/g, ""));
-            if (document.getElementById("total").value === "" || document.getElementById("totalHutang").value === "") {
-                document.getElementById("sisaHutang").value = "";
-            }
             else {
-                var sisa = uangtelur - totalHutang;
-                document.getElementById("sisaHutang").value = "Sisa: Rp " + sisa.toLocaleString();
-              document.getElementById("forcopy").value = Math.abs(sisa).toString();
+                var punjul = (Math.floor((hicePop * (hicePro / 100)) / 30)) * lama;
+                var setel = Math.floor(punjul / 8);
+                var kpakan = Math.ceil(((Math.round(hicePop * feed / 1000)) * lama) / 5) * 5;
+                var tpakan = kpakan * hicePakan;
+                var omzet = setel * 15 * hiceTelur;
+                var selisih = omzet - tpakan;
+                var per = Math.floor((selisih / lama) / 500) * 500;
+
+                document.getElementById("hiceHasil").value =
+                    "~" + lama.toLocaleString() + " Hari~" + "\n" +
+                    "Telur\t " + setel.toLocaleString() + " Setel" + "\n" +
+                    "Pakan\t " + kpakan.toLocaleString() + " kg" + "\n" +
+                    "Biaya\t Rp " + tpakan.toLocaleString() + "\n" +
+                    "Omset\t Rp " + omzet.toLocaleString() + "\n" +
+                    "Selisih\t Rp " + selisih.toLocaleString() + "\n" +
+                    "(1 Hari)\t (Rp " + per.toLocaleString() + ")";
             }
         }
-      
-      function etreHitung(){
-            if (document.getElementById("setel").value === "") {
-                document.getElementById("etreHitungTotal").value = "";
-              	document.getElementById("lblEtreHitungTotal").innerHTML = "Total EggTry";
-              document.getElementById("etreHitungTotal").style.height = "75px";
-            }
-            else {
-                var etreIn = parseFloat(document.getElementById("setel").value.replace(/[,.]/g, ""));
-                var n5 = Math.floor((etreIn * 5) / 70);
-                var l5 = (etreIn * 5) % 70;
-                var n6 = Math.floor((etreIn * 6) / 70);
-                var l6 = (etreIn * 6) % 70;
-                var n7 = Math.floor((etreIn * 7) / 70);
-                var l7 = (etreIn * 7) % 70;
-                var n8 = Math.floor((etreIn * 8) / 70);
-                var l8 = (etreIn * 8) % 70;
-                var n9 = Math.floor((etreIn * 9) / 70);
-                var l9 = (etreIn * 9) % 70;
-                var n10 = Math.floor((etreIn * 10) / 70);
-                var l10 = (etreIn * 10) % 70;
-                var n11 = Math.floor((etreIn * 11) / 70);
-                var l11 = (etreIn * 11) % 70;
-                var n12 = Math.floor((etreIn * 12) / 70);
-                var l12 = (etreIn * 12) % 70;
-                var n13 = Math.floor((etreIn * 13) / 70);
-                var l13 = (etreIn * 13) % 70;
-                var n14 = Math.floor((etreIn * 14) / 70);
-                var l14 = (etreIn * 14) % 70;
-                var n15 = Math.floor((etreIn * 15) / 70);
-                var l15 = (etreIn * 15) % 70;
-
-              document.getElementById("etreHitungTotal").style.height = "375px";  
-              document.getElementById("lblEtreHitungTotal").innerHTML = etreIn.toLocaleString() + " Setel";
-                document.getElementById("etreHitungTotal").value = "\nSatuan\t| Total EggTry\n" +
-                "5an\t\t| " + n5.toLocaleString() + " ikat, " + l5.toLocaleString() + " lembar\n" +
-                "6an\t\t| " + n6.toLocaleString() + " ikat, " + l6.toLocaleString() + " lembar\n" +
-                "7an\t\t| " + n7.toLocaleString() + " ikat, " + l7.toLocaleString() + " lembar\n" +
-                "8an\t\t| " + n8.toLocaleString() + " ikat, " + l8.toLocaleString() + " lembar\n" +
-                "9an\t\t| " + n9.toLocaleString() + " ikat, " + l9.toLocaleString() + " lembar\n" +
-                "10an\t| " + n10.toLocaleString() + " ikat, " + l10.toLocaleString() + " lembar\n" +
-                "11an\t| " + n11.toLocaleString() + " ikat, " + l11.toLocaleString() + " lembar\n" +
-                "12an\t| " + n12.toLocaleString() + " ikat, " + l12.toLocaleString() + " lembar\n" +
-                "13an\t| " + n13.toLocaleString() + " ikat, " + l13.toLocaleString() + " lembar\n" +
-                "14an\t| " + n14.toLocaleString() + " ikat, " + l14.toLocaleString() + " lembar\n" +
-                "15an\t| " + n15.toLocaleString() + " ikat, " + l15.toLocaleString() + " lembar";
-            }
-        }
-      
-      
-      document.addEventListener("DOMContentLoaded", function () {
-      const btn = document.getElementById('tooltipBtn');
-      const tooltip = new bootstrap.Tooltip(btn);
-
-      // Function to show tooltip briefly
-      function showBriefly() {
-        tooltip.show();
-        setTimeout(() => tooltip.hide(), 3000); // Show for 1.5 seconds
-      }
-
-      // Show immediately
-      showBriefly();
-
-      // Repeat every 5 seconds
-      setInterval(showBriefly, 7000);
-    });
-
-    </script>
-    <style>
-        input::-webkit-outer-spin-button,
-        input::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-
-        input[type=number] {
-            -moz-appearance: textfield;
-        }
-
-        .hr-text {
-            display: flex;
-            align-items: center;
-        }
-
-        .hr-text:before {
-            content: "";
-            flex-grow: 1;
-            background-color: #54B4D3;
-            height: 1px;
-            margin: 0 10px 0 0;
-        }
-
-        .hr-text:after {
-            content: "";
-            flex-grow: 1;
-            background-color: #54B4D3;
-            height: 1px;
-            margin: 0 0 0 10px;
-        }
-      
-      .float-btn {
-        border: solid 1px #ffffff;
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      z-index: 1050;
-      border-radius: 25%;
-      width: 50px;
-      height: 50px;
-      font-size: 24px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
     }
-    </style>
+  
+  function hutang(){
+        var uangtelur = parseFloat(document.getElementById("total").value.replace(/[^0-9]/g, ""));
+        var totalHutang = parseFloat(document.getElementById("totalHutang").value.replace(/[,.]/g, ""));
+        if (document.getElementById("total").value === "" || document.getElementById("totalHutang").value === "") {
+            document.getElementById("sisaHutang").value = "";
+        }
+        else {
+            var sisa = uangtelur - totalHutang;
+            document.getElementById("sisaHutang").value = "Sisa: Rp " + sisa.toLocaleString();
+          document.getElementById("forcopy").value = Math.abs(sisa).toString();
+        }
+    }
+  
+  function etreHitung(){
+        if (document.getElementById("setel").value === "") {
+            document.getElementById("etreHitungTotal").value = "";
+              document.getElementById("lblEtreHitungTotal").innerHTML = "Total EggTry";
+          document.getElementById("etreHitungTotal").style.height = "75px";
+        }
+        else {
+            var etreIn = parseFloat(document.getElementById("setel").value.replace(/[,.]/g, ""));
+            var n5 = Math.floor((etreIn * 5) / 70);
+            var l5 = (etreIn * 5) % 70;
+            var n6 = Math.floor((etreIn * 6) / 70);
+            var l6 = (etreIn * 6) % 70;
+            var n7 = Math.floor((etreIn * 7) / 70);
+            var l7 = (etreIn * 7) % 70;
+            var n8 = Math.floor((etreIn * 8) / 70);
+            var l8 = (etreIn * 8) % 70;
+            var n9 = Math.floor((etreIn * 9) / 70);
+            var l9 = (etreIn * 9) % 70;
+            var n10 = Math.floor((etreIn * 10) / 70);
+            var l10 = (etreIn * 10) % 70;
+            var n11 = Math.floor((etreIn * 11) / 70);
+            var l11 = (etreIn * 11) % 70;
+            var n12 = Math.floor((etreIn * 12) / 70);
+            var l12 = (etreIn * 12) % 70;
+            var n13 = Math.floor((etreIn * 13) / 70);
+            var l13 = (etreIn * 13) % 70;
+            var n14 = Math.floor((etreIn * 14) / 70);
+            var l14 = (etreIn * 14) % 70;
+            var n15 = Math.floor((etreIn * 15) / 70);
+            var l15 = (etreIn * 15) % 70;
 
+          document.getElementById("etreHitungTotal").style.height = "375px";  
+          document.getElementById("lblEtreHitungTotal").innerHTML = etreIn.toLocaleString() + " Setel";
+            document.getElementById("etreHitungTotal").value = "\nSatuan\t| Total EggTry\n" +
+            "5an\t\t| " + n5.toLocaleString() + " ikat, " + l5.toLocaleString() + " lembar\n" +
+            "6an\t\t| " + n6.toLocaleString() + " ikat, " + l6.toLocaleString() + " lembar\n" +
+            "7an\t\t| " + n7.toLocaleString() + " ikat, " + l7.toLocaleString() + " lembar\n" +
+            "8an\t\t| " + n8.toLocaleString() + " ikat, " + l8.toLocaleString() + " lembar\n" +
+            "9an\t\t| " + n9.toLocaleString() + " ikat, " + l9.toLocaleString() + " lembar\n" +
+            "10an\t| " + n10.toLocaleString() + " ikat, " + l10.toLocaleString() + " lembar\n" +
+            "11an\t| " + n11.toLocaleString() + " ikat, " + l11.toLocaleString() + " lembar\n" +
+            "12an\t| " + n12.toLocaleString() + " ikat, " + l12.toLocaleString() + " lembar\n" +
+            "13an\t| " + n13.toLocaleString() + " ikat, " + l13.toLocaleString() + " lembar\n" +
+            "14an\t| " + n14.toLocaleString() + " ikat, " + l14.toLocaleString() + " lembar\n" +
+            "15an\t| " + n15.toLocaleString() + " ikat, " + l15.toLocaleString() + " lembar";
+        }
+    }
+  
+  
+  document.addEventListener("DOMContentLoaded", function () {
+  const btn = document.getElementById('tooltipBtn');
+  const tooltip = new bootstrap.Tooltip(btn);
+
+  // Function to show tooltip briefly
+  function showBriefly() {
+    tooltip.show();
+    setTimeout(() => tooltip.hide(), 3000); // Show for 1.5 seconds
+  }
+
+  // Show immediately
+  showBriefly();
+
+  // Repeat every 5 seconds
+  setInterval(showBriefly, 7000);
+});
+
+</script>
+<style>
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    input[type=number] {
+        -moz-appearance: textfield;
+    }
+
+    .hr-text {
+        display: flex;
+        align-items: center;
+    }
+
+    .hr-text:before {
+        content: "";
+        flex-grow: 1;
+        background-color: #54B4D3;
+        height: 1px;
+        margin: 0 10px 0 0;
+    }
+
+    .hr-text:after {
+        content: "";
+        flex-grow: 1;
+        background-color: #54B4D3;
+        height: 1px;
+        margin: 0 0 0 10px;
+    }
+  
+  .float-btn {
+    border: solid 1px #ffffff;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1050;
+  border-radius: 25%;
+  width: 50px;
+  height: 50px;
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+</style>
 </head>
-
 <body class="container mt-3">
 
     <form action="">
@@ -613,7 +609,7 @@
         </div>
         <div class="input-group mt-1">
                 <input class="form-control text-warning-emphasis text-center fs-5 fw-bold" style="width: 60%;" autocomplete="off"
-                    id="etreTotal" placeholder="Etre" disabled>
+                    id="etreTotal" placeholder="EggTry" disabled>
 
                 <select class="form-select text-warning-emphasis" aria-label="Default select example" id="anEtre" onchange="etre()">
                     <option value="5">5an</option>
@@ -654,32 +650,41 @@
                 </div>
             </form>
         </div>
+        <br>
 
-    <!-- button collapse -->
-    <div class="btn-group mb-1 d-flex" role="group" aria-label="Basic radio toggle button group">
-        <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" data-bs-toggle="collapse" data-bs-target="#collapse1">
-        <label class="btn btn-outline-info" for="btnradio1">Pakan</label>
-      
-        <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off" data-bs-toggle="collapse" data-bs-target="#collapse2">
-        <label class="btn btn-outline-info" for="btnradio2">Produksi</label>
-      
-        <input type="radio" class="btn-check" name="btnradio" id="btnradio3" autocomplete="off" data-bs-toggle="collapse" data-bs-target="#collapse3">
-        <label class="btn btn-outline-info" for="btnradio3">Selisih</label>
-    </div>
+  <!-- 🔹 Tombol Utama -->
+  <div class="btn-group d-flex mb-3" data-btn-group>
+    <input type="checkbox" class="btn-check" id="btnPakan" data-bs-toggle="collapse" data-bs-target="#collapsePakan">
+    <label class="btn btn-outline-info w-100" for="btnPakan">Pakan</label>
 
-    <div id="wrapperCollapse">
+    <input type="checkbox" class="btn-check" id="btnProduksi" data-bs-toggle="collapse" data-bs-target="#collapseProduksi">
+    <label class="btn btn-outline-info w-100" for="btnProduksi">Produksi</label>
+
+    <input type="checkbox" class="btn-check" id="btnSelisih" data-bs-toggle="collapse" data-bs-target="#collapseSelisih">
+    <label class="btn btn-outline-info w-100" for="btnSelisih">Selisih</label>
+  </div>
+
+  <!-- 🔸 Wrapper Collapse Utama -->
+  <div id="mainCollapseWrapper">
     
-    <!-- Collapse 1 -->
-    <div class="collapse" id="collapse1" data-bs-parent="#wrapperCollapse">
-          <div class="accordion" id="accordion1">
-            <div class="accordion-item">
-              <h2 class="accordion-header">
-                <button class="accordion-button" data-bs-toggle="collapse" data-bs-target="#acc1-1" aria-expanded="true">
-                  Kalkulator Pakan
-                </button>
-              </h2>
-              <div id="acc1-1" class="accordion-collapse collapse show p-2" data-bs-parent="#accordion1">
-                <form action="">
+    <!-- 🟦 Collapse Pakan -->
+    <div class="collapse" id="collapsePakan" data-bs-parent="#mainCollapseWrapper">
+      <div class="bg-dark text-light rounded">
+
+        <!-- Sub Tombol -->
+        <div class="btn-group d-flex mb-3" data-btn-group>
+          <input type="checkbox" class="btn-check" id="btnKalkulator" data-bs-toggle="collapse" data-bs-target="#collapseKalkulator" checked>
+          <label class="btn btn-outline-light w-100" for="btnKalkulator">Kalkulator</label>
+
+          <input type="checkbox" class="btn-check" id="btnKonsumsi" data-bs-toggle="collapse" data-bs-target="#collapseKonsumsi">
+          <label class="btn btn-outline-light w-100" for="btnKonsumsi">Konsumsi</label>
+        </div>
+
+        <!-- Sub Collapse Pakan -->
+        <div id="pakanCollapseWrapper">
+          <div class="collapse show" id="collapseKalkulator" data-bs-parent="#pakanCollapseWrapper">
+            <div class="bg-dark text-light rounded">
+              <form action="">
                     <div class="hr-text mt-2 mb-2 fs-5 text-info">Jagung</div>
                     <div class="input-group mt-1">
                         <div class="form-floating">
@@ -747,16 +752,11 @@
                         <button type="reset" class="btn btn-danger" tabindex="-1">RESET</button>
                     </div>
                 </form>
-              </div>
             </div>
-            <div class="accordion-item">
-              <h2 class="accordion-header">
-                <button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#acc1-2">
-                  Konsumsi Pakan
-                </button>
-              </h2>
-              <div id="acc1-2" class="accordion-collapse collapse p-2" data-bs-parent="#accordion1">
-                <form action="">
+          </div>
+          <div class="collapse" id="collapseKonsumsi" data-bs-parent="#pakanCollapseWrapper">
+            <div class="bg-dark text-light rounded">
+              <form action="">
                     <div class="input-group">
                         <div class="form-floating">
                             <input class="form-control text-white" autocomplete="off" inputmode="numeric" id="populasi"
@@ -782,21 +782,35 @@
                         *1 Setel = 150 Kg
                     </div>
                 </form>
-              </div>
             </div>
           </div>
+        </div>
       </div>
+    </div>
 
-      <!-- Collapse 2 -->
-    <div class="collapse" id="collapse2" data-bs-parent="#wrapperCollapse">
-          <div class="accordion" id="accordion2">
-            <div class="accordion-item">
-              <h2 class="accordion-header">
-                <button class="accordion-button" data-bs-toggle="collapse" data-bs-target="#acc2-1" aria-expanded="true">
-                  Berdasarkan EggTry
-                </button>
-              </h2>
-              <div id="acc2-1" class="accordion-collapse collapse p-2" data-bs-parent="#accordion2">
+    <!-- 🟧 Collapse Produksi -->
+    <div class="collapse" id="collapseProduksi" data-bs-parent="#mainCollapseWrapper">
+      <div class="bg-dark text-light rounded">
+
+        <!-- Sub Tombol -->
+        <div class="btn-group d-flex mb-3" data-btn-group>
+          <input type="checkbox" class="btn-check" id="btnProd1" data-bs-toggle="collapse" data-bs-target="#collapseProd1">
+          <label class="btn btn-outline-light w-100" for="btnProd1">EggTry</label>
+
+          <input type="checkbox" class="btn-check" id="btnProd2" data-bs-toggle="collapse" data-bs-target="#collapseProd2" checked>
+          <label class="btn btn-outline-light w-100" for="btnProd2">Setel</label>
+
+          <input type="checkbox" class="btn-check" id="btnProd3" data-bs-toggle="collapse" data-bs-target="#collapseProd3">
+          <label class="btn btn-outline-light w-100" for="btnProd3">Persen</label>
+
+          <input type="checkbox" class="btn-check" id="btnProd4" data-bs-toggle="collapse" data-bs-target="#collapseProd4">
+          <label class="btn btn-outline-light w-100" for="btnProd4">Populasi?</label>
+        </div>
+
+        <!-- Sub Collapse Produksi -->
+        <div id="produksiCollapseWrapper">
+          <div class="collapse" id="collapseProd1" data-bs-parent="#produksiCollapseWrapper">
+            <div class="bg-dark text-light rounded">
                 <form action="">
                     <div class="input-group mt-1">
                         <div class="form-floating">
@@ -820,15 +834,10 @@
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>  
                 </form>
-              </div>
             </div>
-            <div class="accordion-item">
-              <h2 class="accordion-header">
-                <button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#acc2-2">
-                    Berdasarkan Setelan
-                </button>
-              </h2>
-              <div id="acc2-2" class="accordion-collapse collapse show p-2" data-bs-parent="#accordion2">
+          </div>
+          <div class="collapse show" id="collapseProd2" data-bs-parent="#produksiCollapseWrapper">
+            <div class="bg-dark text-light rounded">
                 <form action="">
                     <div class="input-group mt-1">
                         <div class="form-floating">
@@ -854,15 +863,10 @@
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>  
                 </form>
-              </div>
             </div>
-            <div class="accordion-item">
-              <h2 class="accordion-header">
-                <button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#acc2-3">
-                  Berdasarkan Persen
-                </button>
-              </h2>
-              <div id="acc2-3" class="accordion-collapse collapse p-2" data-bs-parent="#accordion2">
+          </div>
+          <div class="collapse" id="collapseProd3" data-bs-parent="#produksiCollapseWrapper">
+            <div class="bg-dark text-light rounded">
                 <form action="">
                     <div class="input-group mt-1">
                         <div class="form-floating">
@@ -894,15 +898,10 @@
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>  
                 </form>
-              </div>
             </div>
-            <div class="accordion-item">
-              <h2 class="accordion-header">
-                <button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#acc2-4">
-                  Penebak Populasi
-                </button>
-              </h2>
-              <div id="acc2-4" class="accordion-collapse collapse p-2" data-bs-parent="#accordion2">
+          </div>
+          <div class="collapse" id="collapseProd4" data-bs-parent="#produksiCollapseWrapper">
+            <div class="bg-dark text-light rounded">
                 <form action="">
                     <div class="input-group mt-1">
                         <div class="form-floating">
@@ -939,13 +938,15 @@
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>  
                 </form>
-              </div>
             </div>
           </div>
+        </div>
       </div>
+    </div>
 
-      <!-- Collapse 3 -->
-    <div class="collapse" id="collapse3" data-bs-parent="#wrapperCollapse">
+    <!-- 🟥 Collapse Selisih -->
+    <div class="collapse" id="collapseSelisih" data-bs-parent="#mainCollapseWrapper">
+      <div class="bg-dark text-light rounded">
         <form action="">
             <div class="input-group">
                 <div class="form-floating">
@@ -983,113 +984,165 @@
             </div>
         </form>
       </div>
-
-
     </div>
 
-
     <br>
-  <div class="col text-center">
-            &copy;
-            Dibuat oleh Rocky Pratama
-        </div>
-  <button id="tooltipBtn" class="btn btn-danger float-btn" data-bs-toggle="modal" data-bs-target="#modalHiCe" data-bs-toggle="tooltip" data-bs-placement="left" title="Hitung Cepat">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-lightning-charge-fill" viewBox="0 0 16 16">
-                <path d="M11.251.068a.5.5 0 0 1 .227.58L9.677 6.5H13a.5.5 0 0 1 .364.843l-8 8.5a.5.5 0 0 1-.842-.49L6.323 9.5H3a.5.5 0 0 1-.364-.843l8-8.5a.5.5 0 0 1 .615-.09z"/>
-            </svg>
-        </button>
-  
+    <div class="col text-center">
+        Kalkulator Peternak Ayam Petelur
+    </div>
+    <div class="col text-center">
+        &copy;
+        Dibuat oleh Rocky Pratama
+    </div>
+    <br>
+<button id="tooltipBtn" class="btn btn-danger float-btn" data-bs-toggle="modal" data-bs-target="#modalHiCe" data-bs-toggle="tooltip" data-bs-placement="left" title="Hitung Cepat">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-lightning-charge-fill" viewBox="0 0 16 16">
+            <path d="M11.251.068a.5.5 0 0 1 .227.58L9.677 6.5H13a.5.5 0 0 1 .364.843l-8 8.5a.5.5 0 0 1-.842-.49L6.323 9.5H3a.5.5 0 0 1-.364-.843l8-8.5a.5.5 0 0 1 .615-.09z"/>
+        </svg>
+    </button>
+
 <!-- Modal Hitung Cepat -->
-        <div class="modal fade" id="modalHiCe" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-body">
-                      <div class="row fs-5">
-                      <div class="col text-info">
-                        Hitung<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-lightning-charge-fill" viewBox="0 0 16 16">
-                                <path d="M11.251.068a.5.5 0 0 1 .227.58L9.677 6.5H13a.5.5 0 0 1 .364.843l-8 8.5a.5.5 0 0 1-.842-.49L6.323 9.5H3a.5.5 0 0 1-.364-.843l8-8.5a.5.5 0 0 1 .615-.09z"/>
-                            </svg>Cepat
-                      </div>
-                      <div class="col text-end">
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" tabindex="-1"></button>
-                      </div>
-                      </div>
-                        <form action="">
-                            <div class="input-group mt-1">
-                            <div class="form-floating">
-                                <input class="form-control text-white" autocomplete="off" inputmode="numeric" id="hicePop"
-                                oninput="hitungcepat(); formatInput(this);" placeholder="Setel" tabindex="5">
-                                <label for="hicePop">Populasi (Ekor)</label>
-                            </div>
-                            <div class="form-floating">
-                                <input class="form-control text-white" autocomplete="off" inputmode="numeric" id="hicePakan"
-                                oninput="hitungcepat(); formatInput(this);" placeholder="Setel" tabindex="7">
-                                <label for="hicePakan">Harga Pakan</label>
-                            </div>
-                        </div>
+    <div class="modal fade" id="modalHiCe" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                  <div class="row fs-5">
+                  <div class="col text-info">
+                    Hitung<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-lightning-charge-fill" viewBox="0 0 16 16">
+                            <path d="M11.251.068a.5.5 0 0 1 .227.58L9.677 6.5H13a.5.5 0 0 1 .364.843l-8 8.5a.5.5 0 0 1-.842-.49L6.323 9.5H3a.5.5 0 0 1-.364-.843l8-8.5a.5.5 0 0 1 .615-.09z"/>
+                        </svg>Cepat
+                  </div>
+                  <div class="col text-end">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" tabindex="-1"></button>
+                  </div>
+                  </div>
+                    <form action="">
                         <div class="input-group mt-1">
-                            <div class="form-floating">
-                                <input class="form-control text-white" autocomplete="off" inputmode="numeric" id="hicePro"
-                                oninput="hitungcepat()" placeholder="Harga" tabindex="6">
-                                <label for="hicePro">Produksi (%)</label>
-                            </div>
-                            <div class="form-floating">
-                                <input class="form-control text-white" autocomplete="off" inputmode="numeric" id="hiceTelur"
-                                oninput="hitungcepat(); formatInput(this);" placeholder="Harga" tabindex="8">
-                                <label for="hiceTelur">Harga Telur</label>
-                            </div>
-                        </div>
-                        <div class="input-group mt-1">
-                            <div class="form-floating">
-                                <select class="form-select" aria-label="Default select example" id="feedIntake" onchange="hitungcepat()">
-                                <option value="100">100</option>
-                                <option value="105">105</option>
-                                <option value="110">110</option>
-                                <option value="115">115</option>
-                                <option value="120" selected>120</option>
-                                <option value="125">125</option>
-                                <option value="130">130</option>
-                            </select>
-                            <label for="feedIntake">Feed Intake (gr)</label>
+                        <div class="form-floating">
+                            <input class="form-control text-white" autocomplete="off" inputmode="numeric" id="hicePop"
+                            oninput="hitungcepat(); formatInput(this);" placeholder="Setel" tabindex="5">
+                            <label for="hicePop">Populasi (Ekor)</label>
                         </div>
                         <div class="form-floating">
-                            <select class="form-select" aria-label="Default select example" id="hiceHari" onchange="hitungcepat()">
-                                <option value="1" selected>1 Hari</option>
-                                <option value="2">2 Hari</option>
-                                <option value="3">3 Hari</option>
-                                <option value="4">4 Hari</option>
-                                <option value="5">5 Hari</option>
-                                <option value="6">6 Hari</option>
-                                <option value="7">7 Hari</option>
-                                <option value="30">1 Bulan</option>
-                                <option value="90">3 Bulan</option>
-                                <option value="180">6 Bulan</option>
-                                <option value="365">1 Tahun</option>
-                            </select>
-                                <label for="hiceHari">Berapa Lama?</label>
-                            </div>
+                            <input class="form-control text-white" autocomplete="off" inputmode="numeric" id="hicePakan"
+                            oninput="hitungcepat(); formatInput(this);" placeholder="Setel" tabindex="7">
+                            <label for="hicePakan">Harga Pakan</label>
                         </div>
-                        <div class="input-group">
-                            <div class="form-floating">
-                                <textarea class="form-control fs-5 mt-1 text-info" placeholder="" id="hiceHasil"
-                                style="height: 250px" disabled></textarea>
-                                <label for="hiceHasil" style="font-size: 14pt;" class="fw-bold">Hasil</label>
-                            </div>
+                    </div>
+                    <div class="input-group mt-1">
+                        <div class="form-floating">
+                            <input class="form-control text-white" autocomplete="off" inputmode="numeric" id="hicePro"
+                            oninput="hitungcepat()" placeholder="Harga" tabindex="6">
+                            <label for="hicePro">Produksi (%)</label>
                         </div>
-                        <div class="input-group mt-1">
-                            <div class="col text-center">
-                                <button type="reset" class="btn btn-danger" tabindex="-1">RESET</button>
-                            </div>
+                        <div class="form-floating">
+                            <input class="form-control text-white" autocomplete="off" inputmode="numeric" id="hiceTelur"
+                            oninput="hitungcepat(); formatInput(this);" placeholder="Harga" tabindex="8">
+                            <label for="hiceTelur">Harga Telur</label>
                         </div>
-                    </form>
-                </div>
+                    </div>
+                    <div class="input-group mt-1">
+                        <div class="form-floating">
+                            <select class="form-select" aria-label="Default select example" id="feedIntake" onchange="hitungcepat()">
+                            <option value="100">100</option>
+                            <option value="105">105</option>
+                            <option value="110">110</option>
+                            <option value="115">115</option>
+                            <option value="120" selected>120</option>
+                            <option value="125">125</option>
+                            <option value="130">130</option>
+                        </select>
+                        <label for="feedIntake">Feed Intake (gr)</label>
+                    </div>
+                    <div class="form-floating">
+                        <select class="form-select" aria-label="Default select example" id="hiceHari" onchange="hitungcepat()">
+                            <option value="1" selected>1 Hari</option>
+                            <option value="2">2 Hari</option>
+                            <option value="3">3 Hari</option>
+                            <option value="4">4 Hari</option>
+                            <option value="5">5 Hari</option>
+                            <option value="6">6 Hari</option>
+                            <option value="7">7 Hari</option>
+                            <option value="30">1 Bulan</option>
+                            <option value="90">3 Bulan</option>
+                            <option value="180">6 Bulan</option>
+                            <option value="365">1 Tahun</option>
+                        </select>
+                            <label for="hiceHari">Berapa Lama?</label>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <div class="form-floating">
+                            <textarea class="form-control fs-5 mt-1 text-info" placeholder="" id="hiceHasil"
+                            style="height: 250px" disabled></textarea>
+                            <label for="hiceHasil" style="font-size: 14pt;" class="fw-bold">Hasil</label>
+                        </div>
+                    </div>
+                    <div class="input-group mt-1">
+                        <div class="col text-center">
+                            <button type="reset" class="btn btn-danger" tabindex="-1">RESET</button>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
+</div>
 
+  </div>
 
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- ✅ Script: Checkbox gaya radio -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      // Untuk semua grup tombol dengan data-btn-group
+      document.querySelectorAll('[data-btn-group]').forEach(group => {
+        const checkboxes = group.querySelectorAll('input[type="checkbox"].btn-check');
+  
+        checkboxes.forEach(chk => {
+          const targetId = chk.getAttribute('data-bs-target');
+          const collapse = document.querySelector(targetId);
+  
+          if (!collapse) return;
+  
+          // Saat tombol diubah
+          chk.addEventListener('change', function () {
+            if (this.checked) {
+              // Matikan semua checkbox lain
+              checkboxes.forEach(c => {
+                if (c !== this) {
+                  c.checked = false;
+                  const otherTarget = c.getAttribute('data-bs-target');
+                  const otherCollapse = document.querySelector(otherTarget);
+                  if (otherCollapse && otherCollapse.classList.contains('show')) {
+                    bootstrap.Collapse.getOrCreateInstance(otherCollapse).hide();
+                  }
+                }
+              });
+              // Buka collapse terkait
+              bootstrap.Collapse.getOrCreateInstance(collapse).show();
+            } else {
+              // Jika dicentang lalu di-uncheck → tutup collapse
+              bootstrap.Collapse.getOrCreateInstance(collapse).hide();
+            }
+          });
+  
+          // Saat collapse dibuka secara manual (misalnya pakai JS)
+          collapse.addEventListener('shown.bs.collapse', function () {
+            chk.checked = true;
+            checkboxes.forEach(c => {
+              if (c !== chk) c.checked = false;
+            });
+          });
+  
+          // Saat collapse ditutup secara manual
+          collapse.addEventListener('hidden.bs.collapse', function () {
+            chk.checked = false;
+          });
+        });
+      });
+    });
+  </script>
+  
 </body>
-
 </html>
