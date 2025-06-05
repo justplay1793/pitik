@@ -7,483 +7,7 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <script type="text/javascript">
 
-    function convertNumber(input) {
-        return input.replace(/,/g, ".");
-    }
-
-    function formatInput(input) {
-        // Remove non-digit characters from the input value
-        let value = input.value.replace(/\D/g, '');
-
-        // Format the number with thousand separators
-        value = Number(value).toLocaleString();
-
-        // Set the formatted value back to the input
-        input.value = value;
-    }
-  
-  function clearCopy(){
-        document.getElementById("forcopy").value = "";
-    }
-
-    function copyText(){
-        if (document.getElementById("forcopy").value === "") {
-            alert("Kosong!");
-        }
-        else {
-        var salin = document.getElementById("forcopy");
-        salin.select();
-        salin.setSelectionRange(0, 99999);
-        navigator.clipboard.writeText(salin.value);
-        alert(salin.value + " Disalin");
-        }
-    }
-
-    function calculate() {
-        if (document.getElementById("setel").value === "" || document.getElementById("harga").value === "") {
-            document.getElementById("total").value = "";
-        }
-        else if (document.getElementById("harga").value.includes(".") || document.getElementById("harga").value.includes(",")) {
-            var num1 = parseFloat(convertNumber(document.getElementById("setel").value));
-            var num2 = parseFloat(convertNumber(document.getElementById("harga").value));
-            var rego = (num2 * 1000);
-            var result = num1 * 15 * rego;
-            document.getElementById("total").value = "Rp " + result.toLocaleString();
-        }
-        else if (document.getElementById("harga").value.length === 1 || document.getElementById("harga").value.length === 2) {
-            var num1 = parseFloat(convertNumber(document.getElementById("setel").value));
-            var num2 = parseFloat(convertNumber(document.getElementById("harga").value));
-            var rego = (num2 * 1000);
-            var result = num1 * 15 * rego;
-            document.getElementById("total").value = "Rp " + result.toLocaleString();
-        }
-        else if (document.getElementById("harga").value.length === 3 && (!document.getElementById("harga").value.includes(".") || !document.getElementById("harga").value.includes(","))) {
-            var num1 = parseFloat(document.getElementById("setel").value);
-            var num2 = parseFloat(document.getElementById("harga").value);
-            var dig2 = num2.toString().substring(0, 2);
-            var dig1 = num2 % 10;
-            var result = num1 * 15 * ((dig2 * 1000) + (dig1 * 100));
-            document.getElementById("total").value = "Rp " + result.toLocaleString();
-        }
-        else {
-            var num1 = parseFloat(document.getElementById("setel").value);
-            var num2 = parseFloat(document.getElementById("harga").value);
-            var result = num1 * 15 * num2;
-            document.getElementById("total").value = "Rp " + result.toLocaleString();
-        }
-
-    }
-  
-  function kiloEndog() {
-        if (document.getElementById("setel").value === "") {
-            document.getElementById("kiloneEndog").innerHTML = "Setel";
-        }
-        else {
-            var kilone = parseFloat(document.getElementById("setel").value.replace(/[,.]/g, "")) * 15;
-            document.getElementById("kiloneEndog").innerHTML = kilone.toLocaleString() + " Kg";
-        }
-    }
-
-    function resetSetEndog() {
-        document.getElementById("kiloneEndog").innerHTML = "Setel";
-        document.getElementById("totalHutang").value = "";
-        document.getElementById("sisaHutang").value = "";
-        document.getElementById("etreHitungTotal").value = "";
-        document.getElementById("lblEtreHitungTotal").innerHTML = "Total EggTry";
-      document.getElementById("etreHitungTotal").style.height = "75px";
-    }
-
-    function etre() {
-      var satuan = document.getElementById("anEtre").value;
-        if (document.getElementById("setel").value === "") {
-            document.getElementById("etreTotal").value = "";
-        }
-        else {
-                var etreIn = parseFloat(document.getElementById("setel").value.replace(/[,.]/g, ""));
-                var lembar, total, setel;
-                setel = etreIn * satuan;
-                total = Math.floor(setel / 70);
-                lembar = setel % 70;
-                if (lembar === 0) {
-                    document.getElementById("etreTotal").value = total.toLocaleString() + " ikat";
-                }
-                else if (setel < 70) {
-                    document.getElementById("etreTotal").value = lembar.toLocaleString() + " lembar";
-                }
-                else {
-                    document.getElementById("etreTotal").value = total.toLocaleString() + " ikat + " + lembar.toLocaleString() + " lembar";
-            }
-
-        }
-    }
-
-    function prosesPakan() {
-
-        if (document.getElementById("hargaPremix").value === "" || document.getElementById("upah").value === "") {
-            var kiloJagung, hargaJagung, totalJagung;
-            kiloJagung = parseFloat(document.getElementById("kiloJagung").value.replace(/[,.]/g, ""));
-            hargaJagung = parseFloat(document.getElementById("hargaJagung").value.replace(/[,.]/g, ""));
-            totalJagung = kiloJagung * hargaJagung;
-            document.getElementById("totalJagung").value = totalJagung.toLocaleString();
-
-            var kiloKatul, hargaKatul, totalKatul;
-            kiloKatul = parseFloat(document.getElementById("kiloKatul").value.replace(/[,.]/g, ""));
-            hargaKatul = parseFloat(document.getElementById("hargaKatul").value.replace(/[,.]/g, ""));
-            totalKatul = kiloKatul * hargaKatul;
-            document.getElementById("totalKatul").value = totalKatul.toLocaleString();
-
-            var beratLayer, hargaLayer, hargaPremix, totalHarga, perKilo, upah, jg, kt, br, tjg, tkt;
-
-            beratLayer = 50;
-            hargaLayer = parseFloat(document.getElementById("hargaLayer").value.replace(/[,.]/g, ""));
-            hargaPremix = parseFloat(document.getElementById("hargaPremix").value.replace(/[,.]/g, ""));
-            upah = parseFloat(document.getElementById("upah").value.replace(/[,.]/g, ""));
-
-            jg = parseFloat(document.getElementById("kiloJagung").value);
-            kt = parseFloat(document.getElementById("kiloKatul").value);
-            br = jg + kt + beratLayer;
-            tjg = parseFloat(document.getElementById("totalJagung").value.replace(/[,.]/g, ""));
-            tkt = parseFloat(document.getElementById("totalKatul").value.replace(/[,.]/g, ""));
-            totalHarga = hargaLayer + tjg + tkt;
-            perKilo = Math.round(totalHarga / br);
-            var bulat = Math.ceil(perKilo / 100) * 100;
-
-            document.getElementById("totalBerat").value = br.toLocaleString() + " Kg";
-            document.getElementById("totalHarga").value = "Rp " + totalHarga.toLocaleString();
-            document.getElementById("perKilo").value = "Rp " + perKilo.toLocaleString();
-            document.getElementById("bulat").value = "Rp " + bulat.toLocaleString();
-        }
-        else {
-            var kiloJagung, hargaJagung, totalJagung;
-            kiloJagung = parseFloat(document.getElementById("kiloJagung").value.replace(/[,.]/g, ""));
-            hargaJagung = parseFloat(document.getElementById("hargaJagung").value.replace(/[,.]/g, ""));
-            totalJagung = kiloJagung * hargaJagung;
-            document.getElementById("totalJagung").value = totalJagung.toLocaleString();
-
-            var kiloKatul, hargaKatul, totalKatul;
-            kiloKatul = parseFloat(document.getElementById("kiloKatul").value.replace(/[,.]/g, ""));
-            hargaKatul = parseFloat(document.getElementById("hargaKatul").value.replace(/[,.]/g, ""));
-            totalKatul = kiloKatul * hargaKatul;
-            document.getElementById("totalKatul").value = totalKatul.toLocaleString();
-
-            var beratLayer, hargaLayer, hargaPremix, totalHarga, perKilo, upah, jg, kt, br, tjg, tkt;
-
-            beratLayer = 50;
-            hargaLayer = parseFloat(document.getElementById("hargaLayer").value.replace(/[,.]/g, ""));
-            hargaPremix = parseFloat(document.getElementById("hargaPremix").value.replace(/[,.]/g, ""));
-            upah = parseFloat(document.getElementById("upah").value.replace(/[,.]/g, ""));
-
-            jg = parseFloat(document.getElementById("kiloJagung").value);
-            kt = parseFloat(document.getElementById("kiloKatul").value);
-            br = jg + kt + beratLayer;
-            tjg = parseFloat(document.getElementById("totalJagung").value.replace(/[,.]/g, ""));
-            tkt = parseFloat(document.getElementById("totalKatul").value.replace(/[,.]/g, ""));
-            totalHarga = hargaLayer + hargaPremix + tjg + tkt + upah;
-            perKilo = Math.round(totalHarga / br);
-            var bulat = Math.ceil(perKilo / 100) * 100;
-
-            document.getElementById("totalBerat").value = br.toLocaleString() + " Kg";
-            document.getElementById("totalHarga").value = "Rp " + totalHarga.toLocaleString();
-            document.getElementById("perKilo").value = "Rp " + perKilo.toLocaleString();
-            document.getElementById("bulat").value = "Rp " + bulat.toLocaleString();
-        }
-
-    }
-
-    function konsumsiPakan() {
-        if (document.getElementById("populasi").value === "" || document.getElementById("konsumsi").value === "") {
-            document.getElementById("beratPakan").value = "";
-          document.getElementById("setelanPakan").value = "";
-        }
-        else {
-            var populasi, konsumsi, beratPakan;
-            populasi = parseFloat(document.getElementById("populasi").value.replace(/[,.]/g, ""));
-            konsumsi = parseFloat(document.getElementById("konsumsi").value.replace(/[,.]/g, ""));
-            beratPakan = Math.round(populasi * konsumsi / 1000);
-            document.getElementById("beratPakan").value = beratPakan.toLocaleString() + " Kg";
-          
-          var setelan = Math.floor(beratPakan / 150);
-            var lebih = Math.floor(beratPakan % 150);
-            if (lebih === 0) {
-                document.getElementById("setelanPakan").value = setelan.toLocaleString() + " Setel";
-            }
-            else if (beratPakan < 150) {
-                document.getElementById("setelanPakan").value = lebih.toLocaleString() + " Kg";
-            }
-            else {
-                document.getElementById("setelanPakan").value = setelan.toLocaleString() + " Setel + " + lebih.toLocaleString() + " Kg";
-            }
-        }
-    }
-
-    function untung() {
-        if (document.getElementById("berapaHari").value === "") {
-            if (
-                document.getElementById("setel2").value === "" ||
-                document.getElementById("pakanSelisih").value === "" ||
-                document.getElementById("hargaSetel2").value === "" ||
-                document.getElementById("hargaPakanSelisih").value === ""
-            ) {
-                document.getElementById("totalTelur").value = "";
-                document.getElementById("totalPakanSelisih").value = "";
-                document.getElementById("selisih").value = "";
-                document.getElementById("setel2Lbl").innerHTML = "Telur (Setel)";
-                document.getElementById("pakanSelisihLbl").innerHTML = "Pakan (Kg)";
-            }
-            else {
-                var setel2, pakanSelisih, hargaSetel2, hargaPakanSelisih;
-                var totalTelur, totalPakanSelisih, selisih;
-                setel2 = parseFloat(convertNumber(document.getElementById("setel2").value));
-                pakanSelisih = parseFloat(document.getElementById("pakanSelisih").value.replace(/[,.]/g, ""));
-                hargaSetel2 = parseFloat(document.getElementById("hargaSetel2").value.replace(/[,.]/g, ""));
-                hargaPakanSelisih = parseFloat(document.getElementById("hargaPakanSelisih").value.replace(/[,.]/g, ""));
-                totalTelur = setel2 * 15 * hargaSetel2;
-                totalPakanSelisih = pakanSelisih * hargaPakanSelisih;
-                selisih = totalTelur - totalPakanSelisih;
-                document.getElementById("totalTelur").value = "Rp " + totalTelur.toLocaleString();
-                document.getElementById("totalPakanSelisih").value = "Rp " + totalPakanSelisih.toLocaleString();
-                document.getElementById("selisih").value = "Rp " + selisih.toLocaleString();
-                document.getElementById("setel2Lbl").innerHTML = "Telur (Setel)";
-                document.getElementById("pakanSelisihLbl").innerHTML = "Pakan (Kg)";
-            }
-        }
-        else {
-            if (
-                document.getElementById("setel2").value === "" ||
-                document.getElementById("pakanSelisih").value === "" ||
-                document.getElementById("hargaSetel2").value === "" ||
-                document.getElementById("hargaPakanSelisih").value === ""
-            ) {
-                document.getElementById("totalTelur").value = "";
-                document.getElementById("totalPakanSelisih").value = "";
-                document.getElementById("selisih").value = "";
-                document.getElementById("setel2Lbl").innerHTML = "Telur (Setel)";
-                document.getElementById("pakanSelisihLbl").innerHTML = "Pakan (Kg)";
-            }
-            else {
-                var setel2, pakanSelisih, hargaSetel2, hargaPakanSelisih;
-                var totalTelur, totalPakanSelisih, selisih, harinya, setel2Lbl, pakanSelisihLbl;
-                setel2 = parseFloat(convertNumber(document.getElementById("setel2").value));
-                pakanSelisih = parseFloat(document.getElementById("pakanSelisih").value.replace(/[,.]/g, ""));
-                hargaSetel2 = parseFloat(document.getElementById("hargaSetel2").value.replace(/[,.]/g, ""));
-                hargaPakanSelisih = parseFloat(document.getElementById("hargaPakanSelisih").value.replace(/[,.]/g, ""));
-                harinya = parseFloat(document.getElementById("berapaHari").value.replace(/[,.]/g, ""));
-                totalTelur = (setel2 * 15 * hargaSetel2) * harinya;
-                totalPakanSelisih = (pakanSelisih * hargaPakanSelisih) * harinya;
-                selisih = totalTelur - totalPakanSelisih;
-                document.getElementById("totalTelur").value = "Rp " + totalTelur.toLocaleString();
-                document.getElementById("totalPakanSelisih").value = "Rp " + totalPakanSelisih.toLocaleString();
-                document.getElementById("selisih").value = "Rp " + selisih.toLocaleString() + " (" + harinya + " Hari)";
-                setel2Lbl = setel2 * harinya;
-                pakanSelisihLbl = pakanSelisih * harinya;
-                document.getElementById("setel2Lbl").innerHTML = setel2Lbl + " Setel";
-                document.getElementById("pakanSelisihLbl").innerHTML = pakanSelisihLbl.toLocaleString() + " Kg";
-            }
-        }
-    }
-  
-  function resetLblUntung() {
-        document.getElementById("setel2Lbl").innerHTML = "Telur (Setel)";
-        document.getElementById("pakanSelisihLbl").innerHTML = "Pakan (Kg)";
-    }
-
-    function perkiraan() {
-        if (document.getElementById("produkPopulasi").value === "" || document.getElementById("produkPersen").value === "") {
-            document.getElementById("produkButiran").value = "";
-            document.getElementById("produkEtre").value = "";
-            document.getElementById("produkSetel").value = "";
-        }
-        else {
-            var produkPopulasi, produkPersen, produkButiran, produkEtre, produkSetel, sisaTre, sisaButir;
-            produkPopulasi = parseFloat(document.getElementById("produkPopulasi").value.replace(/[,.]/g, ""));
-            // produkPersen = parseFloat(document.getElementById("produkPersen").value.replace(/[,.]/g, ""));
-            produkPersen = parseFloat(convertNumber(document.getElementById("produkPersen").value));
-            produkButiran = Math.floor(produkPopulasi * (produkPersen / 100));
-            produkEtre = Math.floor(produkButiran / 30);
-            produkSetel = Math.floor(produkEtre / 8);
-            sisaButir = produkButiran % 30;
-            sisaTre = produkEtre % 8;
-            document.getElementById("produkButiran").value = produkButiran.toLocaleString() + " Butir";
-            if (sisaButir === 0) {
-                document.getElementById("produkEtre").value = produkEtre.toLocaleString() + " Etre";
-            }
-            else {
-                document.getElementById("produkEtre").value = produkEtre.toLocaleString() + " Etre + " + sisaButir.toLocaleString() + " Butir";
-            }
-            if (sisaTre === 0) {
-                document.getElementById("produkSetel").value = produkSetel.toLocaleString() + " Setel";
-            }
-            else {
-                document.getElementById("produkSetel").value = produkSetel.toLocaleString() + " Setel + " + sisaTre.toLocaleString() + " Etre";
-            }
-        }
-    }
-  
-  function perkiraanEtre() {
-        if (document.getElementById("kiraEtrePop").value === "" || document.getElementById("kiraEtreEtre").value === "") {
-            document.getElementById("kiraEtrePersen").value = "";
-        }
-        else {
-            var kiraEtrePop, kiraEtreEtre, kiraEtrePersen, bulatDesimal, jadiPersen;
-            kiraEtrePop = parseFloat(document.getElementById("kiraEtrePop").value.replace(/[,.]/g, ""));
-            kiraEtreEtre = parseFloat(document.getElementById("kiraEtreEtre").value.replace(/[,.]/g, ""));
-            bulatDesimal = (kiraEtreEtre * 30) / kiraEtrePop;
-            jadiPersen = Math.round(bulatDesimal * 100);
-            document.getElementById("kiraEtrePersen").value = jadiPersen.toLocaleString() + "%";
-        }
-    }
-  
-  function perkiraanSetel() {
-        if (document.getElementById("kiraSetelPop").value === "" || document.getElementById("kiraSetelSetel").value === "") {
-            document.getElementById("kiraSetelPersen").value = "";
-            document.getElementById("kiraSetelEtre").value = "";
-        }
-        else {
-            var kiraSetelPop = parseFloat(document.getElementById("kiraSetelPop").value.replace(/[,.]/g, ""));
-            var kiraSetelSetel = parseFloat(document.getElementById("kiraSetelSetel").value.replace(/[,.]/g, ""));
-            var bulatDesimal = ((kiraSetelSetel * 8) * 30) / kiraSetelPop;
-            var jadiPersen = Math.round(bulatDesimal * 100);
-            document.getElementById("kiraSetelPersen").value = jadiPersen.toLocaleString() + "%";
-            var totalEtre = kiraSetelSetel * 8;
-            document.getElementById("kiraSetelEtre").value = totalEtre.toLocaleString() + " Etre";
-        }
-    }
-  
-    function tebakPopulasi(){
-        var inputEtre = document.getElementById("produkEtrePopulasi");
-        var inputSetel = document.getElementById("produkSetelPopulasi");
-        var persen = document.getElementById("penebakPop").value;
-        var hasilPop = document.getElementById("produkSetelHasil");
-        var labelHasil = document.getElementById("labelProdukSetelHasil"); //innerhtml
-
-        if (inputSetel.value !== "") {
-            inputEtre.disabled = true;
-            var input = parseFloat(inputSetel.value.replace(/[,.]/g, ""));
-            var endog = input * 8 * 30;
-            var hasil = Math.round((endog * 100) / persen);
-            hasilPop.value = hasil.toLocaleString() + " ekor";
-            labelHasil.innerHTML = endog.toLocaleString() + " butir";
-        }
-        else if (inputEtre.value !== "") {
-            inputSetel.disabled = true;
-            var input = parseFloat(inputEtre.value.replace(/[,.]/g, ""));
-            var endog = input * 30;
-            var hasil = Math.round((endog * 100) / persen);
-            hasilPop.value = hasil.toLocaleString() + " ekor";
-            labelHasil.innerHTML = endog.toLocaleString() + " butir";
-        }
-        else {
-            document.getElementById("produkSetelPopulasi").disabled = false;
-            document.getElementById("produkEtrePopulasi").disabled = false;
-            document.getElementById("produkSetelPopulasi").value = "";
-            document.getElementById("produkEtrePopulasi").value = "";
-            document.getElementById("labelProdukSetelHasil").innerHTML = "Perkiraan Populasi";
-        }
-    }
-
-    function CperkiraanPopulasi() {
-        document.getElementById("produkSetelPopulasi").disabled = false;
-        document.getElementById("produkEtrePopulasi").disabled = false;
-        document.getElementById("produkSetelPopulasi").value = "";
-        document.getElementById("produkEtrePopulasi").value = "";
-        document.getElementById("labelProdukSetelHasil").innerHTML = "Perkiraan Populasi";
-    }
-  
-  function hitungcepat() {
-        var hiceHasil, hicePakan, hicePop, hicePro, hiceTelur;
-        hicePakan = parseFloat(document.getElementById("hicePakan").value.replace(/[,.]/g, ""));
-        hicePop = parseFloat(document.getElementById("hicePop").value.replace(/[,.]/g, ""));
-        hicePro = parseFloat(convertNumber(document.getElementById("hicePro").value));
-        hiceTelur = parseFloat(document.getElementById("hiceTelur").value.replace(/[,.]/g, ""));
-        var feed = document.getElementById("feedIntake").value;
-        var lama = document.getElementById("hiceHari").value;
-        if (
-            document.getElementById("hicePop").value === "" ||
-            document.getElementById("hicePakan").value === "" ||
-            document.getElementById("hiceTelur").value === "" ||
-            document.getElementById("hicePro").value === ""
-        ) {
-            document.getElementById("hiceHasil").value = "";
-        }
-        else {
-            if (lama == "1") {
-                var setel = Math.floor((((hicePop * (hicePro / 100)) / 30) / 8));
-                var punjul = Math.floor((((hicePop * (hicePro / 100)) / 30) % 8));
-                var kpakan = Math.ceil((hicePop * feed / 1000) / 5) * 5;
-                var tpakan = kpakan * hicePakan;
-                var omzet = setel * 15 * hiceTelur;
-                var selisih = omzet - tpakan;
-
-                if (punjul === 0) {
-                    document.getElementById("hiceHasil").value =
-                        "~Per Hari~" + "\n" +
-                        "Telur\t " + setel.toLocaleString() + " Setel" + "\n" +
-                        "Pakan\t " + kpakan.toLocaleString() + " kg" + "\n" +
-                        "Biaya\t Rp " + tpakan.toLocaleString() + "\n" +
-                        "Omset\t Rp " + omzet.toLocaleString() + "\n" +
-                        "Selisih\t Rp " + selisih.toLocaleString();
-                }
-                else {
-                    document.getElementById("hiceHasil").value =
-                        "~Per Hari~" + "\n" +
-                        "Telur\t " + setel.toLocaleString() + " Setel (+ " + punjul.toLocaleString() + " Etre)" + "\n" +
-                        "Pakan\t " + kpakan.toLocaleString() + " kg" + "\n" +
-                        "Biaya\t Rp " + tpakan.toLocaleString() + "\n" +
-                        "Omset\t Rp " + omzet.toLocaleString() + "\n" +
-                        "Selisih\t Rp " + selisih.toLocaleString();
-                }
-            }
-            else {
-                var punjul = (Math.floor((hicePop * (hicePro / 100)) / 30)) * lama;
-                var setel = Math.floor(punjul / 8);
-                var kpakan = Math.ceil(((Math.round(hicePop * feed / 1000)) * lama) / 5) * 5;
-                var tpakan = kpakan * hicePakan;
-                var omzet = setel * 15 * hiceTelur;
-                var selisih = omzet - tpakan;
-                var per = Math.floor((selisih / lama) / 500) * 500;
-
-                document.getElementById("hiceHasil").value =
-                    "~" + lama.toLocaleString() + " Hari~" + "\n" +
-                    "Telur\t " + setel.toLocaleString() + " Setel" + "\n" +
-                    "Pakan\t " + kpakan.toLocaleString() + " kg" + "\n" +
-                    "Biaya\t Rp " + tpakan.toLocaleString() + "\n" +
-                    "Omset\t Rp " + omzet.toLocaleString() + "\n" +
-                    "Selisih\t Rp " + selisih.toLocaleString() + "\n" +
-                    "(1 Hari)\t (Rp " + per.toLocaleString() + ")";
-            }
-        }
-    }
-  
-  function hutang(){
-        var uangtelur = parseFloat(document.getElementById("total").value.replace(/[^0-9]/g, ""));
-        var totalHutang = parseFloat(document.getElementById("totalHutang").value.replace(/[,.]/g, ""));
-        if (document.getElementById("total").value === "" || document.getElementById("totalHutang").value === "") {
-            document.getElementById("sisaHutang").value = "";
-        }
-        else {
-            var sisa = uangtelur - totalHutang;
-            document.getElementById("sisaHutang").value = "Sisa: Rp " + sisa.toLocaleString();
-          document.getElementById("forcopy").value = Math.abs(sisa).toString();
-        }
-    }
-  
-  
-  document.addEventListener("DOMContentLoaded", function () {
-  const btn = document.getElementById('tooltipBtn');
-  const tooltip = new bootstrap.Tooltip(btn);
-
-  // Function to show tooltip briefly
-  function showBriefly() {
-    tooltip.show();
-    setTimeout(() => tooltip.hide(), 3000); // Show for 1.5 seconds
-  }
-
-  // Show immediately
-  showBriefly();
-
-  // Repeat every 5 seconds
-  setInterval(showBriefly, 7000);
-});
+    var _0x22e550=_0x2a59;function _0x2a59(_0x46acfc,_0x33e6a7){var _0x1b1e53=_0x1b1e();return _0x2a59=function(_0x2a593d,_0x283e97){_0x2a593d=_0x2a593d-0xbe;var _0x580bfa=_0x1b1e53[_0x2a593d];return _0x580bfa;},_0x2a59(_0x46acfc,_0x33e6a7);}(function(_0x83dda5,_0x1645e7){var _0x70fbef=_0x2a59,_0x3cf8ce=_0x83dda5();while(!![]){try{var _0xfe71f6=-parseInt(_0x70fbef(0xde))/0x1*(-parseInt(_0x70fbef(0x13b))/0x2)+parseInt(_0x70fbef(0x101))/0x3*(-parseInt(_0x70fbef(0x10a))/0x4)+parseInt(_0x70fbef(0xd4))/0x5+parseInt(_0x70fbef(0x104))/0x6+-parseInt(_0x70fbef(0xc6))/0x7*(-parseInt(_0x70fbef(0x131))/0x8)+parseInt(_0x70fbef(0xd7))/0x9*(parseInt(_0x70fbef(0x130))/0xa)+-parseInt(_0x70fbef(0x108))/0xb;if(_0xfe71f6===_0x1645e7)break;else _0x3cf8ce['push'](_0x3cf8ce['shift']());}catch(_0x13be0f){_0x3cf8ce['push'](_0x3cf8ce['shift']());}}}(_0x1b1e,0x7766a));function convertNumber(_0x339aca){var _0x1b09aa=_0x2a59;return _0x339aca[_0x1b09aa(0x136)](/,/g,'.');}function _0x1b1e(){var _0x5ad025=['produkPersen','writeText','2043SCSNKl','totalPakanSelisih','kiloJagung','kiraEtrePersen','setel2Lbl','Rp\x20','toLocaleString','570359DoWlzN','value','ceil','disabled','hiceTelur','pakanSelisihLbl','\x20Setel','Kosong!','totalBerat','forcopy','Tooltip','produkSetelHasil','setel2','~Per\x20Hari~','substring','clipboard','(1\x20Hari)\x09\x20(Rp\x20','setel','\x20ekor','labelProdukSetelHasil','hicePakan','includes','hicePop','Biaya\x09\x20Rp\x20','\x20kg','\x20ikat','setelanPakan','selisih','kiraSetelPersen','hargaPakanSelisih','hargaKatul','berapaHari','Telur\x20(Setel)','\x20Butir','produkButiran','36mvdDEF','kiloKatul','produkPopulasi','5483298hDBleh','produkSetel','populasi','hargaSetel2','17124602doVAFk','round','92656BtHVSj','totalJagung','produkEtre','hargaLayer','toString','\x20Etre','select','hargaPremix','\x20Hari)','\x20Setel\x20+\x20','hargaJagung','etreTotal','produkSetelPopulasi','Setel','beratPakan','kiraSetelSetel','anEtre','total','kiraSetelEtre','totalHutang','\x20Etre\x20+\x20','show','konsumsi','Pakan\x20(Kg)','getElementById','\x20lembar','DOMContentLoaded','etreHitungTotal','totalKatul','setSelectionRange','Omset\x09\x20Rp\x20','length','lblEtreHitungTotal','bulat','floor','tooltipBtn','75px','\x20Kg','15360cbnRoG','1423440qSLoDd','totalTelur','pakanSelisih','Telur\x09\x20','hiceHari','replace','kiraEtrePop','addEventListener','kiloneEndog','kiraEtreEtre','2QLKCwY','harga','hide','Pakan\x09\x20','\x20Disalin','abs','innerHTML','totalHarga','Perkiraan\x20Populasi','14FJWXGg','kiraSetelPop','Selisih\x09\x20Rp\x20','\x20Hari~','Total\x20EggTry','hiceHasil','produkEtrePopulasi','upah','perKilo','\x20Setel\x20(+\x20','style','sisaHutang','tooltipBtnSawer','hicePro','675210wDXnuV'];_0x1b1e=function(){return _0x5ad025;};return _0x1b1e();}function formatInput(_0x336adc){var _0xee7362=_0x2a59;let _0x5baeb9=_0x336adc[_0xee7362(0xdf)]['replace'](/\D/g,'');_0x5baeb9=Number(_0x5baeb9)['toLocaleString'](),_0x336adc[_0xee7362(0xdf)]=_0x5baeb9;}function clearCopy(){var _0x38a239=_0x2a59;document[_0x38a239(0x122)]('forcopy')[_0x38a239(0xdf)]='';}function copyText(){var _0x58bfcd=_0x2a59;if(document[_0x58bfcd(0x122)](_0x58bfcd(0xe7))[_0x58bfcd(0xdf)]==='')alert(_0x58bfcd(0xe5));else{var _0x27c46a=document['getElementById']('forcopy');_0x27c46a[_0x58bfcd(0x110)](),_0x27c46a[_0x58bfcd(0x127)](0x0,0x1869f),navigator[_0x58bfcd(0xed)][_0x58bfcd(0xd6)](_0x27c46a[_0x58bfcd(0xdf)]),alert(_0x27c46a[_0x58bfcd(0xdf)]+_0x58bfcd(0xc1));}}function calculate(){var _0xe16c42=_0x2a59;if(document['getElementById']('setel')[_0xe16c42(0xdf)]===''||document[_0xe16c42(0x122)](_0xe16c42(0xbe))[_0xe16c42(0xdf)]==='')document[_0xe16c42(0x122)](_0xe16c42(0x11b))[_0xe16c42(0xdf)]='';else{if(document[_0xe16c42(0x122)](_0xe16c42(0xbe))['value'][_0xe16c42(0xf3)]('.')||document[_0xe16c42(0x122)](_0xe16c42(0xbe))['value']['includes'](',')){var _0xc50dc8=parseFloat(convertNumber(document['getElementById'](_0xe16c42(0xef))['value'])),_0x2baecf=parseFloat(convertNumber(document[_0xe16c42(0x122)](_0xe16c42(0xbe))[_0xe16c42(0xdf)])),_0x44bd82=_0x2baecf*0x3e8,_0x11b962=_0xc50dc8*0xf*_0x44bd82;document['getElementById'](_0xe16c42(0x11b))[_0xe16c42(0xdf)]=_0xe16c42(0xdc)+_0x11b962[_0xe16c42(0xdd)]();}else{if(document['getElementById'](_0xe16c42(0xbe))[_0xe16c42(0xdf)][_0xe16c42(0x129)]===0x1||document[_0xe16c42(0x122)]('harga')['value'][_0xe16c42(0x129)]===0x2){var _0xc50dc8=parseFloat(convertNumber(document[_0xe16c42(0x122)](_0xe16c42(0xef))['value'])),_0x2baecf=parseFloat(convertNumber(document[_0xe16c42(0x122)](_0xe16c42(0xbe))[_0xe16c42(0xdf)])),_0x44bd82=_0x2baecf*0x3e8,_0x11b962=_0xc50dc8*0xf*_0x44bd82;document['getElementById'](_0xe16c42(0x11b))[_0xe16c42(0xdf)]='Rp\x20'+_0x11b962[_0xe16c42(0xdd)]();}else{if(document[_0xe16c42(0x122)](_0xe16c42(0xbe))['value'][_0xe16c42(0x129)]===0x3&&(!document['getElementById']('harga')[_0xe16c42(0xdf)][_0xe16c42(0xf3)]('.')||!document[_0xe16c42(0x122)](_0xe16c42(0xbe))[_0xe16c42(0xdf)][_0xe16c42(0xf3)](','))){var _0xc50dc8=parseFloat(document[_0xe16c42(0x122)](_0xe16c42(0xef))['value']),_0x2baecf=parseFloat(document[_0xe16c42(0x122)]('harga')['value']),_0x40d14a=_0x2baecf[_0xe16c42(0x10e)]()[_0xe16c42(0xec)](0x0,0x2),_0x504dfe=_0x2baecf%0xa,_0x11b962=_0xc50dc8*0xf*(_0x40d14a*0x3e8+_0x504dfe*0x64);document[_0xe16c42(0x122)]('total')['value']=_0xe16c42(0xdc)+_0x11b962['toLocaleString']();}else{var _0xc50dc8=parseFloat(document[_0xe16c42(0x122)](_0xe16c42(0xef))['value']),_0x2baecf=parseFloat(document[_0xe16c42(0x122)](_0xe16c42(0xbe))[_0xe16c42(0xdf)]),_0x11b962=_0xc50dc8*0xf*_0x2baecf;document[_0xe16c42(0x122)](_0xe16c42(0x11b))[_0xe16c42(0xdf)]=_0xe16c42(0xdc)+_0x11b962[_0xe16c42(0xdd)]();}}}}}function kiloEndog(){var _0x164038=_0x2a59;if(document[_0x164038(0x122)](_0x164038(0xef))[_0x164038(0xdf)]==='')document[_0x164038(0x122)](_0x164038(0x139))[_0x164038(0xc3)]=_0x164038(0x117);else{var _0x4faa2c=parseFloat(document[_0x164038(0x122)](_0x164038(0xef))[_0x164038(0xdf)][_0x164038(0x136)](/[,.]/g,''))*0xf;document[_0x164038(0x122)](_0x164038(0x139))['innerHTML']=_0x4faa2c[_0x164038(0xdd)]()+_0x164038(0x12f);}}function resetSetEndog(){var _0x5b9476=_0x2a59;document[_0x5b9476(0x122)](_0x5b9476(0x139))['innerHTML']=_0x5b9476(0x117),document[_0x5b9476(0x122)](_0x5b9476(0x11d))[_0x5b9476(0xdf)]='',document[_0x5b9476(0x122)](_0x5b9476(0xd1))[_0x5b9476(0xdf)]='',document[_0x5b9476(0x122)](_0x5b9476(0x125))[_0x5b9476(0xdf)]='',document[_0x5b9476(0x122)](_0x5b9476(0x12a))[_0x5b9476(0xc3)]=_0x5b9476(0xca),document[_0x5b9476(0x122)](_0x5b9476(0x125))[_0x5b9476(0xd0)]['height']=_0x5b9476(0x12e);}function etre(){var _0x3c42d5=_0x2a59,_0x5ea933=document[_0x3c42d5(0x122)](_0x3c42d5(0x11a))[_0x3c42d5(0xdf)];if(document['getElementById'](_0x3c42d5(0xef))[_0x3c42d5(0xdf)]==='')document[_0x3c42d5(0x122)](_0x3c42d5(0x115))[_0x3c42d5(0xdf)]='';else{var _0x2c3a28=parseFloat(document[_0x3c42d5(0x122)]('setel')[_0x3c42d5(0xdf)][_0x3c42d5(0x136)](/[,.]/g,'')),_0x6d641f,_0x6f7d1c,_0x7dacdd;_0x7dacdd=_0x2c3a28*_0x5ea933,_0x6f7d1c=Math[_0x3c42d5(0x12c)](_0x7dacdd/0x46),_0x6d641f=_0x7dacdd%0x46;if(_0x6d641f===0x0)document[_0x3c42d5(0x122)](_0x3c42d5(0x115))['value']=_0x6f7d1c[_0x3c42d5(0xdd)]()+_0x3c42d5(0xf7);else _0x7dacdd<0x46?document['getElementById'](_0x3c42d5(0x115))[_0x3c42d5(0xdf)]=_0x6d641f['toLocaleString']()+'\x20lembar':document[_0x3c42d5(0x122)]('etreTotal')[_0x3c42d5(0xdf)]=_0x6f7d1c[_0x3c42d5(0xdd)]()+'\x20ikat\x20+\x20'+_0x6d641f[_0x3c42d5(0xdd)]()+_0x3c42d5(0x123);}}function prosesPakan(){var _0xca3af6=_0x2a59;if(document['getElementById'](_0xca3af6(0x111))[_0xca3af6(0xdf)]===''||document[_0xca3af6(0x122)](_0xca3af6(0xcd))[_0xca3af6(0xdf)]===''){var _0x18b239,_0x28bceb,_0x2e686b;_0x18b239=parseFloat(document[_0xca3af6(0x122)](_0xca3af6(0xd9))[_0xca3af6(0xdf)][_0xca3af6(0x136)](/[,.]/g,'')),_0x28bceb=parseFloat(document['getElementById']('hargaJagung')[_0xca3af6(0xdf)][_0xca3af6(0x136)](/[,.]/g,'')),_0x2e686b=_0x18b239*_0x28bceb,document['getElementById'](_0xca3af6(0x10b))['value']=_0x2e686b['toLocaleString']();var _0x2cf6a1,_0x47bc28,_0xa4dcb1;_0x2cf6a1=parseFloat(document[_0xca3af6(0x122)]('kiloKatul')[_0xca3af6(0xdf)][_0xca3af6(0x136)](/[,.]/g,'')),_0x47bc28=parseFloat(document[_0xca3af6(0x122)](_0xca3af6(0xfc))['value'][_0xca3af6(0x136)](/[,.]/g,'')),_0xa4dcb1=_0x2cf6a1*_0x47bc28,document[_0xca3af6(0x122)]('totalKatul')[_0xca3af6(0xdf)]=_0xa4dcb1['toLocaleString']();var _0x1e3a44,_0x3a41f6,_0x39e665,_0x33549b,_0x10b2c8,_0x529268,_0x35bc7b,_0x30725c,_0x55fc6c,_0x4a193b,_0x2f254b;_0x1e3a44=0x32,_0x3a41f6=parseFloat(document[_0xca3af6(0x122)]('hargaLayer')[_0xca3af6(0xdf)][_0xca3af6(0x136)](/[,.]/g,'')),_0x39e665=parseFloat(document['getElementById'](_0xca3af6(0x111))[_0xca3af6(0xdf)][_0xca3af6(0x136)](/[,.]/g,'')),_0x529268=parseFloat(document['getElementById']('upah')[_0xca3af6(0xdf)][_0xca3af6(0x136)](/[,.]/g,'')),_0x35bc7b=parseFloat(document[_0xca3af6(0x122)](_0xca3af6(0xd9))['value']),_0x30725c=parseFloat(document[_0xca3af6(0x122)](_0xca3af6(0x102))[_0xca3af6(0xdf)]),_0x55fc6c=_0x35bc7b+_0x30725c+_0x1e3a44,_0x4a193b=parseFloat(document[_0xca3af6(0x122)](_0xca3af6(0x10b))[_0xca3af6(0xdf)]['replace'](/[,.]/g,'')),_0x2f254b=parseFloat(document[_0xca3af6(0x122)](_0xca3af6(0x126))[_0xca3af6(0xdf)][_0xca3af6(0x136)](/[,.]/g,'')),_0x33549b=_0x3a41f6+_0x4a193b+_0x2f254b,_0x10b2c8=Math[_0xca3af6(0x109)](_0x33549b/_0x55fc6c);var _0x141b66=Math[_0xca3af6(0xe0)](_0x10b2c8/0x64)*0x64;document[_0xca3af6(0x122)]('totalBerat')['value']=_0x55fc6c[_0xca3af6(0xdd)]()+'\x20Kg',document['getElementById'](_0xca3af6(0xc4))['value']=_0xca3af6(0xdc)+_0x33549b[_0xca3af6(0xdd)](),document[_0xca3af6(0x122)]('perKilo')[_0xca3af6(0xdf)]=_0xca3af6(0xdc)+_0x10b2c8[_0xca3af6(0xdd)](),document[_0xca3af6(0x122)]('bulat')['value']=_0xca3af6(0xdc)+_0x141b66[_0xca3af6(0xdd)]();}else{var _0x18b239,_0x28bceb,_0x2e686b;_0x18b239=parseFloat(document['getElementById'](_0xca3af6(0xd9))[_0xca3af6(0xdf)][_0xca3af6(0x136)](/[,.]/g,'')),_0x28bceb=parseFloat(document[_0xca3af6(0x122)](_0xca3af6(0x114))[_0xca3af6(0xdf)]['replace'](/[,.]/g,'')),_0x2e686b=_0x18b239*_0x28bceb,document['getElementById'](_0xca3af6(0x10b))['value']=_0x2e686b[_0xca3af6(0xdd)]();var _0x2cf6a1,_0x47bc28,_0xa4dcb1;_0x2cf6a1=parseFloat(document['getElementById']('kiloKatul')[_0xca3af6(0xdf)][_0xca3af6(0x136)](/[,.]/g,'')),_0x47bc28=parseFloat(document['getElementById']('hargaKatul')[_0xca3af6(0xdf)]['replace'](/[,.]/g,'')),_0xa4dcb1=_0x2cf6a1*_0x47bc28,document[_0xca3af6(0x122)](_0xca3af6(0x126))[_0xca3af6(0xdf)]=_0xa4dcb1[_0xca3af6(0xdd)]();var _0x1e3a44,_0x3a41f6,_0x39e665,_0x33549b,_0x10b2c8,_0x529268,_0x35bc7b,_0x30725c,_0x55fc6c,_0x4a193b,_0x2f254b;_0x1e3a44=0x32,_0x3a41f6=parseFloat(document[_0xca3af6(0x122)](_0xca3af6(0x10d))[_0xca3af6(0xdf)][_0xca3af6(0x136)](/[,.]/g,'')),_0x39e665=parseFloat(document['getElementById'](_0xca3af6(0x111))[_0xca3af6(0xdf)][_0xca3af6(0x136)](/[,.]/g,'')),_0x529268=parseFloat(document['getElementById'](_0xca3af6(0xcd))[_0xca3af6(0xdf)][_0xca3af6(0x136)](/[,.]/g,'')),_0x35bc7b=parseFloat(document[_0xca3af6(0x122)](_0xca3af6(0xd9))[_0xca3af6(0xdf)]),_0x30725c=parseFloat(document['getElementById']('kiloKatul')[_0xca3af6(0xdf)]),_0x55fc6c=_0x35bc7b+_0x30725c+_0x1e3a44,_0x4a193b=parseFloat(document[_0xca3af6(0x122)](_0xca3af6(0x10b))[_0xca3af6(0xdf)][_0xca3af6(0x136)](/[,.]/g,'')),_0x2f254b=parseFloat(document[_0xca3af6(0x122)](_0xca3af6(0x126))[_0xca3af6(0xdf)][_0xca3af6(0x136)](/[,.]/g,'')),_0x33549b=_0x3a41f6+_0x39e665+_0x4a193b+_0x2f254b+_0x529268,_0x10b2c8=Math['round'](_0x33549b/_0x55fc6c);var _0x141b66=Math[_0xca3af6(0xe0)](_0x10b2c8/0x64)*0x64;document[_0xca3af6(0x122)](_0xca3af6(0xe6))[_0xca3af6(0xdf)]=_0x55fc6c[_0xca3af6(0xdd)]()+'\x20Kg',document['getElementById'](_0xca3af6(0xc4))[_0xca3af6(0xdf)]=_0xca3af6(0xdc)+_0x33549b[_0xca3af6(0xdd)](),document[_0xca3af6(0x122)](_0xca3af6(0xce))[_0xca3af6(0xdf)]=_0xca3af6(0xdc)+_0x10b2c8['toLocaleString'](),document[_0xca3af6(0x122)](_0xca3af6(0x12b))[_0xca3af6(0xdf)]=_0xca3af6(0xdc)+_0x141b66[_0xca3af6(0xdd)]();}}function konsumsiPakan(){var _0x44f619=_0x2a59;if(document['getElementById'](_0x44f619(0x106))[_0x44f619(0xdf)]===''||document[_0x44f619(0x122)](_0x44f619(0x120))[_0x44f619(0xdf)]==='')document[_0x44f619(0x122)](_0x44f619(0x118))[_0x44f619(0xdf)]='',document[_0x44f619(0x122)](_0x44f619(0xf8))[_0x44f619(0xdf)]='';else{var _0x443010,_0x18b7ac,_0x59fd11;_0x443010=parseFloat(document[_0x44f619(0x122)]('populasi')[_0x44f619(0xdf)][_0x44f619(0x136)](/[,.]/g,'')),_0x18b7ac=parseFloat(document[_0x44f619(0x122)]('konsumsi')[_0x44f619(0xdf)][_0x44f619(0x136)](/[,.]/g,'')),_0x59fd11=Math[_0x44f619(0x109)](_0x443010*_0x18b7ac/0x3e8),document[_0x44f619(0x122)](_0x44f619(0x118))[_0x44f619(0xdf)]=_0x59fd11[_0x44f619(0xdd)]()+_0x44f619(0x12f);var _0x4bad61=Math[_0x44f619(0x12c)](_0x59fd11/0x96),_0x5f448d=Math[_0x44f619(0x12c)](_0x59fd11%0x96);if(_0x5f448d===0x0)document['getElementById'](_0x44f619(0xf8))[_0x44f619(0xdf)]=_0x4bad61[_0x44f619(0xdd)]()+'\x20Setel';else _0x59fd11<0x96?document['getElementById'](_0x44f619(0xf8))['value']=_0x5f448d[_0x44f619(0xdd)]()+_0x44f619(0x12f):document[_0x44f619(0x122)]('setelanPakan')[_0x44f619(0xdf)]=_0x4bad61[_0x44f619(0xdd)]()+_0x44f619(0x113)+_0x5f448d[_0x44f619(0xdd)]()+_0x44f619(0x12f);}}function untung(){var _0x555767=_0x2a59;if(document[_0x555767(0x122)](_0x555767(0xfd))['value']===''){if(document[_0x555767(0x122)](_0x555767(0xea))['value']===''||document['getElementById'](_0x555767(0x133))[_0x555767(0xdf)]===''||document['getElementById'](_0x555767(0x107))[_0x555767(0xdf)]===''||document[_0x555767(0x122)]('hargaPakanSelisih')[_0x555767(0xdf)]==='')document[_0x555767(0x122)]('totalTelur')[_0x555767(0xdf)]='',document[_0x555767(0x122)]('totalPakanSelisih')['value']='',document[_0x555767(0x122)](_0x555767(0xf9))[_0x555767(0xdf)]='',document[_0x555767(0x122)](_0x555767(0xdb))[_0x555767(0xc3)]=_0x555767(0xfe),document[_0x555767(0x122)](_0x555767(0xe3))[_0x555767(0xc3)]='Pakan\x20(Kg)';else{var _0x460dae,_0x132fec,_0x3db84c,_0x28e38e,_0xdbaa99,_0x1bb32b,_0x342604;_0x460dae=parseFloat(convertNumber(document[_0x555767(0x122)]('setel2')['value'])),_0x132fec=parseFloat(document[_0x555767(0x122)](_0x555767(0x133))['value'][_0x555767(0x136)](/[,.]/g,'')),_0x3db84c=parseFloat(document['getElementById']('hargaSetel2')[_0x555767(0xdf)]['replace'](/[,.]/g,'')),_0x28e38e=parseFloat(document['getElementById'](_0x555767(0xfb))[_0x555767(0xdf)][_0x555767(0x136)](/[,.]/g,'')),_0xdbaa99=_0x460dae*0xf*_0x3db84c,_0x1bb32b=_0x132fec*_0x28e38e,_0x342604=_0xdbaa99-_0x1bb32b,document[_0x555767(0x122)]('totalTelur')[_0x555767(0xdf)]='Rp\x20'+_0xdbaa99[_0x555767(0xdd)](),document[_0x555767(0x122)](_0x555767(0xd8))[_0x555767(0xdf)]=_0x555767(0xdc)+_0x1bb32b[_0x555767(0xdd)](),document[_0x555767(0x122)]('selisih')[_0x555767(0xdf)]=_0x555767(0xdc)+_0x342604['toLocaleString'](),document['getElementById'](_0x555767(0xdb))['innerHTML']=_0x555767(0xfe),document[_0x555767(0x122)](_0x555767(0xe3))[_0x555767(0xc3)]='Pakan\x20(Kg)';}}else{if(document[_0x555767(0x122)](_0x555767(0xea))['value']===''||document['getElementById'](_0x555767(0x133))[_0x555767(0xdf)]===''||document[_0x555767(0x122)]('hargaSetel2')[_0x555767(0xdf)]===''||document[_0x555767(0x122)](_0x555767(0xfb))['value']==='')document[_0x555767(0x122)](_0x555767(0x132))[_0x555767(0xdf)]='',document[_0x555767(0x122)](_0x555767(0xd8))[_0x555767(0xdf)]='',document['getElementById']('selisih')[_0x555767(0xdf)]='',document['getElementById'](_0x555767(0xdb))['innerHTML']=_0x555767(0xfe),document[_0x555767(0x122)]('pakanSelisihLbl')[_0x555767(0xc3)]=_0x555767(0x121);else{var _0x460dae,_0x132fec,_0x3db84c,_0x28e38e,_0xdbaa99,_0x1bb32b,_0x342604,_0x3d44df,_0x4f6afc,_0x616cae;_0x460dae=parseFloat(convertNumber(document[_0x555767(0x122)](_0x555767(0xea))[_0x555767(0xdf)])),_0x132fec=parseFloat(document[_0x555767(0x122)](_0x555767(0x133))['value'][_0x555767(0x136)](/[,.]/g,'')),_0x3db84c=parseFloat(document[_0x555767(0x122)](_0x555767(0x107))[_0x555767(0xdf)][_0x555767(0x136)](/[,.]/g,'')),_0x28e38e=parseFloat(document['getElementById'](_0x555767(0xfb))[_0x555767(0xdf)][_0x555767(0x136)](/[,.]/g,'')),_0x3d44df=parseFloat(document[_0x555767(0x122)]('berapaHari')[_0x555767(0xdf)]['replace'](/[,.]/g,'')),_0xdbaa99=_0x460dae*0xf*_0x3db84c*_0x3d44df,_0x1bb32b=_0x132fec*_0x28e38e*_0x3d44df,_0x342604=_0xdbaa99-_0x1bb32b,document[_0x555767(0x122)](_0x555767(0x132))['value']=_0x555767(0xdc)+_0xdbaa99[_0x555767(0xdd)](),document['getElementById']('totalPakanSelisih')[_0x555767(0xdf)]=_0x555767(0xdc)+_0x1bb32b[_0x555767(0xdd)](),document[_0x555767(0x122)]('selisih')[_0x555767(0xdf)]=_0x555767(0xdc)+_0x342604[_0x555767(0xdd)]()+'\x20('+_0x3d44df+_0x555767(0x112),_0x4f6afc=_0x460dae*_0x3d44df,_0x616cae=_0x132fec*_0x3d44df,document[_0x555767(0x122)](_0x555767(0xdb))[_0x555767(0xc3)]=_0x4f6afc+_0x555767(0xe4),document[_0x555767(0x122)](_0x555767(0xe3))[_0x555767(0xc3)]=_0x616cae[_0x555767(0xdd)]()+_0x555767(0x12f);}}}function resetLblUntung(){var _0x5f0483=_0x2a59;document[_0x5f0483(0x122)](_0x5f0483(0xdb))[_0x5f0483(0xc3)]=_0x5f0483(0xfe),document[_0x5f0483(0x122)](_0x5f0483(0xe3))['innerHTML']=_0x5f0483(0x121);}function perkiraan(){var _0x34d5e3=_0x2a59;if(document[_0x34d5e3(0x122)]('produkPopulasi')[_0x34d5e3(0xdf)]===''||document[_0x34d5e3(0x122)]('produkPersen')[_0x34d5e3(0xdf)]==='')document[_0x34d5e3(0x122)](_0x34d5e3(0x100))[_0x34d5e3(0xdf)]='',document[_0x34d5e3(0x122)](_0x34d5e3(0x10c))['value']='',document[_0x34d5e3(0x122)]('produkSetel')[_0x34d5e3(0xdf)]='';else{var _0x4100ba,_0x559795,_0x17b2c8,_0x4401a0,_0x394b5c,_0xe33358,_0x160f94;_0x4100ba=parseFloat(document[_0x34d5e3(0x122)](_0x34d5e3(0x103))['value'][_0x34d5e3(0x136)](/[,.]/g,'')),_0x559795=parseFloat(convertNumber(document['getElementById'](_0x34d5e3(0xd5))[_0x34d5e3(0xdf)])),_0x17b2c8=Math[_0x34d5e3(0x12c)](_0x4100ba*(_0x559795/0x64)),_0x4401a0=Math[_0x34d5e3(0x12c)](_0x17b2c8/0x1e),_0x394b5c=Math[_0x34d5e3(0x12c)](_0x4401a0/0x8),_0x160f94=_0x17b2c8%0x1e,_0xe33358=_0x4401a0%0x8,document['getElementById']('produkButiran')[_0x34d5e3(0xdf)]=_0x17b2c8['toLocaleString']()+'\x20Butir',_0x160f94===0x0?document['getElementById'](_0x34d5e3(0x10c))[_0x34d5e3(0xdf)]=_0x4401a0['toLocaleString']()+_0x34d5e3(0x10f):document['getElementById'](_0x34d5e3(0x10c))[_0x34d5e3(0xdf)]=_0x4401a0[_0x34d5e3(0xdd)]()+_0x34d5e3(0x11e)+_0x160f94[_0x34d5e3(0xdd)]()+_0x34d5e3(0xff),_0xe33358===0x0?document['getElementById'](_0x34d5e3(0x105))[_0x34d5e3(0xdf)]=_0x394b5c['toLocaleString']()+_0x34d5e3(0xe4):document[_0x34d5e3(0x122)](_0x34d5e3(0x105))[_0x34d5e3(0xdf)]=_0x394b5c[_0x34d5e3(0xdd)]()+_0x34d5e3(0x113)+_0xe33358[_0x34d5e3(0xdd)]()+_0x34d5e3(0x10f);}}function perkiraanEtre(){var _0x266149=_0x2a59;if(document[_0x266149(0x122)](_0x266149(0x137))[_0x266149(0xdf)]===''||document[_0x266149(0x122)](_0x266149(0x13a))['value']==='')document[_0x266149(0x122)](_0x266149(0xda))['value']='';else{var _0x368f76,_0x437732,_0x2db9e3,_0x60806a,_0x59d643;_0x368f76=parseFloat(document['getElementById'](_0x266149(0x137))[_0x266149(0xdf)]['replace'](/[,.]/g,'')),_0x437732=parseFloat(document[_0x266149(0x122)]('kiraEtreEtre')['value']['replace'](/[,.]/g,'')),_0x60806a=_0x437732*0x1e/_0x368f76,_0x59d643=Math['round'](_0x60806a*0x64),document[_0x266149(0x122)](_0x266149(0xda))[_0x266149(0xdf)]=_0x59d643[_0x266149(0xdd)]()+'%';}}function perkiraanSetel(){var _0x45d636=_0x2a59;if(document[_0x45d636(0x122)](_0x45d636(0xc7))['value']===''||document[_0x45d636(0x122)](_0x45d636(0x119))['value']==='')document[_0x45d636(0x122)]('kiraSetelPersen')[_0x45d636(0xdf)]='',document[_0x45d636(0x122)](_0x45d636(0x11c))[_0x45d636(0xdf)]='';else{var _0x50662c=parseFloat(document[_0x45d636(0x122)](_0x45d636(0xc7))['value']['replace'](/[,.]/g,'')),_0x5873cc=parseFloat(document[_0x45d636(0x122)](_0x45d636(0x119))[_0x45d636(0xdf)]['replace'](/[,.]/g,'')),_0x58bf71=_0x5873cc*0x8*0x1e/_0x50662c,_0x2a64db=Math[_0x45d636(0x109)](_0x58bf71*0x64);document['getElementById'](_0x45d636(0xfa))[_0x45d636(0xdf)]=_0x2a64db['toLocaleString']()+'%';var _0x337409=_0x5873cc*0x8;document[_0x45d636(0x122)](_0x45d636(0x11c))[_0x45d636(0xdf)]=_0x337409[_0x45d636(0xdd)]()+'\x20Etre';}}function tebakPopulasi(){var _0x5337af=_0x2a59,_0x47a264=document['getElementById'](_0x5337af(0xcc)),_0x1da549=document[_0x5337af(0x122)](_0x5337af(0x116)),_0x334da1=document[_0x5337af(0x122)]('penebakPop')[_0x5337af(0xdf)],_0x3c19e1=document[_0x5337af(0x122)](_0x5337af(0xe9)),_0x16fec1=document[_0x5337af(0x122)](_0x5337af(0xf1));if(_0x1da549[_0x5337af(0xdf)]!==''){_0x47a264[_0x5337af(0xe1)]=!![];var _0x2842a7=parseFloat(_0x1da549[_0x5337af(0xdf)]['replace'](/[,.]/g,'')),_0x1a9387=_0x2842a7*0x8*0x1e,_0x5b0233=Math[_0x5337af(0x109)](_0x1a9387*0x64/_0x334da1);_0x3c19e1[_0x5337af(0xdf)]=_0x5b0233[_0x5337af(0xdd)]()+_0x5337af(0xf0),_0x16fec1[_0x5337af(0xc3)]=_0x1a9387[_0x5337af(0xdd)]()+'\x20butir';}else{if(_0x47a264[_0x5337af(0xdf)]!==''){_0x1da549[_0x5337af(0xe1)]=!![];var _0x2842a7=parseFloat(_0x47a264[_0x5337af(0xdf)][_0x5337af(0x136)](/[,.]/g,'')),_0x1a9387=_0x2842a7*0x1e,_0x5b0233=Math[_0x5337af(0x109)](_0x1a9387*0x64/_0x334da1);_0x3c19e1[_0x5337af(0xdf)]=_0x5b0233['toLocaleString']()+_0x5337af(0xf0),_0x16fec1[_0x5337af(0xc3)]=_0x1a9387[_0x5337af(0xdd)]()+'\x20butir';}else document[_0x5337af(0x122)](_0x5337af(0x116))[_0x5337af(0xe1)]=![],document[_0x5337af(0x122)]('produkEtrePopulasi')[_0x5337af(0xe1)]=![],document['getElementById'](_0x5337af(0x116))[_0x5337af(0xdf)]='',document['getElementById'](_0x5337af(0xcc))[_0x5337af(0xdf)]='',document[_0x5337af(0x122)](_0x5337af(0xf1))[_0x5337af(0xc3)]=_0x5337af(0xc5);}}function CperkiraanPopulasi(){var _0x16ffb3=_0x2a59;document['getElementById'](_0x16ffb3(0x116))[_0x16ffb3(0xe1)]=![],document[_0x16ffb3(0x122)](_0x16ffb3(0xcc))[_0x16ffb3(0xe1)]=![],document[_0x16ffb3(0x122)]('produkSetelPopulasi')[_0x16ffb3(0xdf)]='',document['getElementById'](_0x16ffb3(0xcc))[_0x16ffb3(0xdf)]='',document[_0x16ffb3(0x122)](_0x16ffb3(0xf1))[_0x16ffb3(0xc3)]=_0x16ffb3(0xc5);}function hitungcepat(){var _0x16f1fc=_0x2a59,_0x583a97,_0x540cb7,_0x276499,_0x1234e7,_0x40c595;_0x540cb7=parseFloat(document['getElementById'](_0x16f1fc(0xf2))[_0x16f1fc(0xdf)][_0x16f1fc(0x136)](/[,.]/g,'')),_0x276499=parseFloat(document[_0x16f1fc(0x122)](_0x16f1fc(0xf4))['value'][_0x16f1fc(0x136)](/[,.]/g,'')),_0x1234e7=parseFloat(convertNumber(document[_0x16f1fc(0x122)]('hicePro')[_0x16f1fc(0xdf)])),_0x40c595=parseFloat(document['getElementById'](_0x16f1fc(0xe2))[_0x16f1fc(0xdf)]['replace'](/[,.]/g,''));var _0x3463c0=document[_0x16f1fc(0x122)]('feedIntake')[_0x16f1fc(0xdf)],_0x54fd8d=document[_0x16f1fc(0x122)](_0x16f1fc(0x135))[_0x16f1fc(0xdf)];if(document[_0x16f1fc(0x122)](_0x16f1fc(0xf4))[_0x16f1fc(0xdf)]===''||document[_0x16f1fc(0x122)](_0x16f1fc(0xf2))[_0x16f1fc(0xdf)]===''||document[_0x16f1fc(0x122)](_0x16f1fc(0xe2))['value']===''||document[_0x16f1fc(0x122)](_0x16f1fc(0xd3))[_0x16f1fc(0xdf)]==='')document[_0x16f1fc(0x122)](_0x16f1fc(0xcb))[_0x16f1fc(0xdf)]='';else{if(_0x54fd8d=='1'){var _0xc6e5cf=Math[_0x16f1fc(0x12c)](_0x276499*(_0x1234e7/0x64)/0x1e/0x8),_0x3c1173=Math['floor'](_0x276499*(_0x1234e7/0x64)/0x1e%0x8),_0xe5584e=Math['ceil'](_0x276499*_0x3463c0/0x3e8/0x5)*0x5,_0x13d678=_0xe5584e*_0x540cb7,_0x1b7569=_0xc6e5cf*0xf*_0x40c595,_0x87bc6d=_0x1b7569-_0x13d678;_0x3c1173===0x0?document[_0x16f1fc(0x122)](_0x16f1fc(0xcb))[_0x16f1fc(0xdf)]=_0x16f1fc(0xeb)+'\x0a'+'Telur\x09\x20'+_0xc6e5cf[_0x16f1fc(0xdd)]()+_0x16f1fc(0xe4)+'\x0a'+'Pakan\x09\x20'+_0xe5584e[_0x16f1fc(0xdd)]()+_0x16f1fc(0xf6)+'\x0a'+_0x16f1fc(0xf5)+_0x13d678[_0x16f1fc(0xdd)]()+'\x0a'+_0x16f1fc(0x128)+_0x1b7569[_0x16f1fc(0xdd)]()+'\x0a'+_0x16f1fc(0xc8)+_0x87bc6d[_0x16f1fc(0xdd)]():document[_0x16f1fc(0x122)](_0x16f1fc(0xcb))[_0x16f1fc(0xdf)]=_0x16f1fc(0xeb)+'\x0a'+'Telur\x09\x20'+_0xc6e5cf[_0x16f1fc(0xdd)]()+_0x16f1fc(0xcf)+_0x3c1173[_0x16f1fc(0xdd)]()+'\x20Etre)'+'\x0a'+'Pakan\x09\x20'+_0xe5584e['toLocaleString']()+_0x16f1fc(0xf6)+'\x0a'+_0x16f1fc(0xf5)+_0x13d678[_0x16f1fc(0xdd)]()+'\x0a'+'Omset\x09\x20Rp\x20'+_0x1b7569[_0x16f1fc(0xdd)]()+'\x0a'+_0x16f1fc(0xc8)+_0x87bc6d[_0x16f1fc(0xdd)]();}else{var _0x3c1173=Math[_0x16f1fc(0x12c)](_0x276499*(_0x1234e7/0x64)/0x1e)*_0x54fd8d,_0xc6e5cf=Math['floor'](_0x3c1173/0x8),_0xe5584e=Math[_0x16f1fc(0xe0)](Math[_0x16f1fc(0x109)](_0x276499*_0x3463c0/0x3e8)*_0x54fd8d/0x5)*0x5,_0x13d678=_0xe5584e*_0x540cb7,_0x1b7569=_0xc6e5cf*0xf*_0x40c595,_0x87bc6d=_0x1b7569-_0x13d678,_0x3a6267=Math[_0x16f1fc(0x12c)](_0x87bc6d/_0x54fd8d/0x1f4)*0x1f4;document[_0x16f1fc(0x122)]('hiceHasil')[_0x16f1fc(0xdf)]='~'+_0x54fd8d['toLocaleString']()+_0x16f1fc(0xc9)+'\x0a'+_0x16f1fc(0x134)+_0xc6e5cf[_0x16f1fc(0xdd)]()+_0x16f1fc(0xe4)+'\x0a'+_0x16f1fc(0xc0)+_0xe5584e[_0x16f1fc(0xdd)]()+_0x16f1fc(0xf6)+'\x0a'+_0x16f1fc(0xf5)+_0x13d678['toLocaleString']()+'\x0a'+_0x16f1fc(0x128)+_0x1b7569[_0x16f1fc(0xdd)]()+'\x0a'+_0x16f1fc(0xc8)+_0x87bc6d['toLocaleString']()+'\x0a'+_0x16f1fc(0xee)+_0x3a6267['toLocaleString']()+')';}}}function hutang(){var _0x1c4cc7=_0x2a59,_0x315e39=parseFloat(document[_0x1c4cc7(0x122)](_0x1c4cc7(0x11b))[_0x1c4cc7(0xdf)]['replace'](/[^0-9]/g,'')),_0x4f31dd=parseFloat(document['getElementById'](_0x1c4cc7(0x11d))[_0x1c4cc7(0xdf)][_0x1c4cc7(0x136)](/[,.]/g,''));if(document[_0x1c4cc7(0x122)](_0x1c4cc7(0x11b))[_0x1c4cc7(0xdf)]===''||document[_0x1c4cc7(0x122)](_0x1c4cc7(0x11d))['value']==='')document[_0x1c4cc7(0x122)](_0x1c4cc7(0xd1))['value']='';else{var _0x494418=_0x315e39-_0x4f31dd;document[_0x1c4cc7(0x122)](_0x1c4cc7(0xd1))[_0x1c4cc7(0xdf)]='Sisa:\x20Rp\x20'+_0x494418['toLocaleString'](),document[_0x1c4cc7(0x122)](_0x1c4cc7(0xe7))[_0x1c4cc7(0xdf)]=Math[_0x1c4cc7(0xc2)](_0x494418)['toString']();}}document[_0x22e550(0x138)](_0x22e550(0x124),function(){var _0x43f375=_0x22e550;const _0x501117=document[_0x43f375(0x122)](_0x43f375(0x12d)),_0x4ff4fb=new bootstrap['Tooltip'](_0x501117);function _0x5ee4ff(){var _0x5dc592=_0x43f375;_0x4ff4fb[_0x5dc592(0x11f)](),setTimeout(()=>_0x4ff4fb[_0x5dc592(0xbf)](),0xbb8);}_0x5ee4ff(),setInterval(_0x5ee4ff,0x1b58);}),document['addEventListener'](_0x22e550(0x124),function(){var _0x236079=_0x22e550;const _0x554569=document['getElementById'](_0x236079(0xd2)),_0x1118bc=new bootstrap[(_0x236079(0xe8))](_0x554569);function _0xe0d06(){var _0x51842a=_0x236079;_0x1118bc['show'](),setTimeout(()=>_0x1118bc[_0x51842a(0xbf)](),0xbb8);}_0xe0d06(),setInterval(_0xe0d06,0x1b58);});
 
 </script>
 <style>
@@ -519,10 +43,10 @@
     }
   
   .float-btn {
-    border: solid 1px #ffffff;
+    /* border: solid 2px #ffffff; */
   position: fixed;
   bottom: 20px;
-  right: 20px;
+  /* right: 20px; */
   z-index: 1050;
   border-radius: 25%;
   width: 50px;
@@ -532,6 +56,9 @@
   align-items: center;
   justify-content: center;
 }
+
+.fil0 {fill:white;fill-rule:nonzero}
+
 </style>
 </head>
 <body class="container">
@@ -886,7 +413,7 @@
                         </select>
                     </div>
                     <div class="mt-1 alert alert-info alert-dismissible fade show" role="alert">
-                        Menebak Populasi Berdasarkan Produksi
+                        Menebak Populasi Berdasarkan Produksi (Berapa <b>Setel</b> PerHari <b>atau</b> Berapa <b>EggTry</b> PerHari)
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>  
                 </form>
@@ -899,8 +426,11 @@
     <!-- 🟥 Collapse Selisih -->
     <div class="collapse" id="collapseSelisih" data-bs-parent="#mainCollapseWrapper">
       <div class="bg-dark text-light rounded">
+        <div class="col text-center fs-5">
+            Selisih Telur-Pakan
+        </div>
         <form action="">
-            <div class="input-group">
+            <div class="input-group mt-1">
                 <div class="form-floating">
                     <input autocomplete="off" class="form-control text-white" id="setel2" oninput="untung()" placeholder="Setel" tabindex="1" type="number" inputmode="numeric"/>
                     <label for="setel2" id="setel2Lbl">Telur (Setel)</label>
@@ -940,6 +470,13 @@
 
     <br>
     <div class="col text-center">
+        <u>Satuan Setelan:</u>
+    </div>
+    <div class="col text-center">
+        15kg (Telur), 150kg (Pakan)
+    </div>
+    <br>
+    <div class="col text-center">
         Kalkulator Peternak Ayam Petelur
     </div>
     <div class="col text-center">
@@ -947,7 +484,18 @@
         Dibuat oleh Rocky Pratama
     </div>
     <br>
-<button id="tooltipBtn" class="btn btn-danger float-btn" data-bs-toggle="modal" data-bs-target="#modalHiCe" data-bs-toggle="tooltip" data-bs-placement="left" title="Hitung Cepat">
+    <a id="tooltipBtnSawer" href="https://saweria.co/rockypratama" target="_blank" rel="noopener noreferrer" class="btn btn-outline-secondary float-btn" style="left: 20px;" data-bs-toggle="tooltip" data-bs-placement="right" title="Saweria">
+        <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="42.3332mm" height="42.3332mm" version="1.1" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
+viewBox="0 0 4233.32 4233.32"
+ xmlns:xlink="http://www.w3.org/1999/xlink"
+ xmlns:xodm="http://www.corel.com/coreldraw/odm/2003">
+ <g id="Layer_x0020_1">
+  <metadata id="CorelCorpID_0Corel-Layer"/>
+  <path class="fil0" d="M654.56 211.66c608.35,0 1216.66,0 1824.99,0 657.4,0 1194.44,537.01 1194.44,1194.42 0,568.06 -405.02,1059.88 -960.12,1171.23 -35.4,7.08 -34.77,6.42 -14.87,35.19 321.56,464.99 643.66,929.6 965.02,1394.72 10.84,15.69 11.71,14.4 -28.95,14.4 -200.86,0 -400.89,-0.16 -603.01,-0.16 -23.42,0 -45.37,-4.14 -64.4,-31.66 -314.1,-454.22 -628.46,-908.28 -942.65,-1362.43 -10.57,-15.26 -14.1,-16.73 -14.1,0.72l0 1298.29c0,52.61 -42.62,95.24 -95.22,95.24 -420.37,0 -840.74,0 -1261.13,0 -52.59,0 -95.25,-42.63 -95.24,-95.24 0,-1206.51 0,-2412.99 0,-3619.47 -0.01,-52.63 42.65,-95.25 95.24,-95.25zm1356.35 1810.61c0.48,51.91 42.48,93.9 94.42,94.35l374.22 0.02c390.32,0 710.57,-320.24 710.57,-710.56 0,-390.32 -320.25,-710.55 -710.57,-710.55l-1341.96 0c-51.94,0.45 -93.94,42.44 -94.42,94.38l0 2653.47c0.48,51.93 42.48,93.92 94.42,94.39l295.1 0c51.91,-0.47 93.9,-42.46 94.35,-94.39 0,-727.99 0,-1456.01 0,-2183.99 0,-52.6 42.65,-95.25 95.25,-95.25 294.33,0 588.65,0 882.98,0 52.62,0 95.25,42.65 95.25,95.25l0 293.36c0,52.61 -42.63,95.26 -95.25,95.26l-399.94 0c-51.94,0.48 -93.94,42.45 -94.42,94.38l0 279.88z"/>
+ </g>
+</svg>
+    </a>
+<button style="right: 20px;" id="tooltipBtn" class="btn btn-danger float-btn" data-bs-toggle="modal" data-bs-target="#modalHiCe" data-bs-toggle="tooltip" data-bs-placement="left" title="Hitung Cepat">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-lightning-charge-fill" viewBox="0 0 16 16">
             <path d="M11.251.068a.5.5 0 0 1 .227.58L9.677 6.5H13a.5.5 0 0 1 .364.843l-8 8.5a.5.5 0 0 1-.842-.49L6.323 9.5H3a.5.5 0 0 1-.364-.843l8-8.5a.5.5 0 0 1 .615-.09z"/>
         </svg>
