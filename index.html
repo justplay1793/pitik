@@ -467,54 +467,6 @@
         }
     }
   
-  function etreHitung(){
-        if (document.getElementById("setel").value === "") {
-            document.getElementById("etreHitungTotal").value = "";
-              document.getElementById("lblEtreHitungTotal").innerHTML = "Total EggTry";
-          document.getElementById("etreHitungTotal").style.height = "75px";
-        }
-        else {
-            var etreIn = parseFloat(document.getElementById("setel").value.replace(/[,.]/g, ""));
-            var n5 = Math.floor((etreIn * 5) / 70);
-            var l5 = (etreIn * 5) % 70;
-            var n6 = Math.floor((etreIn * 6) / 70);
-            var l6 = (etreIn * 6) % 70;
-            var n7 = Math.floor((etreIn * 7) / 70);
-            var l7 = (etreIn * 7) % 70;
-            var n8 = Math.floor((etreIn * 8) / 70);
-            var l8 = (etreIn * 8) % 70;
-            var n9 = Math.floor((etreIn * 9) / 70);
-            var l9 = (etreIn * 9) % 70;
-            var n10 = Math.floor((etreIn * 10) / 70);
-            var l10 = (etreIn * 10) % 70;
-            var n11 = Math.floor((etreIn * 11) / 70);
-            var l11 = (etreIn * 11) % 70;
-            var n12 = Math.floor((etreIn * 12) / 70);
-            var l12 = (etreIn * 12) % 70;
-            var n13 = Math.floor((etreIn * 13) / 70);
-            var l13 = (etreIn * 13) % 70;
-            var n14 = Math.floor((etreIn * 14) / 70);
-            var l14 = (etreIn * 14) % 70;
-            var n15 = Math.floor((etreIn * 15) / 70);
-            var l15 = (etreIn * 15) % 70;
-
-          document.getElementById("etreHitungTotal").style.height = "375px";  
-          document.getElementById("lblEtreHitungTotal").innerHTML = etreIn.toLocaleString() + " Setel";
-            document.getElementById("etreHitungTotal").value = "\nSatuan\t| Total EggTry\n" +
-            "5an\t\t| " + n5.toLocaleString() + " ikat, " + l5.toLocaleString() + " lembar\n" +
-            "6an\t\t| " + n6.toLocaleString() + " ikat, " + l6.toLocaleString() + " lembar\n" +
-            "7an\t\t| " + n7.toLocaleString() + " ikat, " + l7.toLocaleString() + " lembar\n" +
-            "8an\t\t| " + n8.toLocaleString() + " ikat, " + l8.toLocaleString() + " lembar\n" +
-            "9an\t\t| " + n9.toLocaleString() + " ikat, " + l9.toLocaleString() + " lembar\n" +
-            "10an\t| " + n10.toLocaleString() + " ikat, " + l10.toLocaleString() + " lembar\n" +
-            "11an\t| " + n11.toLocaleString() + " ikat, " + l11.toLocaleString() + " lembar\n" +
-            "12an\t| " + n12.toLocaleString() + " ikat, " + l12.toLocaleString() + " lembar\n" +
-            "13an\t| " + n13.toLocaleString() + " ikat, " + l13.toLocaleString() + " lembar\n" +
-            "14an\t| " + n14.toLocaleString() + " ikat, " + l14.toLocaleString() + " lembar\n" +
-            "15an\t| " + n15.toLocaleString() + " ikat, " + l15.toLocaleString() + " lembar";
-        }
-    }
-  
   
   document.addEventListener("DOMContentLoaded", function () {
   const btn = document.getElementById('tooltipBtn');
@@ -582,14 +534,14 @@
 }
 </style>
 </head>
-<body class="container mt-3">
+<body class="container">
 
     <form action="">
         <div class="col fs-4 text-center text-info mb-2 hr-text">Kalkulator Endog</div>
         <div class="input-group input-group-lg">
             <div class="form-floating">
                 <input class="form-control text-white fs-3" autocomplete="off" type="number" id="setel"
-                        oninput="etre(); calculate(); kiloEndog(); hutang(); etreHitung();" placeholder="Setel" inputmode="numeric">
+                        oninput="etre(); calculate(); kiloEndog(); hutang();" placeholder="Setel" inputmode="numeric">
                     <label for="setel" id="kiloneEndog">Setel</label>
             </div>
             <div class="form-floating">
@@ -795,16 +747,16 @@
         <!-- Sub Tombol -->
         <div class="btn-group d-flex mb-3" data-btn-group>
           <input type="checkbox" class="btn-check" id="btnProd1" data-bs-toggle="collapse" data-bs-target="#collapseProd1">
-          <label class="btn btn-outline-light w-100" for="btnProd1">EggTry</label>
+          <label class="btn btn-outline-light" for="btnProd1">EggTry</label>
 
           <input type="checkbox" class="btn-check" id="btnProd2" data-bs-toggle="collapse" data-bs-target="#collapseProd2" checked>
-          <label class="btn btn-outline-light w-100" for="btnProd2">Setel</label>
+          <label class="btn btn-outline-light" for="btnProd2">Setel</label>
 
           <input type="checkbox" class="btn-check" id="btnProd3" data-bs-toggle="collapse" data-bs-target="#collapseProd3">
-          <label class="btn btn-outline-light w-100" for="btnProd3">Persen</label>
+          <label class="btn btn-outline-light" for="btnProd3">Persen</label>
 
           <input type="checkbox" class="btn-check" id="btnProd4" data-bs-toggle="collapse" data-bs-target="#collapseProd4">
-          <label class="btn btn-outline-light w-100" for="btnProd4">Populasi?</label>
+          <label class="btn btn-outline-light" for="btnProd4">Populasi?</label>
         </div>
 
         <!-- Sub Collapse Produksi -->
