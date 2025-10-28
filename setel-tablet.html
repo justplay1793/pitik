@@ -1,0 +1,1495 @@
+<!DOCTYPE html>
+<html data-bs-theme="dark" lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Pitik</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script type="text/javascript">
+
+        function tampilkanTanggalHariIni() {
+        const hariMingguan = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+        const pasaranJawa = ["Legi", "Pahing", "Pon", "Wage", "Kliwon"];
+        const bulanSingkat = ["Januari", "Februari", "Maret", "April", "Mei", "Juni",
+                                "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+        const bulanHijriah = ["Muharram", "Safar", "Rabiul Awal", "Rabiul Akhir", "Jumadil Awal",
+                                "Jumadil Akhir", "Rajab", "Syaban", "Ramadhan", "Syawal", "Zulkaidah", "Zulhijah"];
+        const bulanJawa = ["Suro", "Sapar", "Mulud", "Bakdo Mulud", "Jumadil Awal", "Jumadil Akhir",
+                            "Rejeb", "Ruwah", "Poso", "Sawal", "Dulkaidah", "Besar"];
+
+        // Acuan: Sabtu Wage, 26 Juli 2025
+        const tanggalAcuan = new Date("2025-07-26");
+        const sekarang = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Jakarta" }));
+
+        const tglAcuan = new Date(tanggalAcuan.getFullYear(), tanggalAcuan.getMonth(), tanggalAcuan.getDate());
+        const tglSekarang = new Date(sekarang.getFullYear(), sekarang.getMonth(), sekarang.getDate());
+        const selisih = Math.round((tglSekarang - tglAcuan) / (1000 * 60 * 60 * 24));
+
+        const hariIndex = (6 + selisih % 7 + 7) % 7;     // 6 = Sabtu
+        const pasaranIndex = (3 + selisih % 5 + 5) % 5;  // 3 = Wage
+        const hariPasaran = `${hariMingguan[hariIndex]} ${pasaranJawa[pasaranIndex]}`;
+        const tanggalSingkat = `${tglSekarang.getDate()} ${bulanSingkat[tglSekarang.getMonth()]} ${tglSekarang.getFullYear()}`;
+
+        // === Hitung Hijriah ===
+        function masehiKeHijriah(date) {
+            const day = date.getDate();
+            const month = date.getMonth() + 1;
+            const year = date.getFullYear();
+
+            let m = month;
+            let y = year;
+            if (m < 3) { y -= 1; m += 12; }
+
+            const a = Math.floor(y / 100);
+            const b = 2 - a + Math.floor(a / 4);
+            const jd = Math.floor(365.25 * (y + 4716)) + Math.floor(30.6001 * (m + 1)) + day + b - 1524.5;
+            const l = jd - 1948440 + 10632;
+            const n = Math.floor((l - 1) / 10631);
+            const r = l - 10631 * n + 354;
+            const j = (Math.floor((10985 - r) / 5316)) * (Math.floor((50 * r) / 17719))
+                    + (Math.floor(r / 5670)) * (Math.floor((43 * r) / 15238));
+            const k = r - (Math.floor((30 - j) / 15)) * (Math.floor((17719 * j) / 50))
+                    - (Math.floor(j / 16)) * (Math.floor((15238 * j) / 43)) + 29;
+            const bulan = Math.floor((24 * k) / 709);
+            let tanggal = k - Math.floor((709 * bulan) / 24);
+            const tahun = 30 * n + j - 30;
+
+            tanggal = Math.round(tanggal);
+            return { tanggal, bulan, tahun };
+        }
+
+        const h = masehiKeHijriah(tglSekarang);
+        const tanggalHijriah = `${h.tanggal} ${bulanHijriah[h.bulan - 1]} ${h.tahun} H`;
+        const tanggalHijriahJawa = `${h.tanggal} ${bulanJawa[h.bulan - 1]} ${h.tahun} Jawa`;
+
+        // Gabung jadi format baru
+        const hijriahGabung = `${h.tanggal} ${bulanHijriah[h.bulan - 1]} (${bulanJawa[h.bulan - 1]}) ${h.tahun}`;
+
+        document.getElementById('tanggal-hari-ini').innerHTML =
+            `${hariPasaran}, ${tanggalSingkat}<br>${hijriahGabung} H.`;
+    }
+
+    document.addEventListener("DOMContentLoaded", tampilkanTanggalHariIni);
+
+        function convertNumber(input) {
+            return input.replace(/,/g, ".");
+        }
+
+        function formatInput(input) {
+            // Remove non-digit characters from the input value
+            let value = input.value.replace(/\D/g, '');
+
+            // Format the number with thousand separators
+            value = Number(value).toLocaleString();
+
+            // Set the formatted value back to the input
+            input.value = value;
+        }
+
+        function clearCopy() {
+            document.getElementById("forcopy").value = "";
+        }
+
+        function copyText() {
+            if (document.getElementById("forcopy").value === "") {
+                alert("Kosong!");
+            }
+            else {
+                var salin = document.getElementById("forcopy");
+                salin.select();
+                salin.setSelectionRange(0, 99999);
+                navigator.clipboard.writeText(salin.value);
+                alert(salin.value + " Disalin");
+            }
+        }
+
+        function calculate() {
+            const setelVal = document.getElementById("setel").value;
+            const hargaVal = document.getElementById("harga").value;
+            const output = document.getElementById("total");
+
+            if (!setelVal || !hargaVal) {
+                output.value = "";
+                return;
+            }
+
+            const setel = parseFloat(convertNumber(setelVal));
+            let harga = hargaVal;
+
+            // Jika harga mengandung koma/titik → sudah format desimal
+            if (harga.includes(",") || harga.includes(".")) {
+                harga = parseFloat(convertNumber(harga)) * 1000;
+            }
+            // Jika panjang 1–2 digit → asumsikan ribuan
+            else if (harga.length <= 2) {
+                harga = parseFloat(harga) * 1000;
+            }
+            // Jika 3 digit dan dua digit terakhir "00" → gunakan langsung
+            else if (harga.length === 3 && harga.substring(1) === "00") {
+                harga = parseFloat(harga);
+            }
+            // Jika 3 digit dan bukan "00" di akhir → ubah ke skema "22 700"
+            else if (harga.length === 3) {
+                const d2 = parseInt(harga.substring(0, 2));
+                const d1 = parseInt(harga.substring(2));
+                harga = (d2 * 1000) + (d1 * 100);
+            }
+            // Selain itu → gunakan langsung
+            else {
+                harga = parseFloat(harga);
+            }
+
+            const result = setel * 15 * harga;
+            output.value = "Rp " + result.toLocaleString();
+        }
+
+        function kiloEndog() {
+            if (document.getElementById("setel").value === "") {
+                document.getElementById("kiloneEndog").innerHTML = "Setel";
+            }
+            else {
+                var stl = document.getElementById("setel").value;
+                var kilone = parseFloat(document.getElementById("setel").value.replace(/[,.]/g, "")) * 15;
+                document.getElementById("kiloneEndog").innerHTML = stl.toLocaleString() + "×15kg=" + kilone.toLocaleString() + "kg";
+            }
+        }
+
+        function resetSetEndog() {
+            document.getElementById("kiloneEndog").innerHTML = "Setel";
+            document.getElementById("totalHutang").value = "";
+            document.getElementById("sisaHutang").value = "";
+        }
+
+        function etre() {
+            var satuan = document.getElementById("anEtre").value;
+            if (document.getElementById("setel").value === "") {
+                document.getElementById("etreTotal").value = "";
+            }
+            else {
+                var etreIn = parseFloat(document.getElementById("setel").value.replace(/[,.]/g, ""));
+                var lembar, total, setel;
+                setel = etreIn * satuan;
+                total = Math.floor(setel / 70);
+                lembar = setel % 70;
+                if (lembar === 0) {
+                    document.getElementById("etreTotal").value = total.toLocaleString() + " ikat";
+                }
+                else if (setel < 70) {
+                    document.getElementById("etreTotal").value = lembar.toLocaleString() + " lembar";
+                }
+                else {
+                    document.getElementById("etreTotal").value = total.toLocaleString() + " ikat + " + lembar.toLocaleString() + " lembar";
+                }
+
+            }
+        }
+
+        function prosesPakan() {
+            const getNumber = id => parseFloat(document.getElementById(id).value.replace(/[,.]/g, "")) || 0;
+            const formatRp = val => "Rp " + val.toLocaleString();
+            const formatKg = val => val.toLocaleString() + " Kg";
+
+            // Hitung total Jagung & Katul
+            const kiloJagung = getNumber("kiloJagung");
+            const hargaJagung = getNumber("hargaJagung");
+            const totalJagung = kiloJagung * hargaJagung;
+            document.getElementById("totalJagung").value = totalJagung.toLocaleString();
+
+            const kiloKatul = getNumber("kiloKatul");
+            const hargaKatul = getNumber("hargaKatul");
+            const totalKatul = kiloKatul * hargaKatul;
+            document.getElementById("totalKatul").value = totalKatul.toLocaleString();
+
+            // Komponen lainnya
+            const beratLayer = 50;
+            const hargaLayer = getNumber("hargaLayer");
+            const hargaPremix = getNumber("hargaPremix");
+            const upah = getNumber("upah");
+
+            const totalBerat = kiloJagung + kiloKatul + beratLayer;
+
+            // Hitung total harga dasar
+            let totalHarga = hargaLayer + totalJagung + totalKatul;
+
+            // Tambahkan komponen opsional jika ada
+            if (hargaPremix) totalHarga += hargaPremix;
+            if (upah) totalHarga += upah;
+
+            const perKilo = Math.round(totalHarga / totalBerat);
+            const bulat = Math.ceil(perKilo / 100) * 100;
+
+            // Tampilkan hasil
+            document.getElementById("totalBerat").value = formatKg(totalBerat);
+            document.getElementById("totalHarga").value = formatRp(totalHarga);
+            document.getElementById("perKilo").value = formatRp(perKilo);
+            document.getElementById("bulat").value = formatRp(bulat);
+        }
+
+        function konsumsiPakan() {
+            var popIn = document.getElementById("populasi").value;
+            var porIn = document.getElementById("konsumsi").value;
+            var hslOut = document.getElementById("konsumsiHasil");
+
+            if (popIn === "" || porIn === "") {
+                hslOut.value = "";
+                document.getElementById("lblKonsumsiHasil").innerHTML = "Hasil";
+                document.getElementById("konsumsiZak").disabled = false;
+            } else {
+                document.getElementById("konsumsiZak").disabled = true;
+                document.getElementById("lblKonsumsiHasil").innerHTML = "1setel=150kg | 1zak=50kg";
+
+                var populasi = parseFloat(popIn.replace(/[,.]/g, ""));
+                var konsumsi = parseFloat(porIn.replace(/[,.]/g, ""));
+                var beratPakan = Math.round(populasi * konsumsi / 1000);
+
+                var setelan = Math.floor(beratPakan / 150);
+                var lebihSetel = beratPakan % 150;
+
+                var zak = Math.floor(beratPakan / 50);
+                var lebihZak = beratPakan % 50;
+
+                let text = "Berat Pakan\t" + beratPakan.toLocaleString() + " Kg\n";
+
+                // tampilkan setel hanya jika >= 150
+                if (beratPakan >= 150) {
+                    if (lebihSetel === 0) {
+                        text += "Setel Pakan\t" + setelan.toLocaleString() + " Setel\n";
+                    } else {
+                        text += "Setel Pakan\t" + setelan.toLocaleString() + " Setel + " + lebihSetel.toLocaleString() + " Kg\n";
+                    }
+                }
+
+                // tampilkan zak hanya jika >= 50
+                if (beratPakan >= 50) {
+                    if (lebihZak === 0) {
+                        text += "Zak Pakan\t" + zak.toLocaleString() + " Zak";
+                    } else {
+                        text += "Zak Pakan\t" + zak.toLocaleString() + " Zak + " + lebihZak.toLocaleString() + " Kg";
+                    }
+                }
+
+                hslOut.value = text.trim();
+            }
+        }
+
+        function konsumsiPakanZak() {
+            var popIn = document.getElementById("populasi").value;
+            var zakIn = document.getElementById("konsumsiZak").value;
+            var hslOut = document.getElementById("konsumsiHasil");
+            if (popIn === "" || zakIn === "") {
+                hslOut.value = "";
+                document.getElementById("lblKonsumsiHasil").innerHTML = "Hasil";
+                document.getElementById("konsumsi").disabled = false;
+            }
+            else {
+                document.getElementById("konsumsi").disabled = true;
+                document.getElementById("lblKonsumsiHasil").innerHTML = "1zak=50kg | 1setel=150kg";
+                var populasi, konsumsi, beratPakan;
+                populasi = parseFloat(popIn.replace(/[,.]/g, ""));
+                konsumsi = parseFloat(zakIn.replace(/[,.]/g, "")) * 50;
+                beratPakan = Math.round((konsumsi / populasi) * 1000);
+
+                var setelan = Math.floor(konsumsi / 150);
+                var lebih = Math.floor(konsumsi % 150);
+                if (lebih === 0) {
+                    hslOut.value = "Berat Pakan\t" + konsumsi.toLocaleString() + " Kg\n" +
+                        "Setel Pakan\t" + setelan.toLocaleString() + " Setel\n" +
+                        "Porsi 1 Ekor\t" + beratPakan.toLocaleString() + " gram";
+                }
+                else if (konsumsi < 150) {
+                    hslOut.value = "Berat Pakan\t" + konsumsi.toLocaleString() + " Kg\n" +
+                        "Setel Pakan\t" + lebih.toLocaleString() + " Kg\n" +
+                        "Porsi 1 Ekor\t" + beratPakan.toLocaleString() + " gram";
+                }
+                else {
+                    hslOut.value = "Berat Pakan\t" + konsumsi.toLocaleString() + " Kg\n" +
+                        "Setel Pakan\t" + setelan.toLocaleString() + " Setel + " + lebih.toLocaleString() + " Kg\n" +
+                        "Porsi 1 Ekor\t" + beratPakan.toLocaleString() + " gram";
+                }
+            }
+        }
+
+        function Ckonsumsi() {
+            document.getElementById("populasi").value = "";
+            document.getElementById("konsumsi").value = "";
+            document.getElementById("konsumsiZak").value = "";
+            document.getElementById("konsumsiHasil").value = "";
+            document.getElementById("konsumsi").disabled = false;
+            document.getElementById("konsumsiZak").disabled = false;
+            document.getElementById("lblKonsumsiHasil").innerHTML = "Hasil";
+        }
+
+        function untung() {
+            if (document.getElementById("berapaHari").value === "") {
+                if (
+                    document.getElementById("setel2").value === "" ||
+                    document.getElementById("pakanSelisih").value === "" ||
+                    document.getElementById("hargaSetel2").value === "" ||
+                    document.getElementById("hargaPakanSelisih").value === ""
+                ) {
+                    document.getElementById("totalTelur").value = "";
+                    document.getElementById("totalPakanSelisih").value = "";
+                    document.getElementById("selisih").value = "";
+                    document.getElementById("setel2Lbl").innerHTML = "Telur (Setel)";
+                    document.getElementById("pakanSelisihLbl").innerHTML = "Pakan (Kg)";
+                }
+                else {
+                    var setel2, pakanSelisih, hargaSetel2, hargaPakanSelisih;
+                    var totalTelur, totalPakanSelisih, selisih;
+                    setel2 = parseFloat(convertNumber(document.getElementById("setel2").value));
+                    pakanSelisih = parseFloat(document.getElementById("pakanSelisih").value.replace(/[,.]/g, ""));
+                    hargaSetel2 = parseFloat(document.getElementById("hargaSetel2").value.replace(/[,.]/g, ""));
+                    hargaPakanSelisih = parseFloat(document.getElementById("hargaPakanSelisih").value.replace(/[,.]/g, ""));
+                    totalTelur = setel2 * 15 * hargaSetel2;
+                    totalPakanSelisih = pakanSelisih * hargaPakanSelisih;
+                    selisih = totalTelur - totalPakanSelisih;
+                    document.getElementById("totalTelur").value = "Rp " + totalTelur.toLocaleString();
+                    document.getElementById("totalPakanSelisih").value = "Rp " + totalPakanSelisih.toLocaleString();
+                    document.getElementById("selisih").value = "Rp " + selisih.toLocaleString();
+                    document.getElementById("setel2Lbl").innerHTML = "Telur (Setel)";
+                    document.getElementById("pakanSelisihLbl").innerHTML = "Pakan (Kg)";
+                }
+            }
+            else {
+                if (
+                    document.getElementById("setel2").value === "" ||
+                    document.getElementById("pakanSelisih").value === "" ||
+                    document.getElementById("hargaSetel2").value === "" ||
+                    document.getElementById("hargaPakanSelisih").value === ""
+                ) {
+                    document.getElementById("totalTelur").value = "";
+                    document.getElementById("totalPakanSelisih").value = "";
+                    document.getElementById("selisih").value = "";
+                    document.getElementById("setel2Lbl").innerHTML = "Telur (Setel)";
+                    document.getElementById("pakanSelisihLbl").innerHTML = "Pakan (Kg)";
+                }
+                else {
+                    var setel2, pakanSelisih, hargaSetel2, hargaPakanSelisih;
+                    var totalTelur, totalPakanSelisih, selisih, harinya, setel2Lbl, pakanSelisihLbl;
+                    setel2 = parseFloat(convertNumber(document.getElementById("setel2").value));
+                    pakanSelisih = parseFloat(document.getElementById("pakanSelisih").value.replace(/[,.]/g, ""));
+                    hargaSetel2 = parseFloat(document.getElementById("hargaSetel2").value.replace(/[,.]/g, ""));
+                    hargaPakanSelisih = parseFloat(document.getElementById("hargaPakanSelisih").value.replace(/[,.]/g, ""));
+                    harinya = parseFloat(document.getElementById("berapaHari").value.replace(/[,.]/g, ""));
+                    totalTelur = (setel2 * 15 * hargaSetel2) * harinya;
+                    totalPakanSelisih = (pakanSelisih * hargaPakanSelisih) * harinya;
+                    selisih = totalTelur - totalPakanSelisih;
+                    document.getElementById("totalTelur").value = "Rp " + totalTelur.toLocaleString();
+                    document.getElementById("totalPakanSelisih").value = "Rp " + totalPakanSelisih.toLocaleString();
+                    document.getElementById("selisih").value = "Rp " + selisih.toLocaleString() + " (" + harinya + " Hari)";
+                    setel2Lbl = setel2 * harinya;
+                    pakanSelisihLbl = pakanSelisih * harinya;
+                    document.getElementById("setel2Lbl").innerHTML = setel2Lbl + " Setel";
+                    document.getElementById("pakanSelisihLbl").innerHTML = pakanSelisihLbl.toLocaleString() + " Kg";
+                }
+            }
+        }
+
+        function resetLblUntung() {
+            document.getElementById("setel2Lbl").innerHTML = "Telur (Setel)";
+            document.getElementById("pakanSelisihLbl").innerHTML = "Pakan (Kg)";
+        }
+
+        function perkiraan() {
+            if (document.getElementById("produkPopulasi").value === "" || document.getElementById("produkPersen").value === "") {
+                document.getElementById("produkButiran").value = "";
+                document.getElementById("produkEtre").value = "";
+                document.getElementById("produkSetel").value = "";
+            }
+            else {
+                var produkPopulasi, produkPersen, produkButiran, produkEtre, produkSetel, sisaTre, sisaButir;
+                produkPopulasi = parseFloat(document.getElementById("produkPopulasi").value.replace(/[,.]/g, ""));
+                // produkPersen = parseFloat(document.getElementById("produkPersen").value.replace(/[,.]/g, ""));
+                produkPersen = parseFloat(convertNumber(document.getElementById("produkPersen").value));
+                produkButiran = Math.floor(produkPopulasi * (produkPersen / 100));
+                produkEtre = Math.floor(produkButiran / 30);
+                produkSetel = Math.floor(produkEtre / 8);
+                sisaButir = produkButiran % 30;
+                sisaTre = produkEtre % 8;
+                document.getElementById("produkButiran").value = produkButiran.toLocaleString() + " Butir";
+                if (sisaButir === 0) {
+                    document.getElementById("produkEtre").value = produkEtre.toLocaleString() + " Etre";
+                }
+                else {
+                    document.getElementById("produkEtre").value = produkEtre.toLocaleString() + " Etre + " + sisaButir.toLocaleString() + " Butir";
+                }
+                if (sisaTre === 0) {
+                    document.getElementById("produkSetel").value = produkSetel.toLocaleString() + " Setel";
+                }
+                else {
+                    document.getElementById("produkSetel").value = produkSetel.toLocaleString() + " Setel + " + sisaTre.toLocaleString() + " Etre";
+                }
+            }
+        }
+
+        function perkiraanEtre() {
+            if (document.getElementById("kiraEtrePop").value === "" || document.getElementById("kiraEtreEtre").value === "") {
+                document.getElementById("kiraEtrePersen").value = "";
+            }
+            else {
+                var kiraEtrePop, kiraEtreEtre, kiraEtrePersen, bulatDesimal, jadiPersen;
+                kiraEtrePop = parseFloat(document.getElementById("kiraEtrePop").value.replace(/[,.]/g, ""));
+                kiraEtreEtre = parseFloat(document.getElementById("kiraEtreEtre").value.replace(/[,.]/g, ""));
+                bulatDesimal = (kiraEtreEtre * 30) / kiraEtrePop;
+                jadiPersen = Math.round(bulatDesimal * 100);
+                document.getElementById("kiraEtrePersen").value = jadiPersen.toLocaleString() + "%";
+            }
+        }
+
+        function perkiraanSetel() {
+            if (document.getElementById("kiraSetelPop").value === "" || document.getElementById("kiraSetelSetel").value === "") {
+                document.getElementById("kiraSetelPersen").value = "";
+                document.getElementById("kiraSetelEtre").value = "";
+            }
+            else {
+                var kiraSetelPop = parseFloat(document.getElementById("kiraSetelPop").value.replace(/[,.]/g, ""));
+                var kiraSetelSetel = parseFloat(document.getElementById("kiraSetelSetel").value.replace(/[,.]/g, ""));
+                var bulatDesimal = ((kiraSetelSetel * 8) * 30) / kiraSetelPop;
+                var jadiPersen = Math.round(bulatDesimal * 100);
+                document.getElementById("kiraSetelPersen").value = jadiPersen.toLocaleString() + "%";
+                var totalEtre = kiraSetelSetel * 8;
+                document.getElementById("kiraSetelEtre").value = totalEtre.toLocaleString() + " Etre";
+            }
+        }
+
+        function tebakPopulasi() {
+            var inputEtre = document.getElementById("produkEtrePopulasi");
+            var inputSetel = document.getElementById("produkSetelPopulasi");
+            var persen = document.getElementById("penebakPop").value;
+            var hasilPop = document.getElementById("produkSetelHasil");
+            var labelHasil = document.getElementById("labelProdukSetelHasil"); //innerhtml
+
+            if (inputSetel.value !== "") {
+                inputEtre.disabled = true;
+                var input = parseFloat(inputSetel.value.replace(/[,.]/g, ""));
+                var endog = input * 8 * 30;
+                var hasil = Math.round((endog * 100) / persen);
+                hasilPop.value = hasil.toLocaleString() + " ekor";
+                labelHasil.innerHTML = endog.toLocaleString() + " butir";
+            }
+            else if (inputEtre.value !== "") {
+                inputSetel.disabled = true;
+                var input = parseFloat(inputEtre.value.replace(/[,.]/g, ""));
+                var endog = input * 30;
+                var hasil = Math.round((endog * 100) / persen);
+                hasilPop.value = hasil.toLocaleString() + " ekor";
+                labelHasil.innerHTML = endog.toLocaleString() + " butir";
+            }
+            else {
+                document.getElementById("produkSetelPopulasi").disabled = false;
+                document.getElementById("produkEtrePopulasi").disabled = false;
+                document.getElementById("produkSetelPopulasi").value = "";
+                document.getElementById("produkEtrePopulasi").value = "";
+                document.getElementById("produkSetelHasil").value = "";
+                document.getElementById("labelProdukSetelHasil").innerHTML = "Perkiraan Populasi";
+            }
+        }
+
+        function CperkiraanPopulasi() {
+            document.getElementById("produkSetelPopulasi").disabled = false;
+            document.getElementById("produkEtrePopulasi").disabled = false;
+            document.getElementById("produkSetelPopulasi").value = "";
+            document.getElementById("produkEtrePopulasi").value = "";
+            document.getElementById("produkSetelHasil").value = "";
+            document.getElementById("labelProdukSetelHasil").innerHTML = "Perkiraan Populasi";
+        }
+
+        function hitungcepat() {
+            var hiceHasil, hicePakan, hicePop, hicePro, hiceTelur;
+            hicePakan = parseFloat(document.getElementById("hicePakan").value.replace(/[,.]/g, ""));
+            hicePop = parseFloat(document.getElementById("hicePop").value.replace(/[,.]/g, ""));
+            hicePro = parseFloat(convertNumber(document.getElementById("hicePro").value));
+            hiceTelur = parseFloat(document.getElementById("hiceTelur").value.replace(/[,.]/g, ""));
+            var feed = document.getElementById("feedIntake").value;
+            var lama = document.getElementById("hiceHari").value;
+            if (
+                document.getElementById("hicePop").value === "" ||
+                document.getElementById("hicePakan").value === "" ||
+                document.getElementById("hiceTelur").value === "" ||
+                document.getElementById("hicePro").value === ""
+            ) {
+                document.getElementById("hiceHasil").value = "";
+            }
+            else {
+                if (lama == "1") {
+                    var setel = Math.floor((((hicePop * (hicePro / 100)) / 30) / 8));
+                    var punjul = Math.floor((((hicePop * (hicePro / 100)) / 30) % 8));
+                    var kpakan = Math.ceil((hicePop * feed / 1000) / 5) * 5;
+                    var tpakan = kpakan * hicePakan;
+                    var omzet = setel * 15 * hiceTelur;
+                    var selisih = omzet - tpakan;
+
+                    if (punjul === 0) {
+                        document.getElementById("hiceHasil").value =
+                            "~Per Hari~" + "\n" +
+                            "Telur\t " + setel.toLocaleString() + " Setel" + "\n" +
+                            "Pakan\t " + kpakan.toLocaleString() + " kg" + "\n" +
+                            "Biaya\t Rp " + tpakan.toLocaleString() + "\n" +
+                            "Omset\t Rp " + omzet.toLocaleString() + "\n" +
+                            "Selisih\t Rp " + selisih.toLocaleString();
+                    }
+                    else {
+                        document.getElementById("hiceHasil").value =
+                            "~Per Hari~" + "\n" +
+                            "Telur\t " + setel.toLocaleString() + " Setel (+ " + punjul.toLocaleString() + " Etre)" + "\n" +
+                            "Pakan\t " + kpakan.toLocaleString() + " kg" + "\n" +
+                            "Biaya\t Rp " + tpakan.toLocaleString() + "\n" +
+                            "Omset\t Rp " + omzet.toLocaleString() + "\n" +
+                            "Selisih\t Rp " + selisih.toLocaleString();
+                    }
+                }
+                else {
+                    var punjul = (Math.floor((hicePop * (hicePro / 100)) / 30)) * lama;
+                    var setel = Math.floor(punjul / 8);
+                    var kpakan = Math.ceil(((Math.round(hicePop * feed / 1000)) * lama) / 5) * 5;
+                    var tpakan = kpakan * hicePakan;
+                    var omzet = setel * 15 * hiceTelur;
+                    var selisih = omzet - tpakan;
+                    var per = Math.floor((selisih / lama) / 500) * 500;
+
+                    document.getElementById("hiceHasil").value =
+                        "~" + lama.toLocaleString() + " Hari~" + "\n" +
+                        "Telur\t " + setel.toLocaleString() + " Setel" + "\n" +
+                        "Pakan\t " + kpakan.toLocaleString() + " kg" + "\n" +
+                        "Biaya\t Rp " + tpakan.toLocaleString() + "\n" +
+                        "Omset\t Rp " + omzet.toLocaleString() + "\n" +
+                        "Selisih\t Rp " + selisih.toLocaleString() + "\n" +
+                        "(1 Hari)\t (Rp " + per.toLocaleString() + ")";
+                }
+            }
+        }
+
+        function hutang() {
+            const totalEl = document.getElementById("total");
+            const hutangEl = document.getElementById("totalHutang");
+            const sisaEl = document.getElementById("sisaHutang");
+            const copyEl = document.getElementById("forcopy");
+
+            if (!totalEl.value || !hutangEl.value) {
+                sisaEl.value = "";
+                sisaEl.classList.remove("text-danger", "text-info");
+                return;
+            }
+
+            const uangtelur = parseFloat(totalEl.value.replace(/[^0-9]/g, ""));
+            const totalHutang = parseFloat(hutangEl.value.replace(/[,.]/g, ""));
+            const sisa = uangtelur - totalHutang;
+
+            // Update warna sesuai minus atau tidak
+            if (sisa < 0) {
+                sisaEl.classList.add("text-danger");
+                sisaEl.classList.remove("text-info");
+                sisaEl.value = "Hutang: Rp " + sisa.toLocaleString();
+            } else {
+                sisaEl.classList.add("text-info");
+                sisaEl.classList.remove("text-danger");
+                sisaEl.value = "Sisa: Rp " + sisa.toLocaleString();
+            }
+
+            // Tampilkan hasil
+            // sisaEl.value = "Sisa: Rp " + sisa.toLocaleString();
+            copyEl.value = Math.abs(sisa).toString();
+        }
+
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const btn = document.getElementById('tooltipBtn');
+            const tooltip = new bootstrap.Tooltip(btn);
+
+            // Function to show tooltip briefly
+            function showBriefly() {
+                tooltip.show();
+                setTimeout(() => tooltip.hide(), 3000); // Show for 1.5 seconds
+            }
+
+            // Show immediately
+            showBriefly();
+
+            // Repeat every 5 seconds
+            setInterval(showBriefly, 7000);
+        });
+
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const btn = document.getElementById('tooltipBtnSawer');
+            const tooltip = new bootstrap.Tooltip(btn);
+
+            // Function to show tooltip briefly
+            function showBriefly() {
+                tooltip.show();
+                setTimeout(() => tooltip.hide(), 2000); // Show for 1.5 seconds
+            }
+
+            // Show immediately
+            showBriefly();
+
+            // Repeat every 5 seconds
+            setInterval(showBriefly, 20000);
+        });
+
+
+        document.addEventListener("DOMContentLoaded", function () {
+            // Untuk semua grup tombol dengan data-btn-group
+            document.querySelectorAll('[data-btn-group]').forEach(group => {
+                const checkboxes = group.querySelectorAll('input[type="checkbox"].btn-check');
+
+                checkboxes.forEach(chk => {
+                    const targetId = chk.getAttribute('data-bs-target');
+                    const collapse = document.querySelector(targetId);
+
+                    if (!collapse) return;
+
+                    // Saat tombol diubah
+                    chk.addEventListener('change', function () {
+                        if (this.checked) {
+                            // Matikan semua checkbox lain
+                            checkboxes.forEach(c => {
+                                if (c !== this) {
+                                    c.checked = false;
+                                    const otherTarget = c.getAttribute('data-bs-target');
+                                    const otherCollapse = document.querySelector(otherTarget);
+                                    if (otherCollapse && otherCollapse.classList.contains('show')) {
+                                        bootstrap.Collapse.getOrCreateInstance(otherCollapse).hide();
+                                    }
+                                }
+                            });
+                            // Buka collapse terkait
+                            bootstrap.Collapse.getOrCreateInstance(collapse).show();
+                        } else {
+                            // Jika dicentang lalu di-uncheck → tutup collapse
+                            bootstrap.Collapse.getOrCreateInstance(collapse).hide();
+                        }
+                    });
+
+                    // Saat collapse dibuka secara manual (misalnya pakai JS)
+                    collapse.addEventListener('shown.bs.collapse', function () {
+                        chk.checked = true;
+                        checkboxes.forEach(c => {
+                            if (c !== chk) c.checked = false;
+                        });
+                    });
+
+                    // Saat collapse ditutup secara manual
+                    collapse.addEventListener('hidden.bs.collapse', function () {
+                        chk.checked = false;
+                    });
+                });
+            });
+        });
+
+    </script>
+    <style>
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+
+        .hr-text {
+            display: flex;
+            align-items: center;
+        }
+
+        .hr-text:before {
+            content: "";
+            flex-grow: 1;
+            background-color: #54B4D3;
+            height: 1px;
+            margin: 0 10px 0 0;
+        }
+
+        .hr-text:after {
+            content: "";
+            flex-grow: 1;
+            background-color: #54B4D3;
+            height: 1px;
+            margin: 0 0 0 10px;
+        }
+
+        .float-btn {
+            /* border: solid 2px #ffffff; */
+            position: fixed;
+            bottom: 20px;
+            /* right: 20px; */
+            z-index: 1050;
+            border-radius: 25%;
+            width: 50px;
+            height: 50px;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .fil0 {
+            fill: white;
+            fill-rule: nonzero
+        }
+    </style>
+</head>
+
+<body class="container">
+
+    <br>
+    <div class="col text-center lead">
+        <span class="text-light" id="tanggal-hari-ini"></span>
+    </div>
+    <br>
+
+    <div class="row my-3">
+
+        <!-- Kolom Menu lainnya -->
+        <div class="col-12 col-lg-6">
+            <!-- 🔹 Tombol Utama -->
+            <div class="btn-group d-flex mb-3" data-btn-group>
+                <input type="checkbox" class="btn-check" id="btnPakan" data-bs-toggle="collapse"
+                    data-bs-target="#collapsePakan">
+                <label class="btn btn-outline-info w-100" for="btnPakan">Pakan</label>
+
+                <input type="checkbox" class="btn-check" id="btnProduksi" data-bs-toggle="collapse"
+                    data-bs-target="#collapseProduksi">
+                <label class="btn btn-outline-info w-100" for="btnProduksi">Produksi</label>
+
+                <input type="checkbox" class="btn-check" id="btnSelisih" data-bs-toggle="collapse"
+                    data-bs-target="#collapseSelisih">
+                <label class="btn btn-outline-info w-100" for="btnSelisih">Selisih</label>
+            </div>
+
+            <!-- 🔸 Wrapper Collapse Utama -->
+            <div id="mainCollapseWrapper">
+
+                <!-- 🟦 Collapse Pakan -->
+                <div class="collapse" id="collapsePakan" data-bs-parent="#mainCollapseWrapper">
+                    <div class="bg-dark text-light rounded">
+
+                        <!-- Sub Tombol -->
+                        <div class="btn-group d-flex mb-3" data-btn-group>
+                            <input type="checkbox" class="btn-check" id="btnKalkulator" data-bs-toggle="collapse"
+                                data-bs-target="#collapseKalkulator" checked>
+                            <label class="btn btn-outline-light w-100" for="btnKalkulator">Kalkulator</label>
+
+                            <input type="checkbox" class="btn-check" id="btnKonsumsi" data-bs-toggle="collapse"
+                                data-bs-target="#collapseKonsumsi">
+                            <label class="btn btn-outline-light w-100" for="btnKonsumsi">Konsumsi</label>
+                        </div>
+
+                        <!-- Sub Collapse Pakan -->
+                        <div id="pakanCollapseWrapper">
+                            <div class="collapse show" id="collapseKalkulator" data-bs-parent="#pakanCollapseWrapper">
+                                <div class="bg-dark text-light rounded">
+                                    <div class="col text-center fs-5">
+                                        Kalkulator Pakan
+                                    </div>
+                                    <form action="">
+                                        <div class="hr-text mt-2 mb-2 fs-5 text-info">Jagung</div>
+                                        <div class="input-group mt-1">
+                                            <div class="form-floating">
+                                                <input class="form-control text-white" autocomplete="off"
+                                                    inputmode="numeric" id="kiloJagung"
+                                                    oninput="prosesPakan(); formatInput(this);" placeholder="isi">
+                                                <label for="kiloJagung">Berat (Kg)</label>
+                                            </div>
+                                            <div class="form-floating">
+                                                <input class="form-control text-white" autocomplete="off"
+                                                    inputmode="numeric" id="hargaJagung"
+                                                    oninput="prosesPakan(); formatInput(this);" placeholder="isi">
+                                                <label for="hargaJagung">Harga</label>
+                                            </div>
+                                        </div>
+                                        <div class="input-group mt-1">
+                                            <span class="input-group-text">Rp</span>
+                                            <input class="form-control text-white" placeholder="Total"
+                                                autocomplete="off" id="totalJagung" disabled>
+                                        </div>
+                                        <div class="hr-text mt-2 mb-2 fs-5 text-info">Katul</div>
+                                        <div class="input-group mt-1">
+                                            <div class="form-floating">
+                                                <input class="form-control text-white" autocomplete="off"
+                                                    inputmode="numeric" id="kiloKatul"
+                                                    oninput="prosesPakan(); formatInput(this);" placeholder="isi">
+                                                <label for="kiloKatul">Berat (Kg)</label>
+                                            </div>
+                                            <div class="form-floating">
+                                                <input class="form-control text-white" autocomplete="off"
+                                                    inputmode="numeric" id="hargaKatul"
+                                                    oninput="prosesPakan(); formatInput(this);" placeholder="isi">
+                                                <label for="hargaKatul">Harga</label>
+                                            </div>
+                                        </div>
+                                        <div class="input-group mt-1">
+                                            <span class="input-group-text">Rp</span>
+                                            <input class="form-control text-white" placeholder="Total"
+                                                autocomplete="off" id="totalKatul" disabled>
+                                        </div>
+                                        <div class="hr-text mt-2 mb-2 fs-5 text-info">Konsentrat</div>
+                                        <div class="input-group mt-1">
+                                            <div class="form-floating">
+                                                <input class="form-control text-white" autocomplete="off"
+                                                    inputmode="numeric" id="hargaLayer"
+                                                    oninput="prosesPakan(); formatInput(this);" placeholder="isi">
+                                                <label for="hargaLayer">Harga Layer</label>
+                                            </div>
+                                        </div>
+                                        <div class="input-group mt-1">
+                                            <div class="form-floating">
+                                                <input class="form-control text-white" autocomplete="off"
+                                                    inputmode="numeric" id="hargaPremix"
+                                                    oninput="prosesPakan(); formatInput(this);" placeholder="isi">
+                                                <label for="hargaPremix">Premix</label>
+                                            </div>
+                                            <div class="form-floating">
+                                                <input class="form-control text-white" autocomplete="off"
+                                                    inputmode="numeric" id="upah"
+                                                    oninput="prosesPakan(); formatInput(this);" placeholder="isi">
+                                                <label for="upah">Jasa</label>
+                                            </div>
+                                        </div>
+                                        <div class="hr-text mt-2 mb-2 fs-5 text-info">TOTAL</div>
+                                        <div class="input-group mt-1">
+                                            <input class="form-control text-white" placeholder="Total Harga Pakan"
+                                                autocomplete="off" id="totalHarga" disabled>
+                                        </div>
+                                        <div class="input-group mt-1">
+                                            <input class="form-control text-white" placeholder="Berat"
+                                                autocomplete="off" id="totalBerat" disabled>
+                                            <input type="hidden" class="form-control text-white" autocomplete="off"
+                                                id="perKilo" disabled>
+                                            <input class="form-control text-info fs-5 fw-bold" placeholder="Per Kg"
+                                                autocomplete="off" id="bulat" disabled>
+                                        </div>
+                                        <div class="hr-text mt-2 text-info">
+                                            <button type="reset" class="btn btn-danger" tabindex="-1">RESET</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="collapse" id="collapseKonsumsi" data-bs-parent="#pakanCollapseWrapper">
+                                <div class="bg-dark text-light rounded">
+                                    <div class="col text-center fs-5">
+                                        Konsumsi Pakan
+                                    </div>
+                                    <form action="">
+                                        <div class="input-group mt-2">
+                                            <div class="form-floating">
+                                                <input class="form-control text-white" autocomplete="off"
+                                                    inputmode="numeric" id="populasi"
+                                                    oninput="konsumsiPakan(); formatInput(this);"
+                                                    placeholder="Populasi">
+                                                <label for="populasi">Populasi</label>
+                                            </div>
+                                            <button type="reset" class="btn btn-danger" tabindex="-1"
+                                                onclick="Ckonsumsi()">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                    fill="currentColor" class="bi bi-backspace-fill"
+                                                    viewBox="0 0 16 16">
+                                                    <path
+                                                        d="M15.683 3a2 2 0 0 0-2-2h-7.08a2 2 0 0 0-1.519.698L.241 7.35a1 1 0 0 0 0 1.302l4.843 5.65A2 2 0 0 0 6.603 15h7.08a2 2 0 0 0 2-2zM5.829 5.854a.5.5 0 1 1 .707-.708l2.147 2.147 2.146-2.147a.5.5 0 1 1 .707.708L9.39 8l2.146 2.146a.5.5 0 0 1-.707.708L8.683 8.707l-2.147 2.147a.5.5 0 0 1-.707-.708L7.976 8z" />
+                                                </svg>
+                                            </button>
+                                        </div>
+                                        <div class="input-group mt-1">
+                                            <div class="form-floating">
+                                                <input class="form-control text-white" autocomplete="off"
+                                                    inputmode="numeric" id="konsumsi"
+                                                    oninput="konsumsiPakan(); formatInput(this);"
+                                                    placeholder="Konsumsi">
+                                                <label for="konsumsi">Porsi (gram)</label>
+                                            </div>
+                                            <span class="input-group-text">/</span>
+                                            <div class="form-floating">
+                                                <input class="form-control text-white" autocomplete="off"
+                                                    inputmode="numeric" id="konsumsiZak"
+                                                    oninput="konsumsiPakanZak(); formatInput(this);"
+                                                    placeholder="Konsumsi">
+                                                <label for="konsumsiZak">Zak (50kg/zak)</label>
+                                            </div>
+                                        </div>
+                                        <div class="input-group mt-1">
+                                            <div class="form-floating">
+                                                <textarea class="form-control fs-5 mt-1 text-info" placeholder=""
+                                                    id="konsumsiHasil" style="height: 130px" disabled></textarea>
+                                                <label for="konsumsiHasil" id="lblKonsumsiHasil"
+                                                    style="font-size: 14pt;" class="fw-bold">Hasil</label>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 🟧 Collapse Produksi -->
+                <div class="collapse" id="collapseProduksi" data-bs-parent="#mainCollapseWrapper">
+                    <div class="bg-dark text-light rounded">
+
+                        <!-- Sub Tombol -->
+                        <div class="btn-group d-flex mb-3" data-btn-group>
+                            <input type="checkbox" class="btn-check" id="btnProd1" data-bs-toggle="collapse"
+                                data-bs-target="#collapseProd1">
+                            <label class="btn btn-outline-light" for="btnProd1">EggTry</label>
+
+                            <input type="checkbox" class="btn-check" id="btnProd2" data-bs-toggle="collapse"
+                                data-bs-target="#collapseProd2" checked>
+                            <label class="btn btn-outline-light" for="btnProd2">Setel</label>
+
+                            <input type="checkbox" class="btn-check" id="btnProd3" data-bs-toggle="collapse"
+                                data-bs-target="#collapseProd3">
+                            <label class="btn btn-outline-light" for="btnProd3">Persen</label>
+
+                            <input type="checkbox" class="btn-check" id="btnProd4" data-bs-toggle="collapse"
+                                data-bs-target="#collapseProd4">
+                            <label class="btn btn-outline-light" for="btnProd4">Populasi</label>
+                        </div>
+
+                        <!-- Sub Collapse Produksi -->
+                        <div id="produksiCollapseWrapper">
+                            <div class="collapse" id="collapseProd1" data-bs-parent="#produksiCollapseWrapper">
+                                <div class="bg-dark text-light rounded">
+                                    <form action="">
+                                        <div class="input-group mt-1">
+                                            <div class="form-floating">
+                                                <input class="form-control text-white" autocomplete="off"
+                                                    inputmode="numeric" id="kiraEtrePop"
+                                                    oninput="formatInput(this); perkiraanEtre();"
+                                                    placeholder="Populasi">
+                                                <label for="kiraEtrePop">Populasi</label>
+                                            </div>
+                                            <div class="form-floating">
+                                                <input class="form-control text-white" autocomplete="off"
+                                                    inputmode="numeric" id="kiraEtreEtre"
+                                                    oninput="formatInput(this); perkiraanEtre();" placeholder="Etre">
+                                                <label for="kiraEtreEtre">Etre</label>
+                                            </div>
+                                        </div>
+                                        <div class="input-group mt-1">
+                                            <input class="form-control text-info text-center fs-4 fw-bold"
+                                                autocomplete="off" id="kiraEtrePersen" placeholder="Persentase"
+                                                disabled>
+                                            <button type="reset" class="btn btn-danger" tabindex="-1">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                    fill="currentColor" class="bi bi-backspace-fill"
+                                                    viewBox="0 0 16 16">
+                                                    <path
+                                                        d="M15.683 3a2 2 0 0 0-2-2h-7.08a2 2 0 0 0-1.519.698L.241 7.35a1 1 0 0 0 0 1.302l4.843 5.65A2 2 0 0 0 6.603 15h7.08a2 2 0 0 0 2-2zM5.829 5.854a.5.5 0 1 1 .707-.708l2.147 2.147 2.146-2.147a.5.5 0 1 1 .707.708L9.39 8l2.146 2.146a.5.5 0 0 1-.707.708L8.683 8.707l-2.147 2.147a.5.5 0 0 1-.707-.708L7.976 8z" />
+                                                </svg>
+                                            </button>
+                                        </div>
+                                        <div class="mt-1 alert alert-info alert-dismissible fade show" role="alert">
+                                            Mencari Persentase Produksi Berdasarkan Jumlah EggTry
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                                aria-label="Close"></button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="collapse show" id="collapseProd2" data-bs-parent="#produksiCollapseWrapper">
+                                <div class="bg-dark text-light rounded">
+                                    <form action="">
+                                        <div class="input-group mt-1">
+                                            <div class="form-floating">
+                                                <input class="form-control text-white" autocomplete="off"
+                                                    inputmode="numeric" id="kiraSetelPop"
+                                                    oninput="formatInput(this); perkiraanSetel();"
+                                                    placeholder="Populasi">
+                                                <label for="kiraSetelPop">Populasi</label>
+                                            </div>
+                                            <div class="form-floating">
+                                                <input class="form-control text-white" autocomplete="off"
+                                                    inputmode="numeric" id="kiraSetelSetel"
+                                                    oninput="formatInput(this); perkiraanSetel();" placeholder="Setel">
+                                                <label for="kiraSetelSetel">Setel</label>
+                                            </div>
+                                        </div>
+                                        <div class="input-group mt-1">
+                                            <input class="form-control text-info text-center fs-4 fw-bold"
+                                                autocomplete="off" id="kiraSetelPersen" placeholder="Persen" disabled>
+                                            <input class="form-control text-info text-center fs-4 fw-bold"
+                                                autocomplete="off" id="kiraSetelEtre" placeholder="Etre" disabled>
+                                            <button type="reset" class="btn btn-danger" tabindex="-1">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                    fill="currentColor" class="bi bi-backspace-fill"
+                                                    viewBox="0 0 16 16">
+                                                    <path
+                                                        d="M15.683 3a2 2 0 0 0-2-2h-7.08a2 2 0 0 0-1.519.698L.241 7.35a1 1 0 0 0 0 1.302l4.843 5.65A2 2 0 0 0 6.603 15h7.08a2 2 0 0 0 2-2zM5.829 5.854a.5.5 0 1 1 .707-.708l2.147 2.147 2.146-2.147a.5.5 0 1 1 .707.708L9.39 8l2.146 2.146a.5.5 0 0 1-.707.708L8.683 8.707l-2.147 2.147a.5.5 0 0 1-.707-.708L7.976 8z" />
+                                                </svg>
+                                            </button>
+                                        </div>
+                                        <div class="mt-1 alert alert-info alert-dismissible fade show" role="alert">
+                                            Mencari Persentase Produksi Berdasarkan Jumlah Setel (8 EggTry)
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                                aria-label="Close"></button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="collapse" id="collapseProd3" data-bs-parent="#produksiCollapseWrapper">
+                                <div class="bg-dark text-light rounded">
+                                    <form action="">
+                                        <div class="input-group mt-1">
+                                            <div class="form-floating">
+                                                <input class="form-control text-white" autocomplete="off"
+                                                    inputmode="numeric" id="produkPopulasi"
+                                                    oninput="perkiraan(); formatInput(this);" placeholder="Populasi">
+                                                <label for="produkPopulasi" id="">Populasi</label>
+                                            </div>
+                                            <div class="form-floating">
+                                                <input class="form-control text-white" autocomplete="off"
+                                                    inputmode="numeric" id="produkPersen" oninput="perkiraan()"
+                                                    placeholder="Persentase">
+                                                <label for="produkPersen" id="">Persentase (%)</label>
+                                            </div>
+                                            <button type="reset" class="btn btn-danger" tabindex="-1">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                    fill="currentColor" class="bi bi-backspace-fill"
+                                                    viewBox="0 0 16 16">
+                                                    <path
+                                                        d="M15.683 3a2 2 0 0 0-2-2h-7.08a2 2 0 0 0-1.519.698L.241 7.35a1 1 0 0 0 0 1.302l4.843 5.65A2 2 0 0 0 6.603 15h7.08a2 2 0 0 0 2-2zM5.829 5.854a.5.5 0 1 1 .707-.708l2.147 2.147 2.146-2.147a.5.5 0 1 1 .707.708L9.39 8l2.146 2.146a.5.5 0 0 1-.707.708L8.683 8.707l-2.147 2.147a.5.5 0 0 1-.707-.708L7.976 8z" />
+                                                </svg>
+                                            </button>
+                                        </div>
+                                        <div class="input-group mt-1">
+                                            <input class="form-control text-info text-center fs-5 fw-bold"
+                                                autocomplete="off" id="produkButiran" placeholder="Total Butiran"
+                                                disabled>
+                                        </div>
+                                        <div class="input-group mt-1">
+                                            <input class="form-control text-info text-center fs-5 fw-bold"
+                                                autocomplete="off" id="produkEtre" placeholder="Total Etre" disabled>
+                                        </div>
+                                        <div class="input-group mt-1">
+                                            <input class="form-control text-warning text-center fs-5 fw-bold"
+                                                autocomplete="off" id="produkSetel" placeholder="Total Setel" disabled>
+                                        </div>
+                                        <div class="mt-1 alert alert-info alert-dismissible fade show" role="alert">
+                                            Mencari Total Produksi Berdasarkan Persentase
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                                aria-label="Close"></button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="collapse" id="collapseProd4" data-bs-parent="#produksiCollapseWrapper">
+                                <div class="bg-dark text-light rounded">
+                                    <form action="">
+                                        <div class="input-group mt-1">
+                                            <div class="form-floating">
+                                                <input class="form-control text-white" autocomplete="off"
+                                                    inputmode="numeric" id="produkSetelPopulasi"
+                                                    oninput="tebakPopulasi(); formatInput(this);" placeholder="Setel">
+                                                <label for="produkSetelPopulasi" id="">Setel PerHari</label>
+                                            </div>
+                                            <span class="input-group-text">/</span>
+                                            <div class="form-floating">
+                                                <input class="form-control text-white" autocomplete="off"
+                                                    inputmode="numeric" id="produkEtrePopulasi"
+                                                    oninput="tebakPopulasi(); formatInput(this);" placeholder="Etre">
+                                                <label for="produkEtrePopulasi" id="">Etre PerHari</label>
+                                            </div>
+                                            <button onclick="CperkiraanPopulasi()" type="reset" class="btn btn-danger"
+                                                tabindex="-1">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                    fill="currentColor" class="bi bi-backspace-fill"
+                                                    viewBox="0 0 16 16">
+                                                    <path
+                                                        d="M15.683 3a2 2 0 0 0-2-2h-7.08a2 2 0 0 0-1.519.698L.241 7.35a1 1 0 0 0 0 1.302l4.843 5.65A2 2 0 0 0 6.603 15h7.08a2 2 0 0 0 2-2zM5.829 5.854a.5.5 0 1 1 .707-.708l2.147 2.147 2.146-2.147a.5.5 0 1 1 .707.708L9.39 8l2.146 2.146a.5.5 0 0 1-.707.708L8.683 8.707l-2.147 2.147a.5.5 0 0 1-.707-.708L7.976 8z" />
+                                                </svg>
+                                            </button>
+                                        </div>
+                                        <div class="input-group mt-1">
+                                            <div class="form-floating" style="width: 60%;">
+                                                <input class="form-control text-info text-center fs-5 fw-bold"
+                                                    autocomplete="off" style="height: 75px;" id="produkSetelHasil"
+                                                    placeholder="Perkiraan Populasi" disabled>
+                                                <label id="labelProdukSetelHasil" for="produkSetelHasil"
+                                                    style="font-size: 12pt;" class="fw-bold text-light">Perkiraan
+                                                    Populasi</label>
+                                            </div>
+                                            <select class="form-select" aria-label="Default select example"
+                                                id="penebakPop" onchange="tebakPopulasi()" style="height: 75px;">
+                                                <option value="60">60%</option>
+                                                <option value="65">65%</option>
+                                                <option value="70">70%</option>
+                                                <option value="75">75%</option>
+                                                <option value="80" selected>80%</option>
+                                                <option value="85">85%</option>
+                                                <option value="90">90%</option>
+                                                <option value="95">95%</option>
+                                            </select>
+                                        </div>
+                                        <div class="mt-1 alert alert-info alert-dismissible fade show" role="alert">
+                                            Menebak Populasi Berdasarkan Produksi (Berapa <b>Setel</b> PerHari
+                                            <b>atau</b>
+                                            Berapa <b>EggTry</b> PerHari)
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                                aria-label="Close"></button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 🟥 Collapse Selisih -->
+                <div class="collapse" id="collapseSelisih" data-bs-parent="#mainCollapseWrapper">
+                    <div class="bg-dark text-light rounded">
+                        <div class="col text-center fs-5">
+                            Selisih Telur-Pakan
+                        </div>
+                        <form action="">
+                            <div class="input-group mt-1">
+                                <div class="form-floating">
+                                    <input autocomplete="off" class="form-control text-white" id="setel2"
+                                        oninput="untung()" placeholder="Setel" tabindex="1" type="number"
+                                        inputmode="numeric" />
+                                    <label for="setel2" id="setel2Lbl">Telur (Setel)</label>
+                                </div>
+                                <div class="form-floating">
+                                    <input autocomplete="off" class="form-control text-white" id="pakanSelisih"
+                                        inputmode="numeric" oninput="untung(); formatInput(this);" placeholder="Setel"
+                                        tabindex="3" />
+                                    <label for="pakanSelisih" id="pakanSelisihLbl">Pakan (Kg)</label>
+                                </div>
+                            </div>
+                            <div class="input-group mt-1">
+                                <div class="form-floating">
+                                    <input autocomplete="off" class="form-control text-white" id="hargaSetel2"
+                                        inputmode="numeric" oninput="untung(); formatInput(this);" placeholder="Harga"
+                                        tabindex="2" />
+                                    <label for="hargaSetel2">Harga Telur</label>
+                                </div>
+                                <div class="form-floating">
+                                    <input autocomplete="off" class="form-control text-white" id="hargaPakanSelisih"
+                                        inputmode="numeric" oninput="untung(); formatInput(this);" placeholder="Harga"
+                                        tabindex="4" />
+                                    <label for="hargaPakanSelisih">Harga Pakan</label>
+                                </div>
+                            </div>
+                            <div class="input-group mt-1">
+                                <input autocomplete="off" class="form-control text-warning-emphasis fw-bold" disabled=""
+                                    id="totalTelur" placeholder="Total Telur" />
+                                <input autocomplete="off" class="form-control text-danger-emphasis fw-bold" disabled=""
+                                    id="totalPakanSelisih" placeholder="Total Pakan" />
+                            </div>
+                            <div class="input-group mt-1">
+                                <input autocomplete="off" class="form-control text-info text-center fs-4 fw-bold"
+                                    disabled="" id="selisih" placeholder="Selisih" />
+                            </div>
+                            <div class="input-group mt-1">
+                                <div class="form-floating">
+                                    <input autocomplete="off" class="form-control text-white" id="berapaHari"
+                                        inputmode="numeric" oninput="untung(); formatInput(this);" placeholder="Hari"
+                                        tabindex="5" />
+                                    <label for="berapaHari">Berapa Hari?</label>
+                                </div>
+                                <button type="reset" class="btn btn-danger" tabindex="-1" onclick="resetLblUntung()">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                        class="bi bi-backspace-fill" viewBox="0 0 16 16">
+                                        <path
+                                            d="M15.683 3a2 2 0 0 0-2-2h-7.08a2 2 0 0 0-1.519.698L.241 7.35a1 1 0 0 0 0 1.302l4.843 5.65A2 2 0 0 0 6.603 15h7.08a2 2 0 0 0 2-2zM5.829 5.854a.5.5 0 1 1 .707-.708l2.147 2.147 2.146-2.147a.5.5 0 1 1 .707.708L9.39 8l2.146 2.146a.5.5 0 0 1-.707.708L8.683 8.707l-2.147 2.147a.5.5 0 0 1-.707-.708L7.976 8z" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Kolom Kalkulator Endog -->
+        <div class="col-12 col-lg-6 mb-3">
+            <div class="input-group mb-2">
+                 <button id="tooltipBtnS" class="btn btn-light" data-bs-toggle="modal"
+                    data-bs-target="#modalHiCe" data-bs-toggle="tooltip" data-bs-placement="left" title="Hitung Cepat">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                        class="bi bi-lightning-charge-fill" viewBox="0 0 16 16">
+                        <path
+                            d="M11.251.068a.5.5 0 0 1 .227.58L9.677 6.5H13a.5.5 0 0 1 .364.843l-8 8.5a.5.5 0 0 1-.842-.49L6.323 9.5H3a.5.5 0 0 1-.364-.843l8-8.5a.5.5 0 0 1 .615-.09z" />
+                    </svg>
+                </button>
+                <span class="form-control bg-light border border-1 border-light text-dark text-end fs-5">Kalkulator Endog</span>
+                <!-- <input type="text" class="form-control fs-4 text-center" placeholder="Kalkulator Endog" aria-label="Example text with button addon" aria-describedby="button-addon1" disabled> -->
+            </div>
+            <form action="">
+                <!-- <div class="col text-center text-dark mb-2 fs-4 bg-light border border-1 border-light rounded">Kalkulator Endog</div> -->
+                <!-- <div class="col fs-4 text-center text-info mb-2 hr-text">Kalkulator Endog</div> -->
+                <div class="input-group input-group-lg">
+                    <div class="form-floating">
+                        <input class="form-control text-white fs-3" autocomplete="off" type="number" id="setel"
+                            oninput="etre(); calculate(); kiloEndog(); hutang();" placeholder="Setel"
+                            inputmode="numeric">
+                        <label for="setel" id="kiloneEndog">Setel</label>
+                    </div>
+                    <div class="form-floating">
+                        <input autocomplete="off" class="form-control text-white fs-3" id="harga"
+                            oninput="calculate(); hutang();" placeholder="Harga" type="number" inputmode="numeric"
+                            style="letter-spacing: 3px;" />
+                        <label for="harga">Harga</label>
+                    </div>
+                    <button class="btn btn-danger" type="reset" tabindex="-1" onclick="resetSetEndog(); clearCopy();">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
+                            class="bi bi-backspace-fill" viewBox="0 0 16 16">
+                            <path
+                                d="M15.683 3a2 2 0 0 0-2-2h-7.08a2 2 0 0 0-1.519.698L.241 7.35a1 1 0 0 0 0 1.302l4.843 5.65A2 2 0 0 0 6.603 15h7.08a2 2 0 0 0 2-2zM5.829 5.854a.5.5 0 1 1 .707-.708l2.147 2.147 2.146-2.147a.5.5 0 1 1 .707.708L9.39 8l2.146 2.146a.5.5 0 0 1-.707.708L8.683 8.707l-2.147 2.147a.5.5 0 0 1-.707-.708L7.976 8z" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="input-group input-group-lg mt-1">
+                    <input class="form-control text-info text-center fs-2 fw-bold" id="total" placeholder="Uang"
+                        disabled>
+                    <button class="btn btn-secondary" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseHutang" aria-expanded="false" aria-controls="collapseExample">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
+                            class="bi bi-cash-stack" viewBox="0 0 16 16">
+                            <path d="M1 3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1zm7 8a2 2 0 1 0 0-4 2 2 0 0 0 0 4" />
+                            <path
+                                d="M0 5a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1zm3 0a2 2 0 0 1-2 2v4a2 2 0 0 1 2 2h10a2 2 0 0 1 2-2V7a2 2 0 0 1-2-2z" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="input-group mt-1">
+                    <input class="form-control text-warning-emphasis text-center fs-5 fw-bold" style="width: 60%;"
+                        autocomplete="off" id="etreTotal" placeholder="EggTry" disabled>
+
+                    <select class="form-select text-warning-emphasis" aria-label="Default select example" id="anEtre"
+                        onchange="etre()">
+                        <option value="5">5an</option>
+                        <option value="6">6an</option>
+                        <option value="7">7an</option>
+                        <option value="8" selected>8an</option>
+                        <option value="9">9an</option>
+                        <option value="10">10an</option>
+                        <option value="11">11an</option>
+                        <option value="12">12an</option>
+                        <option value="13">13an</option>
+                        <option value="14">14an</option>
+                        <option value="15">15an</option>
+                    </select>
+                </div>
+            </form>
+            <div class="collapse" id="collapseHutang">
+                <div class="mt-1 text-info fs-5 hr-text">
+                    Hutang
+                </div>
+                <form action="">
+                    <div class="input-group mt-1">
+                        <span class="input-group-text">Rp</span>
+                        <div class="form-floating">
+                            <input class="form-control text-white" inputmode="numeric" id="totalHutang"
+                                placeholder="Total Hutang" oninput="hutang(); formatInput(this);">
+                            <label for="totalHutang">Total Hutang</label>
+                        </div>
+                        <button class="btn btn-danger" type="reset" tabindex="-1" onclick="clearCopy()">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                class="bi bi-backspace-fill" viewBox="0 0 16 16">
+                                <path
+                                    d="M15.683 3a2 2 0 0 0-2-2h-7.08a2 2 0 0 0-1.519.698L.241 7.35a1 1 0 0 0 0 1.302l4.843 5.65A2 2 0 0 0 6.603 15h7.08a2 2 0 0 0 2-2zM5.829 5.854a.5.5 0 1 1 .707-.708l2.147 2.147 2.146-2.147a.5.5 0 1 1 .707.708L9.39 8l2.146 2.146a.5.5 0 0 1-.707.708L8.683 8.707l-2.147 2.147a.5.5 0 0 1-.707-.708L7.976 8z" />
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="input-group mt-1">
+                        <input class="form-control text-info text-center fw-bold fs-5" id="sisaHutang"
+                            placeholder="Sisa/Hutang" disabled>
+                        <input id="forcopy" hidden>
+                        <button type="button" class="btn btn-secondary" onclick="copyText()">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                class="bi bi-copy" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd"
+                                    d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1h1v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1v1z" />
+                            </svg>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <br>
+
+
+
+        <br>
+        <!-- <hr class="mt-3"> -->
+        <!-- <div class="text-center">
+            Kalkulator Peternak Ayam Petelur
+        </div>
+        <div class="text-center">
+            &copy;
+            Dibuat oleh Rocky Pratama
+        </div>
+        <div class="text-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-apple"
+                viewBox="0 0 16 16">
+                <path
+                    d="M11.182.008C11.148-.03 9.923.023 8.857 1.18c-1.066 1.156-.902 2.482-.878 2.516s1.52.087 2.475-1.258.762-2.391.728-2.43m3.314 11.733c-.048-.096-2.325-1.234-2.113-3.422s1.675-2.789 1.698-2.854-.597-.79-1.254-1.157a3.7 3.7 0 0 0-1.563-.434c-.108-.003-.483-.095-1.254.116-.508.139-1.653.589-1.968.607-.316.018-1.256-.522-2.267-.665-.647-.125-1.333.131-1.824.328-.49.196-1.422.754-2.074 2.237-.652 1.482-.311 3.83-.067 4.56s.625 1.924 1.273 2.796c.576.984 1.34 1.667 1.659 1.899s1.219.386 1.843.067c.502-.308 1.408-.485 1.766-.472.357.013 1.061.154 1.782.539.571.197 1.111.115 1.652-.105.541-.221 1.324-1.059 2.238-2.758q.52-1.185.473-1.282" />
+                <path
+                    d="M11.182.008C11.148-.03 9.923.023 8.857 1.18c-1.066 1.156-.902 2.482-.878 2.516s1.52.087 2.475-1.258.762-2.391.728-2.43m3.314 11.733c-.048-.096-2.325-1.234-2.113-3.422s1.675-2.789 1.698-2.854-.597-.79-1.254-1.157a3.7 3.7 0 0 0-1.563-.434c-.108-.003-.483-.095-1.254.116-.508.139-1.653.589-1.968.607-.316.018-1.256-.522-2.267-.665-.647-.125-1.333.131-1.824.328-.49.196-1.422.754-2.074 2.237-.652 1.482-.311 3.83-.067 4.56s.625 1.924 1.273 2.796c.576.984 1.34 1.667 1.659 1.899s1.219.386 1.843.067c.502-.308 1.408-.485 1.766-.472.357.013 1.061.154 1.782.539.571.197 1.111.115 1.652-.105.541-.221 1.324-1.059 2.238-2.758q.52-1.185.473-1.282" />
+            </svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-android2"
+                viewBox="0 0 16 16">
+                <path
+                    d="m10.213 1.471.691-1.26q.069-.124-.048-.192-.128-.057-.195.058l-.7 1.27A4.8 4.8 0 0 0 8.005.941q-1.032 0-1.956.404l-.7-1.27Q5.281-.037 5.154.02q-.117.069-.049.193l.691 1.259a4.25 4.25 0 0 0-1.673 1.476A3.7 3.7 0 0 0 3.5 5.02h9q0-1.125-.623-2.072a4.27 4.27 0 0 0-1.664-1.476ZM6.22 3.303a.37.37 0 0 1-.267.11.35.35 0 0 1-.263-.11.37.37 0 0 1-.107-.264.37.37 0 0 1 .107-.265.35.35 0 0 1 .263-.11q.155 0 .267.11a.36.36 0 0 1 .112.265.36.36 0 0 1-.112.264m4.101 0a.35.35 0 0 1-.262.11.37.37 0 0 1-.268-.11.36.36 0 0 1-.112-.264q0-.154.112-.265a.37.37 0 0 1 .268-.11q.155 0 .262.11a.37.37 0 0 1 .107.265q0 .153-.107.264M3.5 11.77q0 .441.311.75.311.306.76.307h.758l.01 2.182q0 .414.292.703a.96.96 0 0 0 .7.288.97.97 0 0 0 .71-.288.95.95 0 0 0 .292-.703v-2.182h1.343v2.182q0 .414.292.703a.97.97 0 0 0 .71.288.97.97 0 0 0 .71-.288.95.95 0 0 0 .292-.703v-2.182h.76q.436 0 .749-.308.31-.307.311-.75V5.365h-9zm10.495-6.587a.98.98 0 0 0-.702.278.9.9 0 0 0-.293.685v4.063q0 .406.293.69a.97.97 0 0 0 .702.284q.42 0 .712-.284a.92.92 0 0 0 .293-.69V6.146a.9.9 0 0 0-.293-.685 1 1 0 0 0-.712-.278m-12.702.283a1 1 0 0 1 .712-.283q.41 0 .702.283a.9.9 0 0 1 .293.68v4.063a.93.93 0 0 1-.288.69.97.97 0 0 1-.707.284 1 1 0 0 1-.712-.284.92.92 0 0 1-.293-.69V6.146q0-.396.293-.68" />
+            </svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-windows"
+                viewBox="0 0 16 16">
+                <path
+                    d="M6.555 1.375 0 2.237v5.45h6.555zM0 13.795l6.555.933V8.313H0zm7.278-5.4.026 6.378L16 16V8.395zM16 0 7.33 1.244v6.414H16z" />
+            </svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                class="bi bi-browser-safari" viewBox="0 0 16 16">
+                <path
+                    d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m.25-14.75v1.5a.25.25 0 0 1-.5 0v-1.5a.25.25 0 0 1 .5 0m0 12v1.5a.25.25 0 1 1-.5 0v-1.5a.25.25 0 1 1 .5 0M4.5 1.938a.25.25 0 0 1 .342.091l.75 1.3a.25.25 0 0 1-.434.25l-.75-1.3a.25.25 0 0 1 .092-.341m6 10.392a.25.25 0 0 1 .341.092l.75 1.299a.25.25 0 1 1-.432.25l-.75-1.3a.25.25 0 0 1 .091-.34ZM2.28 4.408l1.298.75a.25.25 0 0 1-.25.434l-1.299-.75a.25.25 0 0 1 .25-.434Zm10.392 6 1.299.75a.25.25 0 1 1-.25.434l-1.3-.75a.25.25 0 0 1 .25-.434ZM1 8a.25.25 0 0 1 .25-.25h1.5a.25.25 0 0 1 0 .5h-1.5A.25.25 0 0 1 1 8m12 0a.25.25 0 0 1 .25-.25h1.5a.25.25 0 1 1 0 .5h-1.5A.25.25 0 0 1 13 8M2.03 11.159l1.298-.75a.25.25 0 0 1 .25.432l-1.299.75a.25.25 0 0 1-.25-.432Zm10.392-6 1.299-.75a.25.25 0 1 1 .25.433l-1.3.75a.25.25 0 0 1-.25-.434ZM4.5 14.061a.25.25 0 0 1-.092-.341l.75-1.3a.25.25 0 0 1 .434.25l-.75 1.3a.25.25 0 0 1-.342.091m6-10.392a.25.25 0 0 1-.091-.342l.75-1.299a.25.25 0 1 1 .432.25l-.75 1.3a.25.25 0 0 1-.341.09ZM6.494 1.415l.13.483a.25.25 0 1 1-.483.13l-.13-.483a.25.25 0 0 1 .483-.13M9.86 13.972l.13.483a.25.25 0 1 1-.483.13l-.13-.483a.25.25 0 0 1 .483-.13M3.05 3.05a.25.25 0 0 1 .354 0l.353.354a.25.25 0 0 1-.353.353l-.354-.353a.25.25 0 0 1 0-.354m9.193 9.193a.25.25 0 0 1 .353 0l.354.353a.25.25 0 1 1-.354.354l-.353-.354a.25.25 0 0 1 0-.353M1.545 6.01l.483.13a.25.25 0 1 1-.13.483l-.483-.13a.25.25 0 1 1 .13-.482Zm12.557 3.365.483.13a.25.25 0 1 1-.13.483l-.483-.13a.25.25 0 1 1 .13-.483m-12.863.436a.25.25 0 0 1 .176-.306l.483-.13a.25.25 0 1 1 .13.483l-.483.13a.25.25 0 0 1-.306-.177m12.557-3.365a.25.25 0 0 1 .176-.306l.483-.13a.25.25 0 1 1 .13.483l-.483.13a.25.25 0 0 1-.306-.177M3.045 12.944a.3.3 0 0 1-.029-.376l3.898-5.592a.3.3 0 0 1 .062-.062l5.602-3.884a.278.278 0 0 1 .392.392L9.086 9.024a.3.3 0 0 1-.062.062l-5.592 3.898a.3.3 0 0 1-.382-.034zm3.143 1.817a.25.25 0 0 1-.176-.306l.129-.483a.25.25 0 0 1 .483.13l-.13.483a.25.25 0 0 1-.306.176M9.553 2.204a.25.25 0 0 1-.177-.306l.13-.483a.25.25 0 1 1 .483.13l-.13.483a.25.25 0 0 1-.306.176" />
+            </svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                class="bi bi-browser-chrome" viewBox="0 0 16 16">
+                <path fill-rule="evenodd"
+                    d="M16 8a8 8 0 0 1-7.022 7.94l1.902-7.098a3 3 0 0 0 .05-1.492A3 3 0 0 0 10.237 6h5.511A8 8 0 0 1 16 8M0 8a8 8 0 0 0 7.927 8l1.426-5.321a3 3 0 0 1-.723.255 3 3 0 0 1-1.743-.147 3 3 0 0 1-1.043-.7L.633 4.876A8 8 0 0 0 0 8m5.004-.167L1.108 3.936A8.003 8.003 0 0 1 15.418 5H8.066a3 3 0 0 0-1.252.243 2.99 2.99 0 0 0-1.81 2.59M8 10a2 2 0 1 0 0-4 2 2 0 0 0 0 4" />
+            </svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                class="bi bi-browser-firefox" viewBox="0 0 16 16">
+                <path
+                    d="M13.384 3.408c.535.276 1.22 1.152 1.556 1.963a8 8 0 0 1 .503 3.897l-.009.077-.026.224A7.758 7.758 0 0 1 .006 8.257v-.04q.025-.545.114-1.082c.01-.074.075-.42.09-.489l.01-.051a6.6 6.6 0 0 1 1.041-2.35q.327-.465.725-.87.35-.358.758-.65a1.5 1.5 0 0 1 .26-.137c-.018.268-.04 1.553.268 1.943h.003a5.7 5.7 0 0 1 1.868-1.443 3.6 3.6 0 0 0 .021 1.896q.105.07.2.152c.107.09.226.207.454.433l.068.066.009.009a2 2 0 0 0 .213.18c.383.287.943.563 1.306.741.201.1.342.168.359.193l.004.008c-.012.193-.695.858-.933.858-2.206 0-2.564 1.335-2.564 1.335.087.997.714 1.839 1.517 2.357a4 4 0 0 0 .439.241q.114.05.228.094c.325.115.665.18 1.01.194 3.043.143 4.155-2.804 3.129-4.745v-.001a3 3 0 0 0-.731-.9 3 3 0 0 0-.571-.37l-.003-.002a2.68 2.68 0 0 1 1.87.454 3.92 3.92 0 0 0-3.396-1.983q-.116.001-.23.01l-.042.003V4.31h-.002a4 4 0 0 0-.8.14 7 7 0 0 0-.333-.314 2 2 0 0 0-.2-.152 4 4 0 0 1-.088-.383 5 5 0 0 1 1.352-.289l.05-.003c.052-.004.125-.01.205-.012C7.996 2.212 8.733.843 10.17.002l-.003.005.003-.001.002-.002h.002l.002-.002h.015a.02.02 0 0 1 .012.007 2.4 2.4 0 0 0 .206.48q.09.153.183.297c.49.774 1.023 1.379 1.543 1.968.771.874 1.512 1.715 2.036 3.02l-.001-.013a8 8 0 0 0-.786-2.353" />
+            </svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                class="bi bi-browser-edge" viewBox="0 0 16 16">
+                <path
+                    d="M9.482 9.341c-.069.062-.17.153-.17.309 0 .162.107.325.3.456.877.613 2.521.54 2.592.538h.002c.667 0 1.32-.18 1.894-.519A3.84 3.84 0 0 0 16 6.819c.018-1.316-.44-2.218-.666-2.664l-.04-.08C13.963 1.487 11.106 0 8 0A8 8 0 0 0 .473 5.29C1.488 4.048 3.183 3.262 5 3.262c2.83 0 5.01 1.885 5.01 4.797h-.004v.002c0 .338-.168.832-.487 1.244l.006-.006z" />
+                <path
+                    d="M.01 7.753a8.14 8.14 0 0 0 .753 3.641 8 8 0 0 0 6.495 4.564 5 5 0 0 1-.785-.377h-.01l-.12-.075a5.5 5.5 0 0 1-1.56-1.463A5.543 5.543 0 0 1 6.81 5.8l.01-.004.025-.012c.208-.098.62-.292 1.167-.285q.194.001.384.033a4 4 0 0 0-.993-.698l-.01-.005C6.348 4.282 5.199 4.263 5 4.263c-2.44 0-4.824 1.634-4.99 3.49m10.263 7.912q.133-.04.265-.084-.153.047-.307.086z" />
+                <path
+                    d="M10.228 15.667a5 5 0 0 0 .303-.086l.082-.025a8.02 8.02 0 0 0 4.162-3.3.25.25 0 0 0-.331-.35q-.322.168-.663.294a6.4 6.4 0 0 1-2.243.4c-2.957 0-5.532-2.031-5.532-4.644q.003-.203.046-.399a4.54 4.54 0 0 0-.46 5.898l.003.005c.315.441.707.821 1.158 1.121h.003l.144.09c.877.55 1.721 1.078 3.328.996" />
+            </svg>
+        </div>
+        <br>
+        <a id="tooltipBtnSawer" href="https://saweria.co/rockypratama" target="_blank" rel="noopener noreferrer"
+            class="btn btn-outline-secondary float-btn" style="left: 20px;" data-bs-toggle="tooltip"
+            data-bs-placement="right" title="Saweria">
+            <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="42.3332mm" height="42.3332mm"
+                version="1.1"
+                style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
+                viewBox="0 0 4233.32 4233.32" xmlns:xlink="http://www.w3.org/1999/xlink"
+                xmlns:xodm="http://www.corel.com/coreldraw/odm/2003">
+                <g id="Layer_x0020_1">
+                    <metadata id="CorelCorpID_0Corel-Layer" />
+                    <path class="fil0"
+                        d="M654.56 211.66c608.35,0 1216.66,0 1824.99,0 657.4,0 1194.44,537.01 1194.44,1194.42 0,568.06 -405.02,1059.88 -960.12,1171.23 -35.4,7.08 -34.77,6.42 -14.87,35.19 321.56,464.99 643.66,929.6 965.02,1394.72 10.84,15.69 11.71,14.4 -28.95,14.4 -200.86,0 -400.89,-0.16 -603.01,-0.16 -23.42,0 -45.37,-4.14 -64.4,-31.66 -314.1,-454.22 -628.46,-908.28 -942.65,-1362.43 -10.57,-15.26 -14.1,-16.73 -14.1,0.72l0 1298.29c0,52.61 -42.62,95.24 -95.22,95.24 -420.37,0 -840.74,0 -1261.13,0 -52.59,0 -95.25,-42.63 -95.24,-95.24 0,-1206.51 0,-2412.99 0,-3619.47 -0.01,-52.63 42.65,-95.25 95.24,-95.25zm1356.35 1810.61c0.48,51.91 42.48,93.9 94.42,94.35l374.22 0.02c390.32,0 710.57,-320.24 710.57,-710.56 0,-390.32 -320.25,-710.55 -710.57,-710.55l-1341.96 0c-51.94,0.45 -93.94,42.44 -94.42,94.38l0 2653.47c0.48,51.93 42.48,93.92 94.42,94.39l295.1 0c51.91,-0.47 93.9,-42.46 94.35,-94.39 0,-727.99 0,-1456.01 0,-2183.99 0,-52.6 42.65,-95.25 95.25,-95.25 294.33,0 588.65,0 882.98,0 52.62,0 95.25,42.65 95.25,95.25l0 293.36c0,52.61 -42.63,95.26 -95.25,95.26l-399.94 0c-51.94,0.48 -93.94,42.45 -94.42,94.38l0 279.88z" />
+                </g>
+            </svg>
+        </a> -->
+        <!-- <button style="right: 20px;" id="tooltipBtn" class="btn btn-danger float-btn" data-bs-toggle="modal"
+            data-bs-target="#modalHiCe" data-bs-toggle="tooltip" data-bs-placement="left" title="Hitung Cepat">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                class="bi bi-lightning-charge-fill" viewBox="0 0 16 16">
+                <path
+                    d="M11.251.068a.5.5 0 0 1 .227.58L9.677 6.5H13a.5.5 0 0 1 .364.843l-8 8.5a.5.5 0 0 1-.842-.49L6.323 9.5H3a.5.5 0 0 1-.364-.843l8-8.5a.5.5 0 0 1 .615-.09z" />
+            </svg>
+        </button> -->
+
+        <!-- Modal Hitung Cepat -->
+        <div class="modal fade" id="modalHiCe" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <div class="row fs-5">
+                            <div class="col text-info">
+                                Hitung<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                                    class="bi bi-lightning-charge-fill" viewBox="0 0 16 16">
+                                    <path
+                                        d="M11.251.068a.5.5 0 0 1 .227.58L9.677 6.5H13a.5.5 0 0 1 .364.843l-8 8.5a.5.5 0 0 1-.842-.49L6.323 9.5H3a.5.5 0 0 1-.364-.843l8-8.5a.5.5 0 0 1 .615-.09z" />
+                                </svg>Cepat
+                            </div>
+                            <div class="col text-end">
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                                    tabindex="-1"></button>
+                            </div>
+                        </div>
+                        <form action="">
+                            <div class="input-group mt-1">
+                                <div class="form-floating">
+                                    <input class="form-control text-white" autocomplete="off" inputmode="numeric"
+                                        id="hicePop" oninput="hitungcepat(); formatInput(this);" placeholder="Setel"
+                                        tabindex="5">
+                                    <label for="hicePop">Populasi (Ekor)</label>
+                                </div>
+                                <div class="form-floating">
+                                    <input class="form-control text-white" autocomplete="off" inputmode="numeric"
+                                        id="hicePakan" oninput="hitungcepat(); formatInput(this);" placeholder="Setel"
+                                        tabindex="7">
+                                    <label for="hicePakan">Harga Pakan</label>
+                                </div>
+                            </div>
+                            <div class="input-group mt-1">
+                                <div class="form-floating">
+                                    <input class="form-control text-white" autocomplete="off" inputmode="numeric"
+                                        id="hicePro" oninput="hitungcepat()" placeholder="Harga" tabindex="6">
+                                    <label for="hicePro">Produksi (%)</label>
+                                </div>
+                                <div class="form-floating">
+                                    <input class="form-control text-white" autocomplete="off" inputmode="numeric"
+                                        id="hiceTelur" oninput="hitungcepat(); formatInput(this);" placeholder="Harga"
+                                        tabindex="8">
+                                    <label for="hiceTelur">Harga Telur</label>
+                                </div>
+                            </div>
+                            <div class="input-group mt-1">
+                                <div class="form-floating">
+                                    <select class="form-select" aria-label="Default select example" id="feedIntake"
+                                        onchange="hitungcepat()">
+                                        <option value="100">100</option>
+                                        <option value="105">105</option>
+                                        <option value="110">110</option>
+                                        <option value="115">115</option>
+                                        <option value="120" selected>120</option>
+                                        <option value="125">125</option>
+                                        <option value="130">130</option>
+                                    </select>
+                                    <label for="feedIntake">Porsi (gr)</label>
+                                </div>
+                                <div class="form-floating">
+                                    <select class="form-select" aria-label="Default select example" id="hiceHari"
+                                        onchange="hitungcepat()">
+                                        <option value="1" selected>1 Hari</option>
+                                        <option value="2">2 Hari</option>
+                                        <option value="3">3 Hari</option>
+                                        <option value="4">4 Hari</option>
+                                        <option value="5">5 Hari</option>
+                                        <option value="6">6 Hari</option>
+                                        <option value="7">7 Hari</option>
+                                        <option value="30">1 Bulan</option>
+                                        <option value="90">3 Bulan</option>
+                                        <option value="180">6 Bulan</option>
+                                        <option value="365">1 Tahun</option>
+                                    </select>
+                                    <label for="hiceHari">Berapa Lama?</label>
+                                </div>
+                            </div>
+                            <div class="input-group">
+                                <div class="form-floating">
+                                    <textarea class="form-control fs-5 mt-1 text-info" placeholder="" id="hiceHasil"
+                                        style="height: 250px" disabled></textarea>
+                                    <label for="hiceHasil" style="font-size: 14pt;" class="fw-bold">Hasil</label>
+                                </div>
+                            </div>
+                            <div class="input-group mt-1">
+                                <div class="col text-center">
+                                    <button type="reset" class="btn btn-danger" tabindex="-1">RESET</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>
