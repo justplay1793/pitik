@@ -67,7 +67,7 @@
         const hijriahGabung = `${h.tanggal} ${bulanHijriah[h.bulan - 1]} (${bulanJawa[h.bulan - 1]}) ${h.tahun}`;
 
         document.getElementById('tanggal-hari-ini').innerHTML =
-            `${hariPasaran}, ${tanggalSingkat}<br>${hijriahGabung} H.`;
+            `${hariPasaran}, ${tanggalSingkat}<br>${hijriahGabung}`;
     }
 
     document.addEventListener("DOMContentLoaded", tampilkanTanggalHariIni);
@@ -89,6 +89,16 @@
 
         function clearCopy() {
             document.getElementById("forcopy").value = "";
+        }
+        
+        function bersihKalEndog() {
+            document.getElementById("setel").value = "";
+            document.getElementById("harga").value = "";
+            document.getElementById("total").value = "";
+            document.getElementById("etreTotal").value = "";
+            document.getElementById("totalHutang").value = "";
+            document.getElementById("forcopy").value = "";
+            document.getElementById("sisaHutang").value = "";
         }
 
         function copyText() {
@@ -580,7 +590,7 @@
             if (sisa < 0) {
                 sisaEl.classList.add("text-danger");
                 sisaEl.classList.remove("text-info");
-                sisaEl.value = "Hutang: Rp " + sisa.toLocaleString();
+                sisaEl.value = "Utang: Rp " + sisa.toLocaleString();
             } else {
                 sisaEl.classList.add("text-info");
                 sisaEl.classList.remove("text-danger");
@@ -745,9 +755,25 @@
         
         <!-- Kolom Kalkulator Endog -->
         <div class="col-12 col-lg-6 mb-3">
-            <div class="input-group mb-2">
+            <div class="input-group mb-1">
                 <span class="form-control bg-light border border-1 border-light text-dark fs-5">Kalkulator Endog</span>
-                 <button id="tooltipBtnS" class="btn btn-light" data-bs-toggle="modal"
+                <button class="btn btn-light" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseHutang" aria-expanded="false" aria-controls="collapseExample">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                            class="bi bi-cash-stack" viewBox="0 0 16 16">
+                            <path d="M1 3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1zm7 8a2 2 0 1 0 0-4 2 2 0 0 0 0 4" />
+                            <path
+                                d="M0 5a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1zm3 0a2 2 0 0 1-2 2v4a2 2 0 0 1 2 2h10a2 2 0 0 1 2-2V7a2 2 0 0 1-2-2z" />
+                        </svg>
+                </button>
+                <button class="btn btn-light" tabindex="-1" onclick="bersihKalEndog()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                            class="bi bi-backspace-fill" viewBox="0 0 16 16">
+                            <path
+                                d="M15.683 3a2 2 0 0 0-2-2h-7.08a2 2 0 0 0-1.519.698L.241 7.35a1 1 0 0 0 0 1.302l4.843 5.65A2 2 0 0 0 6.603 15h7.08a2 2 0 0 0 2-2zM5.829 5.854a.5.5 0 1 1 .707-.708l2.147 2.147 2.146-2.147a.5.5 0 1 1 .707.708L9.39 8l2.146 2.146a.5.5 0 0 1-.707.708L8.683 8.707l-2.147 2.147a.5.5 0 0 1-.707-.708L7.976 8z" />
+                        </svg>
+                </button>
+                <button id="tooltipBtnS" class="btn btn-light" data-bs-toggle="modal"
                     data-bs-target="#modalHiCe" data-bs-toggle="tooltip" data-bs-placement="left" title="Hitung Cepat">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
                         class="bi bi-lightning-charge-fill" viewBox="0 0 16 16">
@@ -763,29 +789,30 @@
                 <!-- <div class="col fs-4 text-center text-info mb-2 hr-text">Kalkulator Endog</div> -->
                 <div class="input-group input-group-lg">
                     <div class="form-floating">
-                        <input class="form-control text-white fs-3" autocomplete="off" type="number" id="setel"
+                        <input class="form-control text-end text-white fs-3" autocomplete="off" type="number" id="setel"
                             oninput="etre(); calculate(); kiloEndog(); hutang();" placeholder="Setel"
                             inputmode="numeric">
-                        <label for="setel" id="kiloneEndog">Setel</label>
+                        <!-- <label for="setel" id="kiloneEndog">Setel</label> -->
+                        <label for="setel">Setel</label>
                     </div>
                     <div class="form-floating">
-                        <input autocomplete="off" class="form-control text-white fs-3" id="harga"
+                        <input autocomplete="off" class="form-control text-end text-white fs-3" id="harga"
                             oninput="calculate(); hutang();" placeholder="Harga" type="number" inputmode="numeric"
                             style="letter-spacing: 3px;" />
                         <label for="harga">Harga</label>
                     </div>
-                    <button class="btn btn-danger" type="reset" tabindex="-1" onclick="resetSetEndog(); clearCopy();">
+                    <!-- <button class="btn btn-dark border" type="reset" tabindex="-1" onclick="resetSetEndog(); clearCopy();">
                         <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
                             class="bi bi-backspace-fill" viewBox="0 0 16 16">
                             <path
                                 d="M15.683 3a2 2 0 0 0-2-2h-7.08a2 2 0 0 0-1.519.698L.241 7.35a1 1 0 0 0 0 1.302l4.843 5.65A2 2 0 0 0 6.603 15h7.08a2 2 0 0 0 2-2zM5.829 5.854a.5.5 0 1 1 .707-.708l2.147 2.147 2.146-2.147a.5.5 0 1 1 .707.708L9.39 8l2.146 2.146a.5.5 0 0 1-.707.708L8.683 8.707l-2.147 2.147a.5.5 0 0 1-.707-.708L7.976 8z" />
                         </svg>
-                    </button>
+                    </button> -->
                 </div>
                 <div class="input-group input-group-lg mt-1">
-                    <input class="form-control text-info text-center fs-2 fw-bold" id="total" placeholder="Uang"
+                    <input class="form-control text-info text-start fs-2 fw-bold" id="total" placeholder="Uang"
                         disabled>
-                    <button class="btn btn-secondary" type="button" data-bs-toggle="collapse"
+                    <!-- <button class="btn btn-dark border" type="button" data-bs-toggle="collapse"
                         data-bs-target="#collapseHutang" aria-expanded="false" aria-controls="collapseExample">
                         <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
                             class="bi bi-cash-stack" viewBox="0 0 16 16">
@@ -793,10 +820,10 @@
                             <path
                                 d="M0 5a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1zm3 0a2 2 0 0 1-2 2v4a2 2 0 0 1 2 2h10a2 2 0 0 1 2-2V7a2 2 0 0 1-2-2z" />
                         </svg>
-                    </button>
+                    </button> -->
                 </div>
-                <div class="input-group mt-1">
-                    <input class="form-control text-warning-emphasis text-center fs-5 fw-bold" style="width: 60%;"
+                <div class="input-group input-group-lg mt-1">
+                    <input class="form-control text-warning-emphasis text-start fs-5 fw-bold" style="width: 65%;"
                         autocomplete="off" id="etreTotal" placeholder="EggTry" disabled>
 
                     <select class="form-select text-warning-emphasis" aria-label="Default select example" id="anEtre"
@@ -806,29 +833,28 @@
                         <option value="7">7an</option>
                         <option value="8" selected>8an</option>
                         <option value="9">9an</option>
-                        <option value="10">10an</option>
-                        <option value="11">11an</option>
-                        <option value="12">12an</option>
-                        <option value="13">13an</option>
-                        <option value="14">14an</option>
-                        <option value="15">15an</option>
+                        <option value="10">10</option>
+                        <option value="11">11</option>
+                        <option value="12">12</option>
+                        <option value="13">13</option>
+                        <option value="14">14</option>
+                        <option value="15">15</option>
                     </select>
                 </div>
             </form>
             <div class="collapse" id="collapseHutang">
-                <div class="mt-1 text-info fs-5 hr-text">
-                    Hutang
-                </div>
                 <form action="">
-                    <div class="input-group mt-1">
-                        <span class="input-group-text">Rp</span>
-                        <div class="form-floating">
-                            <input class="form-control text-white" inputmode="numeric" id="totalHutang"
-                                placeholder="Total Hutang" oninput="hutang(); formatInput(this);">
-                            <label for="totalHutang">Total Hutang</label>
-                        </div>
-                        <button class="btn btn-danger" type="reset" tabindex="-1" onclick="clearCopy()">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                    <div class="input-group">
+                        <span class="form-control bg-light border border-1 border-light text-dark fs-5">Utang</span>
+                        <button type="button" class="btn btn-light" onclick="copyText()">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                                class="bi bi-copy" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd"
+                                    d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1h1v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1v1z" />
+                            </svg>
+                        </button>
+                        <button class="btn btn-light" type="reset" tabindex="-1" onclick="clearCopy()">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
                                 class="bi bi-backspace-fill" viewBox="0 0 16 16">
                                 <path
                                     d="M15.683 3a2 2 0 0 0-2-2h-7.08a2 2 0 0 0-1.519.698L.241 7.35a1 1 0 0 0 0 1.302l4.843 5.65A2 2 0 0 0 6.603 15h7.08a2 2 0 0 0 2-2zM5.829 5.854a.5.5 0 1 1 .707-.708l2.147 2.147 2.146-2.147a.5.5 0 1 1 .707.708L9.39 8l2.146 2.146a.5.5 0 0 1-.707.708L8.683 8.707l-2.147 2.147a.5.5 0 0 1-.707-.708L7.976 8z" />
@@ -836,16 +862,31 @@
                         </button>
                     </div>
                     <div class="input-group mt-1">
-                        <input class="form-control text-info text-center fw-bold fs-5" id="sisaHutang"
-                            placeholder="Sisa/Hutang" disabled>
+                        <!-- <span class="input-group-text">Rp</span> -->
+                        <div class="form-floating">
+                            <input class="form-control text-start text-white" inputmode="numeric" id="totalHutang"
+                                placeholder="Total Hutang (Rp)" oninput="hutang(); formatInput(this);">
+                            <label for="totalHutang">Total Utang (Rp)</label>
+                        </div>
+                        <!-- <button class="btn btn-dark border" type="reset" tabindex="-1" onclick="clearCopy()">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                class="bi bi-backspace-fill" viewBox="0 0 16 16">
+                                <path
+                                    d="M15.683 3a2 2 0 0 0-2-2h-7.08a2 2 0 0 0-1.519.698L.241 7.35a1 1 0 0 0 0 1.302l4.843 5.65A2 2 0 0 0 6.603 15h7.08a2 2 0 0 0 2-2zM5.829 5.854a.5.5 0 1 1 .707-.708l2.147 2.147 2.146-2.147a.5.5 0 1 1 .707.708L9.39 8l2.146 2.146a.5.5 0 0 1-.707.708L8.683 8.707l-2.147 2.147a.5.5 0 0 1-.707-.708L7.976 8z" />
+                            </svg>
+                        </button> -->
+                    </div>
                         <input id="forcopy" hidden>
-                        <button type="button" class="btn btn-secondary" onclick="copyText()">
+                    <div class="input-group mt-1">
+                        <input class="form-control text-info text-start fw-bold fs-5" id="sisaHutang"
+                            placeholder="Sisa/Utang" disabled>
+                        <!-- <button type="button" class="btn btn-dark border" onclick="copyText()">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                 class="bi bi-copy" viewBox="0 0 16 16">
                                 <path fill-rule="evenodd"
                                     d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1h1v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1v1z" />
                             </svg>
-                        </button>
+                        </button> -->
                     </div>
                 </form>
             </div>
@@ -1398,8 +1439,29 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-body">
+                        <form action="">
                         <div class="row fs-5">
-                            <div class="col text-info">
+                            <div class="input-group">
+                                <span class="form-control bg-light border border-1 border-light text-dark fs-5">Hitung<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                                    class="bi bi-lightning-charge-fill" viewBox="0 0 16 16">
+                                    <path
+                                        d="M11.251.068a.5.5 0 0 1 .227.58L9.677 6.5H13a.5.5 0 0 1 .364.843l-8 8.5a.5.5 0 0 1-.842-.49L6.323 9.5H3a.5.5 0 0 1-.364-.843l8-8.5a.5.5 0 0 1 .615-.09z" />
+                                    </svg>Cepat
+                                </span>
+                                <button type="reset" class="btn btn-light" tabindex="-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-backspace-fill" viewBox="0 0 16 16">
+                                      <path d="M15.683 3a2 2 0 0 0-2-2h-7.08a2 2 0 0 0-1.519.698L.241 7.35a1 1 0 0 0 0 1.302l4.843 5.65A2 2 0 0 0 6.603 15h7.08a2 2 0 0 0 2-2zM5.829 5.854a.5.5 0 1 1 .707-.708l2.147 2.147 2.146-2.147a.5.5 0 1 1 .707.708L9.39 8l2.146 2.146a.5.5 0 0 1-.707.708L8.683 8.707l-2.147 2.147a.5.5 0 0 1-.707-.708L7.976 8z"/>
+                                    </svg>
+                                </button>
+                                <button type="button" class="btn btn-light" data-bs-dismiss="modal" aria-label="Close"
+                                    tabindex="-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+                                      <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+                                    </svg>
+                                </button>
+                            </div>
+                            
+                            <!-- <div class="col">
                                 Hitung<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
                                     class="bi bi-lightning-charge-fill" viewBox="0 0 16 16">
                                     <path
@@ -1409,9 +1471,9 @@
                             <div class="col text-end">
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
                                     tabindex="-1"></button>
-                            </div>
+                            </div> -->
                         </div>
-                        <form action="">
+                        <!-- <form action=""> -->
                             <div class="input-group mt-1">
                                 <div class="form-floating">
                                     <input class="form-control text-white" autocomplete="off" inputmode="numeric"
@@ -1463,6 +1525,7 @@
                                         <option value="5">5 Hari</option>
                                         <option value="6">6 Hari</option>
                                         <option value="7">7 Hari</option>
+                                        <option value="10">10 Hari</option>
                                         <option value="30">1 Bulan</option>
                                         <option value="90">3 Bulan</option>
                                         <option value="180">6 Bulan</option>
@@ -1478,11 +1541,11 @@
                                     <label for="hiceHasil" style="font-size: 14pt;" class="fw-bold">Hasil</label>
                                 </div>
                             </div>
-                            <div class="input-group mt-1">
+                            <!-- <div class="input-group mt-1">
                                 <div class="col text-center">
                                     <button type="reset" class="btn btn-danger" tabindex="-1">RESET</button>
                                 </div>
-                            </div>
+                            </div> -->
                         </form>
                     </div>
                 </div>
