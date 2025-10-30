@@ -161,7 +161,8 @@
             else {
                 var stl = document.getElementById("setel").value;
                 var kilone = parseFloat(document.getElementById("setel").value.replace(/[,.]/g, "")) * 15;
-                document.getElementById("kiloneEndog").innerHTML = stl.toLocaleString() + "×15kg=" + kilone.toLocaleString() + "kg";
+                // document.getElementById("kiloneEndog").innerHTML = stl.toLocaleString() + "×15kg=" + kilone.toLocaleString() + "kg";
+                document.getElementById("kiloneEndog").innerHTML = stl.toLocaleString() + " Setel (" + kilone.toLocaleString() + " Kg)";
             }
         }
 
@@ -792,8 +793,8 @@
                         <input class="form-control text-end text-white fs-3" autocomplete="off" type="number" id="setel"
                             oninput="etre(); calculate(); kiloEndog(); hutang();" placeholder="Setel"
                             inputmode="numeric">
-                        <!-- <label for="setel" id="kiloneEndog">Setel</label> -->
-                        <label for="setel">Setel</label>
+                        <label for="setel" id="kiloneEndog">Setel</label>
+                        <!-- <label for="setel">Setel</label> -->
                     </div>
                     <div class="form-floating">
                         <input autocomplete="off" class="form-control text-end text-white fs-3" id="harga"
@@ -1559,5 +1560,6 @@
 </body>
 
 </html>
+
 
 
