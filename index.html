@@ -207,18 +207,26 @@
             const kiloJagung = getNumber("kiloJagung");
             const hargaJagung = getNumber("hargaJagung");
             const totalJagung = kiloJagung * hargaJagung;
-            document.getElementById("totalJagung").value = totalJagung.toLocaleString();
+            // document.getElementById("totalJagung").value = totalJagung.toLocaleString();
+            document.getElementById("judulTotalJagung").textContent =
+                totalJagung > 0 ? `| Rp ${totalJagung.toLocaleString()}` : "";
 
             const kiloKatul = getNumber("kiloKatul");
             const hargaKatul = getNumber("hargaKatul");
             const totalKatul = kiloKatul * hargaKatul;
-            document.getElementById("totalKatul").value = totalKatul.toLocaleString();
+            // document.getElementById("totalKatul").value = totalKatul.toLocaleString();
+            document.getElementById("judulTotalKatul").textContent =
+                totalKatul > 0 ? `| Rp ${totalKatul.toLocaleString()}` : "";
 
             // Komponen lainnya
             const hargaLayer = getNumber("hargaLayer");
             const beratLayer = hargaLayer > 0 ? 50 : 0; // ✅ jika hargaLayer kosong, beratLayer = 0
             const hargaPremix = getNumber("hargaPremix");
             const upah = getNumber("upah");
+            
+            const totalSentrat = hargaLayer + hargaPremix + upah;
+            document.getElementById("judulTotalSentrat").textContent =
+                totalSentrat > 0 ? `| Rp ${totalSentrat.toLocaleString()}` : "";
 
             const totalBerat = kiloJagung + kiloKatul + beratLayer;
 
@@ -237,8 +245,10 @@
             // Tampilkan hasil
             document.getElementById("totalBerat").value = totalBerat ? formatKg(totalBerat) : "";
             document.getElementById("totalHarga").value = totalHarga ? formatRp(totalHarga) : "";
-            document.getElementById("perKilo").value = perKilo ? formatRp(perKilo) : "";
-            document.getElementById("bulat").value = bulat ? formatRp(bulat) : "";
+            // document.getElementById("perKilo").value = perKilo ? formatRp(perKilo) : "";
+            // document.getElementById("bulat").value = bulat ? formatRp(bulat) : "";
+            document.getElementById("judulTotalPerKilo").textContent =
+                bulat > 0 ? `: Rp ${bulat.toLocaleString()}/kg` : "";
         }
 
         function konsumsiPakan() {
@@ -668,6 +678,12 @@
             });
             prosesPakan();
         }
+        function hapusJudulCard() {
+            document.getElementById("judulTotalJagung").textContent = "";
+            document.getElementById("judulTotalKatul").textContent = "";
+            document.getElementById("judulTotalSentrat").textContent = "";
+            document.getElementById("judulTotalPerKilo").textContent = "";
+        }
 
     </script>
     <style>
@@ -845,30 +861,34 @@
                     <div class="bg-dark text-light rounded">
 
                         <!-- Sub Tombol -->
-                        <div class="btn-group d-flex mb-3" data-btn-group>
-                            <input type="checkbox" class="btn-check" id="btnKalkulator" data-bs-toggle="collapse"
-                                data-bs-target="#collapseKalkulator" checked>
-                            <label class="btn btn-outline-light w-100" for="btnKalkulator"><i class="bi bi-calculator-fill"></i> Pakan</label>
-
-                            <input type="checkbox" class="btn-check" id="btnKonsumsi" data-bs-toggle="collapse"
-                                data-bs-target="#collapseKonsumsi">
-                            <label class="btn btn-outline-light w-100" for="btnKonsumsi"><i class="bi bi-calculator-fill"></i> Konsumsi</label>
-                        </div>
+                         <div class="row text-center">
+                            <div class="col-1"></div>
+                            <div class="col">
+                                <div class="btn-group d-flex mb-3" data-btn-group>
+                                    <input type="checkbox" class="btn-check" id="btnKalkulator" data-bs-toggle="collapse"
+                                        data-bs-target="#collapseKalkulator" checked>
+                                    <label class="btn btn-outline-light w-100" for="btnKalkulator"><i class="bi bi-calculator-fill"></i> Hitung</label>
+                                    <input type="checkbox" class="btn-check" id="btnKonsumsi" data-bs-toggle="collapse"
+                                        data-bs-target="#collapseKonsumsi">
+                                    <label class="btn btn-outline-light w-100" for="btnKonsumsi"><i class="bi bi-calculator-fill"></i> Konsumsi</label>
+                                </div>
+                            </div>
+                            <div class="col-1"></div>
+                         </div>
 
                         <!-- Sub Collapse Pakan -->
                         <div id="pakanCollapseWrapper">
                             <div class="collapse show" id="collapseKalkulator" data-bs-parent="#pakanCollapseWrapper">
                                 <div class="bg-dark text-light rounded">
-                                    <!-- <div class="col text-center fs-5">
-                                        Kalkulator Pakan
-                                    </div> -->
                                     <form action="">
                                         <!-- Card Jagung -->
                                         <div class="card bg-dark text-white mb-1">
                                             <div class="card-header d-flex justify-content-between align-items-center">
-                                                <span class="fs-5 text-light">Jagung</span>
+                                                <span class="fs-5 text-light">
+                                                    Jagung <span id="judulTotalJagung" class="text-light"></span>
+                                                </span>
                                                 <button type="button" class="btn btn-sm btn-dark bg-transparent border-0" onclick="hapusCard('Jagung')" title="Hapus Jagung">
-                                                    <i class="bi bi-backspace-fill"></i>
+                                                    <i class="bi bi-backspace-fill" style="font-size: 1.25rem"></i>
                                                 </button>
                                             </div>
                                             <div class="card-body">
@@ -884,20 +904,17 @@
                                                         <label for="hargaJagung">Harga</label>
                                                     </div>
                                                 </div>
-                                                <div class="input-group mt-1">
-                                                    <span class="input-group-text">Rp</span>
-                                                    <input class="form-control text-white" placeholder="Total" autocomplete="off"
-                                                        id="totalJagung" disabled>
-                                                </div>
                                             </div>
                                         </div>
 
                                         <!-- Card Katul -->
                                         <div class="card bg-dark text-white mb-1">
                                             <div class="card-header d-flex justify-content-between align-items-center">
-                                                <span class="fs-5 text-light">Katul</span>
+                                                <span class="fs-5 text-light">
+                                                    Katul <span id="judulTotalKatul" class="text-light"></span>
+                                                </span>
                                                 <button type="button" class="btn btn-sm btn-dark bg-transparent border-0" onclick="hapusCard('Katul')" title="Hapus Katul">
-                                                    <i class="bi bi-backspace-fill"></i>
+                                                    <i class="bi bi-backspace-fill" style="font-size: 1.25rem"></i>
                                                 </button>
                                             </div>
                                             <div class="card-body">
@@ -913,38 +930,35 @@
                                                         <label for="hargaKatul">Harga</label>
                                                     </div>
                                                 </div>
-                                                <div class="input-group mt-1">
-                                                    <span class="input-group-text">Rp</span>
-                                                    <input class="form-control text-white" placeholder="Total" autocomplete="off"
-                                                        id="totalKatul" disabled>
-                                                </div>
                                             </div>
                                         </div>
 
                                         <!-- Card Konsentrat -->
                                         <div class="card bg-dark text-white mb-1">
                                             <div class="card-header d-flex justify-content-between align-items-center">
-                                                <span class="fs-5 text-light">Konsentrat</span>
+                                                <span class="fs-5 text-light">
+                                                    Konsentrat <span id="judulTotalSentrat" class="text-light"></span>
+                                                </span>
                                                 <button type="button" class="btn btn-sm btn-dark bg-transparent border-0" onclick="hapusCard('Konsentrat')" title="Hapus Konsentrat">
-                                                    <i class="bi bi-backspace-fill"></i>
+                                                    <i class="bi bi-backspace-fill" style="font-size: 1.25rem"></i>
                                                 </button>
                                             </div>
                                             <div class="card-body">
                                                 <div class="input-group mt-1">
                                                     <div class="form-floating">
-                                                        <input class="form-control text-white" autocomplete="off" inputmode="numeric"
+                                                        <input class="form-control text-white text-center" autocomplete="off" inputmode="numeric"
                                                             id="hargaLayer" oninput="prosesPakan(); formatInput(this);" placeholder="isi">
-                                                        <label for="hargaLayer">Harga Layer</label>
+                                                        <label for="hargaLayer">Layer</label>
                                                     </div>
-                                                </div>
-                                                <div class="input-group mt-1">
+                                                <!-- </div>
+                                                <div class="input-group mt-1"> -->
                                                     <div class="form-floating">
-                                                        <input class="form-control text-white" autocomplete="off" inputmode="numeric"
+                                                        <input class="form-control text-white text-center" autocomplete="off" inputmode="numeric"
                                                             id="hargaPremix" oninput="prosesPakan(); formatInput(this);" placeholder="isi">
                                                         <label for="hargaPremix">Premix</label>
                                                     </div>
                                                     <div class="form-floating">
-                                                        <input class="form-control text-white" autocomplete="off" inputmode="numeric"
+                                                        <input class="form-control text-white text-center" autocomplete="off" inputmode="numeric"
                                                             id="upah" oninput="prosesPakan(); formatInput(this);" placeholder="isi">
                                                         <label for="upah">Jasa</label>
                                                     </div>
@@ -955,23 +969,19 @@
                                         <!-- Card Total -->
                                         <div class="card bg-dark text-white">
                                             <div class="card-header d-flex justify-content-between align-items-center">
-                                                <span class="fs-5 text-light">TOTAL</span>
-                                                <button type="reset" class="btn btn-sm btn-dark bg-transparent border-0" title="Hapus Semua">
+                                                <span class="fs-5 text-light">
+                                                    TOTAL <span id="judulTotalPerKilo" class="text-info fw-bold"></span>
+                                                </span>
+                                                <button onclick="hapusJudulCard()" type="reset" class="btn btn-sm btn-dark bg-transparent border-0" title="Hapus Semua">
                                                     <i class="bi bi-trash-fill" style="font-size: 1.25rem"></i>
                                                 </button>
                                             </div>
                                             <div class="card-body">
-                                                <div class="input-group mt-1">
-                                                    <input class="form-control text-white" placeholder="Total Harga Pakan"
+                                                <div class="input-group input-group-lg mt-1">
+                                                    <input class="form-control text-white border-0" placeholder="Total Harga"
                                                         autocomplete="off" id="totalHarga" disabled>
-                                                </div>
-                                                <div class="input-group mt-1">
-                                                    <input class="form-control text-white" placeholder="Berat"
+                                                    <input class="form-control text-white border-0 border-start" placeholder="Total Berat"
                                                         autocomplete="off" id="totalBerat" disabled>
-                                                    <input type="hidden" class="form-control" autocomplete="off"
-                                                        id="perKilo" disabled>
-                                                    <input class="form-control text-info fs-5 fw-bold" placeholder="Per Kg"
-                                                        autocomplete="off" id="bulat" disabled>
                                                 </div>
                                             </div>
                                         </div>
@@ -979,50 +989,52 @@
                                 </div>
                             </div>
                             <div class="collapse" id="collapseKonsumsi" data-bs-parent="#pakanCollapseWrapper">
-                                <div class="bg-dark text-light rounded">
-                                    <div class="col text-center fs-5">
-                                        Konsumsi Pakan
+                                <div class="card bg-dark text-white mb-2">
+                                    <div class="card-header d-flex justify-content-between align-items-center">
+                                    <span class="fs-5 text-light">Konsumsi Pakan</span>
+                                    <button type="reset" class="btn btn-sm bg-transparent border-0 text-light"
+                                        onclick="Ckonsumsi()" title="Hapus Konsumsi">
+                                        <i class="bi bi-backspace-fill" style="font-size: 1.25rem"></i>
+                                    </button>
                                     </div>
+
+                                    <div class="card-body">
                                     <form action="">
-                                        <div class="input-group mt-2">
-                                            <div class="form-floating">
-                                                <input class="form-control text-white" autocomplete="off"
-                                                    inputmode="numeric" id="populasi"
-                                                    oninput="konsumsiPakan(); formatInput(this);"
-                                                    placeholder="Populasi">
-                                                <label for="populasi">Populasi</label>
-                                            </div>
-                                            <button type="reset" class="btn btn-danger" tabindex="-1"
-                                                onclick="Ckonsumsi()">
-                                                <i class="bi bi-backspace-fill"></i>
-                                            </button>
+                                        <div class="input-group">
+                                        <div class="form-floating">
+                                            <input class="form-control text-white" autocomplete="off"
+                                            inputmode="numeric" id="populasi"
+                                            oninput="konsumsiPakan(); formatInput(this);" placeholder="Populasi">
+                                            <label for="populasi">Populasi</label>
                                         </div>
-                                        <div class="input-group mt-1">
-                                            <div class="form-floating">
-                                                <input class="form-control text-white" autocomplete="off"
-                                                    inputmode="numeric" id="konsumsi"
-                                                    oninput="konsumsiPakan(); formatInput(this);"
-                                                    placeholder="Konsumsi">
-                                                <label for="konsumsi">Porsi (gram)</label>
-                                            </div>
-                                            <span class="input-group-text">/</span>
-                                            <div class="form-floating">
-                                                <input class="form-control text-white" autocomplete="off"
-                                                    inputmode="numeric" id="konsumsiZak"
-                                                    oninput="konsumsiPakanZak(); formatInput(this);"
-                                                    placeholder="Konsumsi">
-                                                <label for="konsumsiZak">Zak (50kg/zak)</label>
-                                            </div>
                                         </div>
+
                                         <div class="input-group mt-1">
-                                            <div class="form-floating">
-                                                <textarea class="form-control fs-5 mt-1 text-info" placeholder=""
-                                                    id="konsumsiHasil" style="height: 130px" disabled></textarea>
-                                                <label for="konsumsiHasil" id="lblKonsumsiHasil"
-                                                    style="font-size: 14pt;" class="fw-bold">Hasil</label>
-                                            </div>
+                                        <div class="form-floating">
+                                            <input class="form-control text-white" autocomplete="off"
+                                            inputmode="numeric" id="konsumsi"
+                                            oninput="konsumsiPakan(); formatInput(this);" placeholder="Konsumsi">
+                                            <label for="konsumsi">Porsi (gram)</label>
+                                        </div>
+                                        <span class="input-group-text bg-transparent">/</span>
+                                        <div class="form-floating">
+                                            <input class="form-control text-white" autocomplete="off"
+                                            inputmode="numeric" id="konsumsiZak"
+                                            oninput="konsumsiPakanZak(); formatInput(this);" placeholder="Konsumsi">
+                                            <label for="konsumsiZak">Zak (50kg/zak)</label>
+                                        </div>
                                         </div>
                                     </form>
+                                    </div>
+
+                                    <div class="card-footer">
+                                    <div class="form-floating">
+                                        <textarea class="form-control fs-5 mt-1 text-info" id="konsumsiHasil"
+                                        style="height: 150px" disabled></textarea>
+                                        <label for="konsumsiHasil" id="lblKonsumsiHasil"
+                                        style="font-size: 14pt;" class="fw-bold">Hasil</label>
+                                    </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1391,5 +1403,4 @@
 </body>
 
 </html>
-
 
