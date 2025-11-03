@@ -783,14 +783,14 @@
                     </div>
                 </div>
                 <div class="input-group input-group-lg mt-1">
-                    <input class="form-control text-info text-start fs-2 fw-bold" id="total" placeholder="Uang"
+                    <input class="form-control text-info text-start fs-2 fw-bold border-0" id="total" placeholder="Uang"
                         disabled>
                 </div>
                 <div class="input-group input-group-lg mt-1 mb-3">
-                    <input class="form-control text-warning-emphasis text-start fs-5 fw-bold" style="width: 65%;"
+                    <input class="form-control text-warning-emphasis text-start fs-5 fw-bold border-0" style="width: 65%;"
                         autocomplete="off" id="etreTotal" placeholder="EggTry" disabled>
 
-                    <select class="form-select text-warning-emphasis" aria-label="Default select example" id="anEtre"
+                    <select class="form-select text-warning-emphasis bg-body-secondary border-0 border-start" aria-label="Default select example" id="anEtre"
                         onchange="etre()">
                         <option value="5">5an</option>
                         <option value="6">6an</option>
@@ -818,7 +818,6 @@
                         </button>
                     </div>
                     <div class="input-group mt-1">
-                        <!-- <span class="input-group-text">Rp</span> -->
                         <div class="form-floating">
                             <input class="form-control text-start text-white" inputmode="numeric" id="totalHutang"
                                 placeholder="Total Hutang (Rp)" oninput="hutang(); formatInput(this);">
@@ -827,7 +826,7 @@
                     </div>
                         <input id="forcopy" hidden>
                     <div class="input-group mt-1">
-                        <input class="form-control text-info text-start fw-bold fs-5" id="sisaHutang"
+                        <input class="form-control text-info text-start fw-bold fs-5 border-0" id="sisaHutang"
                             placeholder="Sisa/Utang" disabled>
                     </div>
                 </form>
@@ -861,20 +860,14 @@
                     <div class="bg-dark text-light rounded">
 
                         <!-- Sub Tombol -->
-                         <div class="row text-center">
-                            <div class="col-1"></div>
-                            <div class="col">
-                                <div class="btn-group d-flex mb-3" data-btn-group>
-                                    <input type="checkbox" class="btn-check" id="btnKalkulator" data-bs-toggle="collapse"
-                                        data-bs-target="#collapseKalkulator" checked>
-                                    <label class="btn btn-outline-light w-100" for="btnKalkulator"><i class="bi bi-calculator-fill"></i> Hitung</label>
-                                    <input type="checkbox" class="btn-check" id="btnKonsumsi" data-bs-toggle="collapse"
-                                        data-bs-target="#collapseKonsumsi">
-                                    <label class="btn btn-outline-light w-100" for="btnKonsumsi"><i class="bi bi-calculator-fill"></i> Konsumsi</label>
-                                </div>
-                            </div>
-                            <div class="col-1"></div>
-                         </div>
+                        <div class="btn-group d-flex mb-3 px-3" data-btn-group>
+                            <input type="checkbox" class="btn-check" id="btnKalkulator" data-bs-toggle="collapse"
+                                data-bs-target="#collapseKalkulator" checked>
+                            <label class="btn btn-outline-light w-100" for="btnKalkulator"><i class="bi bi-calculator-fill"></i> Hitung</label>
+                            <input type="checkbox" class="btn-check" id="btnKonsumsi" data-bs-toggle="collapse"
+                                data-bs-target="#collapseKonsumsi">
+                            <label class="btn btn-outline-light w-100" for="btnKonsumsi"><i class="bi bi-plus-slash-minus"></i> Konsumsi</label>
+                        </div>
 
                         <!-- Sub Collapse Pakan -->
                         <div id="pakanCollapseWrapper">
@@ -950,8 +943,6 @@
                                                             id="hargaLayer" oninput="prosesPakan(); formatInput(this);" placeholder="isi">
                                                         <label for="hargaLayer">Layer</label>
                                                     </div>
-                                                <!-- </div>
-                                                <div class="input-group mt-1"> -->
                                                     <div class="form-floating">
                                                         <input class="form-control text-white text-center" autocomplete="off" inputmode="numeric"
                                                             id="hargaPremix" oninput="prosesPakan(); formatInput(this);" placeholder="isi">
@@ -1029,7 +1020,7 @@
 
                                     <div class="card-footer">
                                     <div class="form-floating">
-                                        <textarea class="form-control fs-5 mt-1 text-info" id="konsumsiHasil"
+                                        <textarea class="form-control fs-5 mt-1 text-info border-0" id="konsumsiHasil"
                                         style="height: 150px" disabled></textarea>
                                         <label for="konsumsiHasil" id="lblKonsumsiHasil"
                                         style="font-size: 14pt;" class="fw-bold">Hasil</label>
@@ -1046,22 +1037,22 @@
                     <div class="bg-dark text-light rounded">
 
                         <!-- Sub Tombol -->
-                        <div class="btn-group d-flex mb-3" data-btn-group>
+                        <div class="btn-group d-flex mb-3 px-3" data-btn-group>
                             <input type="checkbox" class="btn-check" id="btnProd1" data-bs-toggle="collapse"
                                 data-bs-target="#collapseProd1">
-                            <label class="btn btn-outline-light" for="btnProd1">EggTry</label>
+                            <label class="btn btn-outline-light" for="btnProd1"><i class="bi bi-inbox-fill"></i><br>EggTry</label>
 
                             <input type="checkbox" class="btn-check" id="btnProd2" data-bs-toggle="collapse"
                                 data-bs-target="#collapseProd2" checked>
-                            <label class="btn btn-outline-light" for="btnProd2">Setel</label>
+                            <label class="btn btn-outline-light" for="btnProd2"><i class="bi bi-box2-fill"></i><br>Setel</label>
 
                             <input type="checkbox" class="btn-check" id="btnProd3" data-bs-toggle="collapse"
                                 data-bs-target="#collapseProd3">
-                            <label class="btn btn-outline-light" for="btnProd3">Persen</label>
+                            <label class="btn btn-outline-light" for="btnProd3"><i class="bi bi-percent"></i><br>Persen</label>
 
                             <input type="checkbox" class="btn-check" id="btnProd4" data-bs-toggle="collapse"
                                 data-bs-target="#collapseProd4">
-                            <label class="btn btn-outline-light" for="btnProd4">Populasi</label>
+                            <label class="btn btn-outline-light" for="btnProd4"><i class="bi bi-question-circle-fill"></i><br>Populasi</label>
                         </div>
 
                         <!-- Sub Collapse Produksi -->
@@ -1085,14 +1076,15 @@
                                             </div>
                                         </div>
                                         <div class="input-group mt-1">
-                                            <input class="form-control text-info text-center fs-4 fw-bold"
+                                            <input class="form-control text-info text-center fs-4 fw-bold border-0"
                                                 autocomplete="off" id="kiraEtrePersen" placeholder="Persentase"
                                                 disabled>
-                                            <button type="reset" class="btn btn-danger" tabindex="-1">
-                                                <i class="bi bi-backspace-fill"></i>
+                                            <button type="reset" class="btn btn-dark bg-body-secondary border-0 border-start" tabindex="-1">
+                                                <i class="bi bi-trash-fill" style="font-size: 1.25rem;"></i>
                                             </button>
                                         </div>
-                                        <div class="mt-1 alert alert-info alert-dismissible fade show" role="alert">
+                                        <div class="mt-1 alert alert-dark alert-dismissible fade show" role="alert">
+                                            <i class="bi bi-info-circle-fill text-info"></i>
                                             Mencari Persentase Produksi Berdasarkan Jumlah EggTry
                                             <button type="button" class="btn-close" data-bs-dismiss="alert"
                                                 aria-label="Close"></button>
@@ -1119,18 +1111,18 @@
                                             </div>
                                         </div>
                                         <div class="input-group mt-1">
-                                            <input class="form-control text-info text-center fs-4 fw-bold"
+                                            <input class="form-control text-info text-center fs-4 fw-bold border-0"
                                                 autocomplete="off" id="kiraSetelPersen" placeholder="Persen" disabled>
-                                            <input class="form-control text-info text-center fs-4 fw-bold"
-                                                autocomplete="off" id="kiraSetelEtre" placeholder="Etre" disabled>
-                                            <button type="reset" class="btn btn-danger" tabindex="-1">
-                                                <i class="bi bi-backspace-fill"></i>
+                                            <button type="reset" class="btn btn-dark bg-body-secondary border-0 border-start border-end" tabindex="-1">
+                                                <i class="bi bi-trash-fill" style="font-size: 1.25rem;"></i>
                                             </button>
+                                            <input class="form-control text-info text-center fs-4 fw-bold border-0"
+                                                autocomplete="off" id="kiraSetelEtre" placeholder="Etre" disabled>
                                         </div>
-                                        <div class="mt-1 alert alert-info alert-dismissible fade show" role="alert">
+                                        <div class="mt-1 alert alert-dark alert-dismissible fade show" role="alert">
+                                            <i class="bi bi-info-circle-fill text-info"></i>
                                             Mencari Persentase Produksi Berdasarkan Jumlah Setel (8 EggTry)
-                                            <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                                aria-label="Close"></button>
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                         </div>
                                     </form>
                                 </div>
@@ -1151,24 +1143,25 @@
                                                     placeholder="Persentase">
                                                 <label for="produkPersen" id="">Persentase (%)</label>
                                             </div>
-                                            <button type="reset" class="btn btn-danger" tabindex="-1">
-                                                <i class="bi bi-backspace-fill"></i>
+                                            <button type="reset" class="btn btn-dark border" tabindex="-1">
+                                                <i class="bi bi-trash-fill" style="font-size: 1.25rem;"></i>
                                             </button>
                                         </div>
                                         <div class="input-group mt-1">
-                                            <input class="form-control text-info text-center fs-5 fw-bold"
+                                            <input class="form-control text-info text-center fs-5 fw-bold border-0 rounded-0 rounded-top"
                                                 autocomplete="off" id="produkButiran" placeholder="Total Butiran"
                                                 disabled>
                                         </div>
-                                        <div class="input-group mt-1">
-                                            <input class="form-control text-info text-center fs-5 fw-bold"
+                                        <div class="input-group">
+                                            <input class="form-control text-info text-center fs-5 fw-bold border-0 rounded-0"
                                                 autocomplete="off" id="produkEtre" placeholder="Total Etre" disabled>
                                         </div>
-                                        <div class="input-group mt-1">
-                                            <input class="form-control text-warning text-center fs-5 fw-bold"
+                                        <div class="input-group">
+                                            <input class="form-control text-warning text-center fs-5 fw-bold border-0 rounded-0 rounded-bottom"
                                                 autocomplete="off" id="produkSetel" placeholder="Total Setel" disabled>
                                         </div>
-                                        <div class="mt-1 alert alert-info alert-dismissible fade show" role="alert">
+                                        <div class="mt-1 alert alert-dark alert-dismissible fade show" role="alert">
+                                            <i class="bi bi-info-circle-fill text-info"></i>
                                             Mencari Total Produksi Berdasarkan Persentase
                                             <button type="button" class="btn-close" data-bs-dismiss="alert"
                                                 aria-label="Close"></button>
@@ -1186,28 +1179,28 @@
                                                     oninput="tebakPopulasi(); formatInput(this);" placeholder="Setel">
                                                 <label for="produkSetelPopulasi" id="">Setel PerHari</label>
                                             </div>
-                                            <span class="input-group-text">/</span>
+                                            <span class="input-group-text bg-transparent">/</span>
                                             <div class="form-floating">
                                                 <input class="form-control text-white" autocomplete="off"
                                                     inputmode="numeric" id="produkEtrePopulasi"
                                                     oninput="tebakPopulasi(); formatInput(this);" placeholder="Etre">
                                                 <label for="produkEtrePopulasi" id="">Etre PerHari</label>
                                             </div>
-                                            <button onclick="CperkiraanPopulasi()" type="reset" class="btn btn-danger"
+                                            <button onclick="CperkiraanPopulasi()" type="reset" class="btn btn-dark border"
                                                 tabindex="-1">
-                                                <i class="bi bi-backspace-fill"></i>
+                                                <i class="bi bi-trash-fill" style="font-size: 1.25rem;"></i>
                                             </button>
                                         </div>
                                         <div class="input-group mt-1">
                                             <div class="form-floating" style="width: 60%;">
-                                                <input class="form-control text-info text-center fs-5 fw-bold"
+                                                <input class="form-control text-info text-center fs-5 fw-bold border-0"
                                                     autocomplete="off" style="height: 75px;" id="produkSetelHasil"
                                                     placeholder="Perkiraan Populasi" disabled>
                                                 <label id="labelProdukSetelHasil" for="produkSetelHasil"
                                                     style="font-size: 12pt;" class="fw-bold text-light">Perkiraan
                                                     Populasi</label>
                                             </div>
-                                            <select class="form-select" aria-label="Default select example"
+                                            <select class="form-select text-light fs-5 bg-body-secondary border-0 border-start" aria-label="Default select example"
                                                 id="penebakPop" onchange="tebakPopulasi()" style="height: 75px;">
                                                 <option value="60">60%</option>
                                                 <option value="65">65%</option>
@@ -1219,7 +1212,8 @@
                                                 <option value="95">95%</option>
                                             </select>
                                         </div>
-                                        <div class="mt-1 alert alert-info alert-dismissible fade show" role="alert">
+                                        <div class="mt-1 alert alert-dark alert-dismissible fade show" role="alert">
+                                            <i class="bi bi-info-circle-fill text-info"></i>
                                             Menebak Populasi Berdasarkan Produksi (Berapa <b>Setel</b> PerHari
                                             <b>atau</b>
                                             Berapa <b>EggTry</b> PerHari)
@@ -1269,13 +1263,13 @@
                                 </div>
                             </div>
                             <div class="input-group mt-1">
-                                <input autocomplete="off" class="form-control text-warning-emphasis fw-bold" disabled=""
+                                <input autocomplete="off" class="form-control text-warning-emphasis fw-bold border-0" disabled=""
                                     id="totalTelur" placeholder="Total Telur" />
-                                <input autocomplete="off" class="form-control text-danger-emphasis fw-bold" disabled=""
+                                <input autocomplete="off" class="form-control text-danger-emphasis fw-bold border-0 border-start" disabled=""
                                     id="totalPakanSelisih" placeholder="Total Pakan" />
                             </div>
                             <div class="input-group mt-1">
-                                <input autocomplete="off" class="form-control text-info text-center fs-4 fw-bold"
+                                <input autocomplete="off" class="form-control text-info text-center fs-4 fw-bold border-0"
                                     disabled="" id="selisih" placeholder="Selisih" />
                             </div>
                             <div class="input-group mt-1">
@@ -1285,8 +1279,8 @@
                                         tabindex="5" />
                                     <label for="berapaHari">Berapa Hari?</label>
                                 </div>
-                                <button type="reset" class="btn btn-danger" tabindex="-1" onclick="resetLblUntung()">
-                                    <i class="bi bi-backspace-fill"></i>
+                                <button type="reset" class="btn btn-dark border" tabindex="-1" onclick="resetLblUntung()">
+                                    <i class="bi bi-trash-fill" style="font-size: 1.25rem;"></i>
                                 </button>
                             </div>
                         </form>
@@ -1403,5 +1397,4 @@
 </body>
 
 </html>
-
 
