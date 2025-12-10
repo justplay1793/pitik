@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="id" data-bs-theme="dark">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>CSV to ICS</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+
+<body class="container">
+
+  <!-- Header -->
+  <header class="d-flex justify-content-between align-items-center mt-3">
+    <div>
+      <h4 class="mb-1">CSV → ICS Converter</h4>
+      <small class="text-body-secondary"><code>JUDUL,27/07/2025</code> atau <code>JUDUL[tab]27/07/2025</code></small>
+      <br>
+      <small class="text-body-secondary">bisa pakai tab atau comma
+    </div>
+
+    <button id="themeToggle" class="btn btn-outline-secondary btn-sm">
+      <i id="themeIcon" class="bi bi-moon-fill" style="font-size: 1.2rem;"></i>
+    </button>
+  </header>
+
+  <div class="text-center my-2">
+    <div class="btn-group gap-2" role="group" aria-label="Basic example">
+      <button id="clearLeft" class="btn bg-transparent">
+        <i class="bi bi-trash-fill" style="font-size: 1.5rem;"></i>
+      </button>
+      <button id="copyBtn" class="btn bg-transparent">
+        <i class="bi bi-copy" style="font-size: 1.5rem;"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Main -->
+  <div class="row g-2 mb-5">
+    <!-- CSV Input -->
+    <div class="col-md-6">
+      <textarea id="csvInput" class="form-control font-monospace" rows="10" placeholder="Judul Acara,27/07/2025"
+        oninput="proses()"></textarea>
+    </div>
+
+    <!-- ICS Output -->
+    <div class="col-md-6">
+      <textarea id="icsOutput" class="form-control font-monospace" rows="10" readonly
+        placeholder="Hasil ICS..."></textarea>
+    </div>
+  </div>
+
+  <script>
+    function formatDateToICS(d) {
+      // d is Date object in UTC
+      function pad(n) { return n < 10 ? '0' + n : '' + n }
+      return d.getUTCFullYear() + pad(d.getUTCMonth() + 1) + pad(d.getUTCDate())
+    }
+
+    function formatDateTimeStamp(d) {
+      function pad(n) { return n < 10 ? '0' + n : '' + n }
+      return d.getUTCFullYear() + pad(d.getUTCMonth() + 1) + pad(d.getUTCDate()) + 'T' + pad(d.getUTCHours()) + pad(d.getUTCMinutes()) + pad(d.getUTCSeconds()) + 'Z'
+    }
+
+    function parseLine(line) {
+      // Auto detect separator: TAB > comma
+      let separator = ','
+
+      if (line.includes('\t')) {
+        separator = '\t'
+      }
+
+      const parts = line.split(separator)
+
+      if (parts.length < 2) return null
+
+      const summary = parts[0].trim()
+      const dateStr = parts[1].trim() // dd/mm/yyyy
+
+      const d = dateStr.split('/')
+      if (d.length !== 3) return null
+
+      const [day, month, year] = d.map(v => v.padStart(2, '0'))
+
+      return { summary, day, month, year }
+    }
+
+
+    function buildICS(events) {
+      const now = new Date()
+      const dtstamp = formatDateTimeStamp(now)
+      const lines = []
+      lines.push('BEGIN:VCALENDAR')
+      lines.push('VERSION:2.0')
+      lines.push('PRODID:-//Scheduler//ID')
+
+      events.forEach((ev, i) => {
+        lines.push('BEGIN:VEVENT')
+        lines.push('UID:' + (i + 1) + '@jadwal')
+        lines.push('DTSTAMP:' + dtstamp)
+        lines.push('DTSTART:' + ev.year + ev.month + ev.day)
+        lines.push('SUMMARY:' + ev.summary)
+        lines.push('END:VEVENT')
+      })
+
+      lines.push('END:VCALENDAR')
+      return lines.join('\n')
+    }
+
+    function proses() {
+      const input = document.getElementById('csvInput').value
+      const lines = input.split(/\r?\n/)
+      const events = []
+      for (const rawLine of lines) {
+        const line = rawLine.trim()
+        if (!line) continue
+        const parsed = parseLine(line)
+        if (!parsed) continue
+        let summary = parsed.summary
+        events.push({ summary, day: parsed.day, month: parsed.month, year: parsed.year })
+      }
+      const ics = buildICS(events)
+      document.getElementById('icsOutput').value = ics
+    }
+
+    document.getElementById('copyBtn').addEventListener('click', async () => {
+      const txt = document.getElementById('icsOutput').value
+      if (!txt) return alert('Tidak ada isi untuk dicopy')
+      try {
+        await navigator.clipboard.writeText(txt)
+        alert('Hasil ICS disalin ke clipboard')
+      } catch (e) {
+        // fallback
+        const ta = document.createElement('textarea')
+        ta.value = txt
+        document.body.appendChild(ta)
+        ta.select()
+        document.execCommand('copy')
+        document.body.removeChild(ta)
+        alert('Hasil ICS disalin ke clipboard (fallback)')
+      }
+    })
+
+    document.getElementById('clearLeft').addEventListener('click', () => {
+      document.getElementById('csvInput').value = ''
+      document.getElementById('icsOutput').value = ''
+    })
+
+    // Theme Toggle
+    const themeIcon = document.getElementById('themeIcon')
+
+    function setTheme(theme) {
+      document.documentElement.setAttribute('data-bs-theme', theme)
+      localStorage.setItem('theme', theme)
+      themeIcon.className = theme === 'dark' ? 'bi bi-moon-fill' : 'bi bi-sun-fill'
+    }
+
+    setTheme(localStorage.getItem('theme') || 'dark')
+
+    document.getElementById('themeToggle').addEventListener('click', () => {
+      const now = document.documentElement.getAttribute('data-bs-theme')
+      setTheme(now === 'dark' ? 'light' : 'dark')
+    })
+  </script>
+</body>
+
+</html>
