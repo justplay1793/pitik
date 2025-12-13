@@ -100,13 +100,30 @@
       lines.push('VERSION:2.0')
       lines.push('PRODID:-//Scheduler//ID')
 
+      // events.forEach((ev, i) => {
+      //   lines.push('BEGIN:VEVENT')
+      //   lines.push('UID:' + Date.now() + '-' + (i + 1) + '@jadwal')
+      //   lines.push('DTSTAMP:' + dtstamp)
+      //   lines.push('DTSTART:' + ev.year + ev.month + ev.day)
+      //   lines.push('SUMMARY:' + ev.summary)
+      //   lines.push('END:VEVENT')
+      // })
+
       events.forEach((ev, i) => {
         lines.push('BEGIN:VEVENT')
-        // lines.push('UID:' + (i + 1) + '@jadwal')
-        lines.push('UID:' + Date.now() + '-' + (i + 1) + '@jadwal')
-        lines.push('DTSTAMP:' + dtstamp)
-        lines.push('DTSTART:' + ev.year + ev.month + ev.day)
-        lines.push('SUMMARY:' + ev.summary)
+        lines.push(`UID:${Date.now()}-${i + 1}@jadwal`)
+        lines.push(`DTSTAMP:${dtstamp}`)
+        lines.push(`DTSTART:${ev.year}${ev.month}${ev.day}`)
+        lines.push(`SUMMARY:${ev.summary}`)
+
+        // === REMINDER / ALERT ===
+        lines.push('BEGIN:VALARM')
+        lines.push('TRIGGER:-PT9H')       // 9 jam sebelum
+        lines.push('ACTION:DISPLAY')
+        lines.push('DESCRIPTION:Reminder')
+        lines.push('END:VALARM')
+        // ========================
+
         lines.push('END:VEVENT')
       })
 
