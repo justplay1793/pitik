@@ -102,7 +102,8 @@
 
       events.forEach((ev, i) => {
         lines.push('BEGIN:VEVENT')
-        lines.push('UID:' + (i + 1) + '@jadwal')
+        // lines.push('UID:' + (i + 1) + '@jadwal')
+        lines.push('UID:' + Date.now() + '-' + (i + 1) + '@jadwal')
         lines.push('DTSTAMP:' + dtstamp)
         lines.push('DTSTART:' + ev.year + ev.month + ev.day)
         lines.push('SUMMARY:' + ev.summary)
