@@ -69,13 +69,29 @@
     }
 
     function addDays(y, m, d, days) {
-      const date = new Date(Date.UTC(y, m - 1, d))
-      date.setUTCDate(date.getUTCDate() + days)
+      const year = parseInt(y, 10)
+      const month = parseInt(m, 10)
+      const day = parseInt(d, 10)
+      const dur = parseInt(days, 10)
 
-      const pad = n => n < 10 ? '0' + n : n
-      return date.getUTCFullYear() +
+      if (
+        !Number.isFinite(year) ||
+        !Number.isFinite(month) ||
+        !Number.isFinite(day) ||
+        !Number.isFinite(dur)
+      ) {
+        return ''
+      }
+
+      const date = new Date(Date.UTC(year, month - 1, day))
+      date.setUTCDate(date.getUTCDate() + dur)
+
+      const pad = n => String(n).padStart(2, '0')
+      return (
+        date.getUTCFullYear() +
         pad(date.getUTCMonth() + 1) +
         pad(date.getUTCDate())
+      )
     }
 
     function parseLine(line) {
@@ -85,8 +101,12 @@
       if (parts.length < 2) return null
 
       const summary = parts[0].trim()
-      const dateStr = parts[1].trim()
-      const duration = parseInt(parts[2] || '1', 10)
+      const dateStr = parts[1].trim().replace(/[^\d/]/g, '')
+
+      let duration = Number(parts[2])
+      if (!Number.isInteger(duration) || duration < 1) {
+        duration = 1
+      }
 
       const d = dateStr.split('/')
       if (d.length !== 3) return null
@@ -142,7 +162,13 @@
         const parsed = parseLine(line)
         if (!parsed) continue
         let summary = parsed.summary
-        events.push({ summary, day: parsed.day, month: parsed.month, year: parsed.year })
+        events.push({
+          summary: parsed.summary,
+          day: parsed.day,
+          month: parsed.month,
+          year: parsed.year,
+          duration: parsed.duration
+        })
       }
       const ics = buildICS(events)
       document.getElementById('icsOutput').value = ics
