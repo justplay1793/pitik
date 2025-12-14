@@ -68,27 +68,32 @@
       return d.getUTCFullYear() + pad(d.getUTCMonth() + 1) + pad(d.getUTCDate()) + 'T' + pad(d.getUTCHours()) + pad(d.getUTCMinutes()) + pad(d.getUTCSeconds()) + 'Z'
     }
 
+    function addDays(y, m, d, days) {
+      const date = new Date(Date.UTC(y, m - 1, d))
+      date.setUTCDate(date.getUTCDate() + days)
+
+      const pad = n => n < 10 ? '0' + n : n
+      return date.getUTCFullYear() +
+        pad(date.getUTCMonth() + 1) +
+        pad(date.getUTCDate())
+    }
+
     function parseLine(line) {
-      // Auto detect separator: TAB > comma
-      let separator = ','
-
-      if (line.includes('\t')) {
-        separator = '\t'
-      }
-
+      let separator = line.includes('\t') ? '\t' : ','
       const parts = line.split(separator)
 
       if (parts.length < 2) return null
 
       const summary = parts[0].trim()
-      const dateStr = parts[1].trim() // dd/mm/yyyy
+      const dateStr = parts[1].trim()
+      const duration = parseInt(parts[2] || '1', 10)
 
       const d = dateStr.split('/')
       if (d.length !== 3) return null
 
       const [day, month, year] = d.map(v => v.padStart(2, '0'))
 
-      return { summary, day, month, year }
+      return { summary, day, month, year, duration }
     }
 
 
@@ -100,29 +105,25 @@
       lines.push('VERSION:2.0')
       lines.push('PRODID:-//Scheduler//ID')
 
-      // events.forEach((ev, i) => {
-      //   lines.push('BEGIN:VEVENT')
-      //   lines.push('UID:' + Date.now() + '-' + (i + 1) + '@jadwal')
-      //   lines.push('DTSTAMP:' + dtstamp)
-      //   lines.push('DTSTART:' + ev.year + ev.month + ev.day)
-      //   lines.push('SUMMARY:' + ev.summary)
-      //   lines.push('END:VEVENT')
-      // })
+      const uidBase = Date.now()
 
       events.forEach((ev, i) => {
+        const dtstart = ev.year + ev.month + ev.day
+        const dtend = addDays(ev.year, ev.month, ev.day, ev.duration)
+
         lines.push('BEGIN:VEVENT')
-        lines.push(`UID:${Date.now()}-${i + 1}@jadwal`)
+        lines.push(`UID:${uidBase}-${i + 1}@jadwal`)
         lines.push(`DTSTAMP:${dtstamp}`)
-        lines.push(`DTSTART:${ev.year}${ev.month}${ev.day}`)
+        lines.push(`DTSTART:${dtstart}`)
+        lines.push(`DTEND:${dtend}`)
         lines.push(`SUMMARY:${ev.summary}`)
 
-        // === REMINDER / ALERT ===
+        // Reminder
         lines.push('BEGIN:VALARM')
-        lines.push('TRIGGER:-PT0H')       // hari H
+        lines.push('TRIGGER:-PT0H')
         lines.push('ACTION:DISPLAY')
         lines.push('DESCRIPTION:Reminder')
         lines.push('END:VALARM')
-        // ========================
 
         lines.push('END:VEVENT')
       })
