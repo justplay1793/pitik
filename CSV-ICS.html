@@ -63,6 +63,7 @@
     if (data) {
       document.getElementById("csvInput").value = decodeURIComponent(data);
       proses();
+      unduh();
     }
     
     function formatDateToICS(d) {
@@ -222,6 +223,10 @@
     })
 
     document.getElementById('downloadICS').addEventListener('click', () => {
+      unduh()
+    })
+
+    function unduh() {
       const text = document.getElementById('icsOutput').value.trim()
       if (!text) {
         alert('Tidak ada ICS untuk di-download.')
@@ -237,7 +242,7 @@
       link.click()
 
       URL.revokeObjectURL(url)
-    })
+    }
   </script>
 </body>
 
