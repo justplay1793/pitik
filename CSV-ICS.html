@@ -57,6 +57,13 @@
   </div>
 
   <script>
+    const params = new URLSearchParams(window.location.search);
+    const data = params.get("data");
+      
+    if (data) {
+      document.getElementById("csvInput").value = decodeURIComponent(data);
+    }
+    
     function formatDateToICS(d) {
       // d is Date object in UTC
       function pad(n) { return n < 10 ? '0' + n : '' + n }
