@@ -295,9 +295,9 @@
 </head>
 
 <body>
-<main class="app">
+<main class="container">
 
-    <header class="text-center">
+    <header class="text-center my-1">
         <i class="bi bi-calendar3"></i>
         <span id="tanggal-hari-ini"></span>
     </header>
@@ -340,21 +340,12 @@
             <output class="text-info fw-bold fs-1" id="total">-</output>
         </section>
 
-        <section class="eggtry-card my-2">
-            <div class="small text-body">EggTry <i class="bi bi-inboxes-fill"></i></div>
-            <output class="text-warning-emphasis fw-semibold fs-4" id="etreTotal">-</output>
-        </section>
-
-        <div class="unit-slider rounded-4">
-            <div class="d-flex justify-content-between align-items-center mb-1">
-                <label for="anEtre" class="text-body small">
-                    Satuan EggTry
-                    <i class="bi bi-inbox-fill"></i>
-                </label>
-
-                <span id="etreValue" class="text-warning-emphasis fw-semibold fs-5">8an</span>
+        <section class="unit-slider rounded-4 mt-1">
+            <div class="d-flex justify-content-between">
+                <span class="small text-body">EggTry <i class="bi bi-inbox-fill"></i></span>
+                <span id="etreValue" class="text-warning-emphasis fw-semibold fs-6">8an</span>
             </div>
-
+            <output class="text-warning-emphasis fw-semibold fs-4" id="etreTotal">-</output>
             <input
                 type="range"
                 class="form-range"
@@ -365,12 +356,7 @@
                 value="8"
                 oninput="etre()"
             />
-
-            <!-- <div class="d-flex justify-content-between text-body small">
-                <span>5an</span>
-                <span>15an</span>
-            </div> -->
-        </div>
+        </section>
         
     </form>
 
