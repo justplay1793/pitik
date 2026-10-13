@@ -417,25 +417,18 @@
             }
         }
 
-        const bawah = document.getElementById("bawah");
-
         function batasiScroll() {
-            const maxScroll = Math.max(
-                0,
-                bawah.getBoundingClientRect().bottom +
-                window.scrollY -
-                window.innerHeight
-            );
+            const bawah = document.getElementById("bawah");
 
-            if (window.scrollY > maxScroll) {
-                window.scrollTo({
-                    top: maxScroll,
-                    behavior: "smooth"
-                });
-            }
+            const maxScroll = bawah.offsetTop + bawah.offsetHeight - window.innerHeight;
+
+            window.scrollTo({
+                top: Math.max(0, Math.min(window.scrollY, maxScroll)),
+                behavior: "smooth"
+            });
         }
 
-        window.addEventListener("scroll", batasiScroll, { passive: true });
+        window.addEventListener("scroll", batasiScroll);
     </script>
 </body>
 
