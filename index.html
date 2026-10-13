@@ -201,7 +201,7 @@
 <body class="container">
     <main>
 
-        <header class="text-center mt-2" id="bawah">
+        <header class="text-center mt-2">
             <i class="bi bi-calendar3"></i>
             <span id="tanggal-hari-ini"></span>
         </header>
@@ -417,18 +417,14 @@
             }
         }
 
-        // function batasiScroll() {
-        //     const bawah = document.getElementById("bawah");
-
-        //     const maxScroll = bawah.offsetTop + bawah.offsetHeight - window.innerHeight;
-
-        //     window.scrollTo({
-        //         top: Math.max(0, Math.min(window.scrollY, maxScroll)),
-        //         behavior: "smooth"
-        //     });
-        // }
-
-        // window.addEventListener("scroll", batasiScroll);
+        window.addEventListener("scroll", () => {
+            if (window.scrollY > 0) {
+                window.scrollTo({
+                    top: 0,
+                    behavior: "smooth"
+                });
+            }
+        });
     </script>
 </body>
 
