@@ -27,6 +27,11 @@
             -moz-appearance: textfield;
         }
 
+        html,
+        body {
+            overflow: hidden;
+        }
+
         :root {
             color-scheme: dark;
             --bg: #08090a;
@@ -133,6 +138,50 @@
             background: #eee;
         }
 
+
+        .field-input-wrap {
+            position: relative;
+        }
+
+        .field-input {
+            padding-right: 26px;
+        }
+
+        .clear-field {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+
+            display: none;
+            align-items: center;
+            justify-content: center;
+
+            width: 23px;
+            height: 23px;
+            padding: 0;
+
+            border: 0;
+            border-radius: 50%;
+            background: #292c30;
+            color: #b0b4bb;
+
+            font-family: Arial, sans-serif;
+            font-size: 19px;
+            line-height: 1;
+            cursor: pointer;
+        }
+
+        .clear-field.show {
+            display: flex;
+        }
+
+        .clear-field:active {
+            background: #454950;
+            color: white;
+        }
+
+
         @media (max-width: 360px) {
             .field-grid {
                 gap: 8px;
@@ -163,16 +212,26 @@
 
                 <div class="field-card rounded-4">
                     <label for="setel" class="field-label small text-body">Setel <i class="fa-solid fa-egg"></i></label>
-                    <input class="field-input" autocomplete="off" type="number" id="setel" inputmode="numeric"
-                        placeholder="0" oninput="etre(); calculate(); kiloEndog();">
+                    <div class="field-input-wrap">
+                        <input class="field-input" autocomplete="off" type="number" id="setel" inputmode="numeric"
+                            placeholder="0" oninput="etre(); calculate(); kiloEndog(); toggleClear('setel')">
+                        <button tabindex="-1" type="button" class="clear-field" id="clear-setel"
+                            aria-label="Hapus Setel" onclick="clearInput('setel')"><i
+                                class="fa-solid fa-xmark"></i></button>
+                    </div>
                     <div class="field-hint small text-body" id="kiloneEndog">× 15 kg</div>
                 </div>
 
                 <div class="field-card rounded-4">
                     <label for="harga" class="field-label small text-body">Harga <i
                             class="fa-solid fa-coins"></i></label>
-                    <input class="field-input" autocomplete="off" type="number" id="harga" inputmode="numeric"
-                        placeholder="0" oninput="calculate()">
+                    <div class="field-input-wrap">
+                        <input class="field-input" autocomplete="off" type="number" id="harga" inputmode="numeric"
+                            placeholder="0" oninput="calculate(); toggleClear('harga')">
+                        <button tabindex="-1" type="button" class="clear-field" id="clear-harga"
+                            aria-label="Hapus Harga" onclick="clearInput('harga')"><i
+                                class="fa-solid fa-xmark"></i></button>
+                    </div>
                     <div class="field-hint small text-body" id="rupiah">Harga/kg</div>
                 </div>
 
@@ -203,7 +262,7 @@
                 <i class="fa-solid fa-trash-can"></i>
                 HAPUS
             </div>
-            <a href="https://justplay1793.github.io/pitik/kalpi.html"
+            <a tabindex="-1" href="https://justplay1793.github.io/pitik/kalpi.html"
                 class="fw-bold text-body bg-transparent border-0 text-decoration-none text-end">Selengkapnya <i
                     class="fa-solid fa-arrow-right"></i></a>
         </div>
@@ -225,6 +284,27 @@
     </main>
 
     <script>
+
+        function toggleClear(id) {
+            const input = document.getElementById(id);
+            const button = document.getElementById("clear-" + id);
+
+            button.classList.toggle("show", input.value !== "");
+        }
+
+        function clearInput(id) {
+            document.getElementById(id).value = "";
+
+            if (id === "setel") {
+                etre();
+                kiloEndog();
+                calculate();
+            } else if (id === "harga") {
+                calculate();
+            }
+
+            toggleClear(id);
+        }
 
         function tampilkanTanggalHariIni() {
             const hari = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
@@ -256,6 +336,8 @@
             document.getElementById("detailUang").textContent = "";
             document.getElementById("etreTotal").textContent = "-";
             document.getElementById("kiloneEndog").textContent = "× 15 kg";
+            toggleClear("setel");
+            toggleClear("harga");
         }
 
         function calculate() {
@@ -302,18 +384,14 @@
             } else {
                 const stl = input;
                 const kilone = parseFloat(input.replace(/[,.]/g, "")) * 15;
-                output.textContent =
-                    // stl.toLocaleString("id-ID") + " Setel (" +
-                    kilone.toLocaleString("id-ID") + " Kg";
+                output.textContent = kilone.toLocaleString("id-ID") + " Kg";
             }
         }
 
         function etre() {
             const slider = document.getElementById("anEtre");
             const satuan = parseInt(slider.value);
-            document.getElementById("etreValue").textContent =
-                // satuan + (satuan <= 9 ? "an" : "");
-                satuan + "an";
+            document.getElementById("etreValue").textContent = satuan + "an";
 
             const input = document.getElementById("setel").value;
             const output = document.getElementById("etreTotal");
