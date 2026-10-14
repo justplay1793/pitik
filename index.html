@@ -35,9 +35,9 @@
 
         :root {
             color-scheme: dark;
-            --bg: #08090a;
+            --bg: #000;
             --panel: #101112;
-            --border: #292c30;
+            --border: #101112;
             --muted: #858b96;
             --white: #f5f6f7;
             --cyan: #55d5ec;
@@ -45,8 +45,7 @@
         }
 
         body {
-            /* background: var(--bg); */
-            background: #000;
+            background: var(--bg);
             color: var(--white);
             font-family: 'JetBrains Mono', monospace;
             /* letter-spacing: -0.6px; */
@@ -66,18 +65,19 @@
             background: var(--panel);
             border: 1px solid var(--border);
             border-radius: 17px;
-            padding: 16px 15px 13px;
+            padding: 13px;
             transition: border-color .2s;
         }
 
         .field-card:focus-within {
-            border-color: #626971;
+            /* border-color: #626971; */
+            border-color: #002533;
+            background: #002533;
         }
 
         .field-label {
             display: block;
             color: var(--muted);
-            /* font-size: 12px; */
             margin-bottom: 10px;
         }
 
@@ -106,24 +106,22 @@
             margin-top: 11px;
             padding-top: 10px;
             color: var(--muted);
-            /* font-size: 10px; */
             min-height: 29px;
             white-space: nowrap;
         }
 
         .result-card {
-            margin-top: 13px;
-            padding: 17px 16px;
+            padding: 13px;
             background: var(--panel);
             border: 1px solid var(--border);
             border-radius: 17px;
         }
 
         .unit-slider {
-            padding: 12px 14px;
-            background: #111;
-            border: 1px solid #292929;
-            border-radius: 12px;
+            padding: 13px;
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 17px;
         }
 
         .unit-slider .form-range {
@@ -209,7 +207,7 @@
 
         <hr>
         <form onsubmit="return false">
-            <div class="field-grid my-2 gap-2">
+            <div class="field-grid gap-2">
 
                 <div class="field-card rounded-4">
                     <label for="setel" class="field-label text-body">Setel <i class="fa-solid fa-egg"></i></label>
@@ -238,7 +236,7 @@
 
             </div>
 
-            <section class="result-card rounded-4">
+            <section class="result-card rounded-4 my-2">
                 <div class="d-flex justify-content-between">
                     <span class="fs-6 text-body">Uang <i class="bi bi-cash-stack"></i></span>
                     <span id="detailUang" class="fs-6 text-light"></span>
@@ -246,7 +244,7 @@
                 <output class="text-info fw-bold fs-1" id="total">-</output>
             </section>
 
-            <section class="unit-slider rounded-4 mt-1">
+            <section class="unit-slider rounded-4">
                 <div class="d-flex justify-content-between">
                     <span class="fs-6 text-body">EggTry <i class="bi bi-inbox-fill"></i></span>
                     <span id="etreValue" class="text-warning-emphasis fw-semibold fs-6">8an</span>
