@@ -370,7 +370,7 @@
             }
 
             const result = setel * 15 * harga;
-            document.getElementById("detailUang").textContent = setel.toLocaleString() + "×" + "15×" + harga.toLocaleString("id-ID");
+            document.getElementById("detailUang").textContent = setel.toLocaleString("id-ID") + "×" + "15×" + harga.toLocaleString("id-ID");
             document.getElementById("rupiah").textContent = "Rp " + harga.toLocaleString("id-ID") + "/kg";
             output.textContent = "Rp " + result.toLocaleString("id-ID");
         }
