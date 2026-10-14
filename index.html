@@ -1,3 +1,4 @@
+<!-- pitik new ai -->
 <!DOCTYPE html>
 <html lang="id" data-bs-theme="dark">
 
@@ -48,7 +49,7 @@
             background: #000;
             color: var(--white);
             font-family: 'JetBrains Mono', monospace;
-            letter-spacing: -0.6px;
+            /* letter-spacing: -0.6px; */
             word-spacing: normal;
             min-height: 100vh;
             margin: 0;
@@ -201,7 +202,7 @@
 <body class="container">
     <main>
 
-        <header class="text-center fs-5 mt-2">
+        <header class="text-center fs-5 mt-3">
             <i class="bi bi-calendar3"></i>
             <span id="tanggal-hari-ini"></span>
         </header>
@@ -211,10 +212,10 @@
             <div class="field-grid my-2 gap-2">
 
                 <div class="field-card rounded-4">
-                    <label for="setel" class="field-label small text-body">Setel <i class="fa-solid fa-egg"></i></label>
+                    <label for="setel" class="field-label text-body">Setel <i class="fa-solid fa-egg"></i></label>
                     <div class="field-input-wrap">
                         <input class="field-input" autocomplete="off" type="number" id="setel" inputmode="numeric"
-                            placeholder="0" oninput="etre(); calculate(); kiloEndog(); toggleClear('setel')">
+                            placeholder="0" oninput="etre(); calculate(); kiloEndog(); toggleClear('setel')" style="letter-spacing: 1px;">
                         <button tabindex="-1" type="button" class="clear-field" id="clear-setel"
                             aria-label="Hapus Setel" onclick="clearInput('setel')"><i
                                 class="fa-solid fa-xmark"></i></button>
@@ -223,11 +224,11 @@
                 </div>
 
                 <div class="field-card rounded-4">
-                    <label for="harga" class="field-label small text-body">Harga <i
+                    <label for="harga" class="field-label text-body">Harga <i
                             class="fa-solid fa-coins"></i></label>
                     <div class="field-input-wrap">
                         <input class="field-input" autocomplete="off" type="number" id="harga" inputmode="numeric"
-                            placeholder="0" oninput="calculate(); toggleClear('harga')">
+                            placeholder="0" oninput="calculate(); toggleClear('harga')" style="letter-spacing: 3px;">
                         <button tabindex="-1" type="button" class="clear-field" id="clear-harga"
                             aria-label="Hapus Harga" onclick="clearInput('harga')"><i
                                 class="fa-solid fa-xmark"></i></button>
@@ -239,18 +240,18 @@
 
             <section class="result-card rounded-4">
                 <div class="d-flex justify-content-between">
-                    <span class="small text-body">Uang <i class="bi bi-cash-stack"></i></span>
-                    <span id="detailUang" class="small text-light"></span>
+                    <span class="fs-6 text-body">Uang <i class="bi bi-cash-stack"></i></span>
+                    <span id="detailUang" class="fs-6 text-light"></span>
                 </div>
                 <output class="text-info fw-bold fs-1" id="total">-</output>
             </section>
 
             <section class="unit-slider rounded-4 mt-1">
                 <div class="d-flex justify-content-between">
-                    <span class="small text-body">EggTry <i class="bi bi-inbox-fill"></i></span>
+                    <span class="fs-6 text-body">EggTry <i class="bi bi-inbox-fill"></i></span>
                     <span id="etreValue" class="text-warning-emphasis fw-semibold fs-6">8an</span>
                 </div>
-                <output class="text-warning-emphasis fw-semibold fs-4" id="etreTotal">-</output>
+                <output class="text-warning-emphasis fw-semibold fs-4 my-1" id="etreTotal">-</output>
                 <input type="range" class="form-range" id="anEtre" min="5" max="15" step="1" value="8"
                     oninput="etre()" />
             </section>
