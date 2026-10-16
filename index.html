@@ -1,4 +1,4 @@
-<!-- pitik new ai -->
+<!-- pitik new -->
 <!DOCTYPE html>
 <html lang="id" data-bs-theme="dark">
 
@@ -76,7 +76,7 @@
         .field-label {
             display: block;
             color: var(--muted);
-            margin-bottom: 10px;
+            margin-bottom: 5px;
         }
 
         .field-input {
@@ -99,11 +99,11 @@
         }
 
         .field-hint {
-            border-top: 1px solid #36393e;
-            margin-top: 11px;
-            padding-top: 10px;
+            border-top: 1px solid #858b96;
+            margin-top: 5px;
+            /* padding-top: 10px; */
             color: var(--muted);
-            min-height: 29px;
+            /* min-height: 29px; */
             white-space: nowrap;
         }
 
@@ -123,7 +123,7 @@
 
         .unit-slider .form-range {
             cursor: pointer;
-            margin-bottom: 4px;
+            /* margin-bottom: 4px; */
         }
 
         .unit-slider .form-range::-webkit-slider-thumb {
@@ -202,8 +202,8 @@
                 padding: 13px 11px;
             }
 
-            .field-hint {
-                font-size: 9px;
+            .field-label {
+                font-size: 12px;
             }
         }
     </style>
@@ -212,75 +212,9 @@
 <body class="container">
     <main>
 
-        <header class="text-center fs-5 mt-3">
-            <i class="bi bi-calendar3"></i>
+        <header class="d-flex justify-content-between align-items-center fs-5 mt-3 text-body">
             <span id="tanggal-hari-ini"></span>
-        </header>
-
-        <hr>
-        <form onsubmit="return false">
-            <div class="field-grid gap-2">
-
-                <div class="field-card rounded-4">
-                    <label for="setel" class="field-label text-body">Setel <i class="fa-solid fa-egg"></i></label>
-                    <div class="field-input-wrap">
-                        <input class="field-input" autocomplete="off" type="number" id="setel" inputmode="numeric"
-                            placeholder="0" oninput="etre(); calculate(); kiloEndog(); toggleClear('setel')"
-                            style="letter-spacing: 1px;">
-                        <button tabindex="-1" type="button" class="clear-field" id="clear-setel"
-                            aria-label="Hapus Setel" onclick="clearInput('setel')"><i
-                                class="fa-solid fa-xmark"></i></button>
-                    </div>
-                    <div class="field-hint small text-body" id="kiloneEndog">× 15 kg</div>
-                </div>
-
-                <div class="field-card rounded-4">
-                    <label for="harga" class="field-label text-body">Harga <i class="fa-solid fa-coins"></i></label>
-                    <div class="field-input-wrap">
-                        <input class="field-input" autocomplete="off" type="number" id="harga" inputmode="numeric"
-                            placeholder="0" oninput="calculate(); toggleClear('harga')" style="letter-spacing: 3px;">
-                        <button tabindex="-1" type="button" class="clear-field" id="clear-harga"
-                            aria-label="Hapus Harga" onclick="clearInput('harga')"><i
-                                class="fa-solid fa-xmark"></i></button>
-                    </div>
-                    <div class="field-hint small text-body" id="rupiah">Harga/kg</div>
-                </div>
-
-            </div>
-
-            <section class="result-card rounded-4 my-2">
-                <div class="d-flex justify-content-between">
-                    <span class="fs-6 text-body">Uang <i class="bi bi-cash-stack"></i></span>
-                    <span id="detailUang" class="fs-6 text-light"></span>
-                </div>
-                <output class="text-info fw-bold fs-1" id="total">-</output>
-            </section>
-
-            <section class="unit-slider rounded-4">
-                <div class="d-flex justify-content-between">
-                    <span class="fs-6 text-body">EggTry <i class="bi bi-inbox-fill"></i></span>
-                    <span id="etreValue" class="text-warning-emphasis fw-semibold fs-6">8an</span>
-                </div>
-                <output class="text-warning-emphasis fw-semibold fs-4 my-1" id="etreTotal">-</output>
-                <input type="range" class="form-range" id="anEtre" min="5" max="15" step="1" value="8"
-                    oninput="etre()" />
-            </section>
-
-        </form>
-
-        <div class="d-flex justify-content-between align-items-center mt-3">
-            <div class="fw-bold text-body bg-transparent border-0" onclick="bersihKalEndog()" type="button">
-                <i class="fa-solid fa-trash-can"></i>
-                HAPUS
-            </div>
-            <a tabindex="-1" href="https://justplay1793.github.io/pitik/kalpi.html"
-                class="fw-bold text-body bg-transparent border-0 text-decoration-none text-end">Selengkapnya <i
-                    class="fa-solid fa-arrow-right"></i></a>
-        </div>
-        <hr>
-
-        <div class="text-center">
-            <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="7mm" height="7mm" version="1.1"
+            <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="6mm" height="6mm" version="1.1"
                 style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
                 viewBox="0 0 4233.32 4233.32" xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:xodm="http://www.corel.com/coreldraw/odm/2003">
@@ -290,7 +224,74 @@
                         d="M654.56 211.66c608.35,0 1216.66,0 1824.99,0 657.4,0 1194.44,537.01 1194.44,1194.42 0,568.06 -405.02,1059.88 -960.12,1171.23 -35.4,7.08 -34.77,6.42 -14.87,35.19 321.56,464.99 643.66,929.6 965.02,1394.72 10.84,15.69 11.71,14.4 -28.95,14.4 -200.86,0 -400.89,-0.16 -603.01,-0.16 -23.42,0 -45.37,-4.14 -64.4,-31.66 -314.1,-454.22 -628.46,-908.28 -942.65,-1362.43 -10.57,-15.26 -14.1,-16.73 -14.1,0.72l0 1298.29c0,52.61 -42.62,95.24 -95.22,95.24 -420.37,0 -840.74,0 -1261.13,0 -52.59,0 -95.25,-42.63 -95.24,-95.24 0,-1206.51 0,-2412.99 0,-3619.47 -0.01,-52.63 42.65,-95.25 95.24,-95.25zm1356.35 1810.61c0.48,51.91 42.48,93.9 94.42,94.35l374.22 0.02c390.32,0 710.57,-320.24 710.57,-710.56 0,-390.32 -320.25,-710.55 -710.57,-710.55l-1341.96 0c-51.94,0.45 -93.94,42.44 -94.42,94.38l0 2653.47c0.48,51.93 42.48,93.92 94.42,94.39l295.1 0c51.91,-0.47 93.9,-42.46 94.35,-94.39 0,-727.99 0,-1456.01 0,-2183.99 0,-52.6 42.65,-95.25 95.25,-95.25 294.33,0 588.65,0 882.98,0 52.62,0 95.25,42.65 95.25,95.25l0 293.36c0,52.61 -42.63,95.26 -95.25,95.26l-399.94 0c-51.94,0.48 -93.94,42.45 -94.42,94.38l0 279.88z" />
                 </g>
             </svg>
+            <!-- <i class="bi bi-calendar3"></i> -->
+        </header>
+
+        <hr class="border-2 rounded-pill">
+        <form onsubmit="return false">
+            <div class="field-grid gap-2">
+
+                <div class="field-card rounded-4">
+                    <!-- <label for="setel" class="field-label text-body">Setel <i class="fa-solid fa-egg"></i></label> -->
+                    <div class="field-label text-body small" id="kiloneEndog">Setel <i class="fa-solid fa-egg"></i></div>
+                    <div class="field-input-wrap">
+                        <input class="field-input" autocomplete="off" type="number" id="setel" inputmode="numeric"
+                            placeholder="0" oninput="etre(); calculate(); kiloEndog(); toggleClear('setel')"
+                            style="letter-spacing: 1px;">
+                        <button tabindex="-1" type="button" class="clear-field" id="clear-setel"
+                            aria-label="Hapus Setel" onclick="clearInput('setel')"><i
+                                class="fa-solid fa-xmark"></i></button>
+                    </div>
+                    <div class="field-hint text-body"></div>
+                    <!-- <div class="field-hint small text-body" id="kiloneEndog">× 15 kg</div> -->
+                </div>
+
+                <div class="field-card rounded-4">
+                    <!-- <label for="harga" class="field-label text-body">Harga <i class="fa-solid fa-coins"></i></label> -->
+                    <div class="field-label text-body small" id="rupiah">Harga <i class="fa-solid fa-coins"></i></div>
+                    <div class="field-input-wrap">
+                        <input class="field-input" autocomplete="off" type="number" id="harga" inputmode="numeric"
+                            placeholder="0" oninput="calculate(); toggleClear('harga')" style="letter-spacing: 3px;">
+                        <button tabindex="-1" type="button" class="clear-field" id="clear-harga"
+                            aria-label="Hapus Harga" onclick="clearInput('harga')"><i
+                                class="fa-solid fa-xmark"></i></button>
+                    </div>
+                    <div class="field-hint text-body"></div>
+                    <!-- <div class="field-hint small text-body" id="rupiah">Harga/kg</div> -->
+                </div>
+
+            </div>
+
+            <section class="result-card rounded-4 my-2">
+                <div class="d-flex justify-content-between mb-1 small">
+                    <span class="text-body">Uang <i class="bi bi-cash-stack"></i></span>
+                    <span id="detailUang" class="text-light"></span>
+                </div>
+                <output class="text-info fw-bold fs-1" id="total">-</output>
+            </section>
+
+            <section class="unit-slider rounded-4">
+                <div class="d-flex justify-content-between mb-1 small">
+                    <span class="text-body col-auto">EggTry <i class="bi bi-inbox-fill"></i></span>
+                    <input type="range" class="form-range mx-3" id="anEtre" min="7" max="11" step="1" value="8" oninput="etre()"/>
+                    <span id="etreValue" class="text-warning-emphasis fw-semibold text-end" style="width: 20%;">8an</span>
+                </div>
+                <output class="text-warning-emphasis fw-semibold fs-3 my-1" id="etreTotal">-</output>
+                <!-- <input type="range" class="form-range" id="anEtre" min="5" max="15" step="1" value="8" oninput="etre()" /> -->
+            </section>
+
+        </form>
+
+        <div class="d-flex justify-content-between align-items-center mt-3 fw-bold">
+            <div class="text-body bg-transparent border-0" onclick="bersihKalEndog()" type="button">
+                <i class="fa-solid fa-trash-can"></i>
+                HAPUS
+            </div>
+            <a tabindex="-1" href="https://justplay1793.github.io/pitik/kalpi.html"
+                class="text-body bg-transparent border-0 text-decoration-none text-end">Selengkapnya <i
+                    class="fa-solid fa-arrow-right"></i></a>
         </div>
+        <!-- <hr class="border-2 rounded-pill"> -->
 
     </main>
 
@@ -326,9 +327,10 @@
                 new Date().toLocaleString("en-US", { timeZone: "Asia/Jakarta" })
             );
 
-            const tanggal = `${hari[sekarang.getDay()]}, ${sekarang.getDate()} ${bulan[sekarang.getMonth()]} ${sekarang.getFullYear()}`;
+            // const tanggal = `${hari[sekarang.getDay()]}, ${sekarang.getDate()} ${bulan[sekarang.getMonth()]} ${sekarang.getFullYear()}`;
+            const tanggal = `${hari[sekarang.getDay()]}, ${sekarang.getDate()} ${bulan[sekarang.getMonth()]} ${String(sekarang.getFullYear()).slice(-2)}`;
 
-            document.getElementById("tanggal-hari-ini").textContent = tanggal;
+            document.getElementById("tanggal-hari-ini").innerHTML = '<i class="bi bi-calendar3"></i> ' + tanggal;
         }
 
         document.addEventListener("DOMContentLoaded", tampilkanTanggalHariIni);
@@ -342,11 +344,13 @@
             document.getElementById("harga").value = "";
             document.getElementById("anEtre").value = 8;
             document.getElementById("etreValue").textContent = "8an";
-            document.getElementById("rupiah").textContent = "Harga/kg";
+            // document.getElementById("rupiah").textContent = "Harga/kg";
+            document.getElementById("rupiah").innerHTML = 'Harga <i class="fa-solid fa-coins"></i>';
             document.getElementById("total").textContent = "-";
             document.getElementById("detailUang").textContent = "";
             document.getElementById("etreTotal").textContent = "-";
-            document.getElementById("kiloneEndog").textContent = "× 15 kg";
+            // document.getElementById("kiloneEndog").textContent = "× 15 kg";
+            document.getElementById("kiloneEndog").innerHTML = 'Setel <i class="fa-solid fa-egg"></i>';
             toggleClear("setel");
             toggleClear("harga");
         }
@@ -358,7 +362,8 @@
 
             if (!setelVal || !hargaVal) {
                 output.textContent = "-";
-                document.getElementById("rupiah").textContent = "Harga/kg";
+                // document.getElementById("rupiah").textContent = "Harga/kg";
+                document.getElementById("rupiah").innerHTML = 'Harga <i class="fa-solid fa-coins"></i>';
                 document.getElementById("detailUang").textContent = "";
                 return;
             }
@@ -381,8 +386,9 @@
             }
 
             const result = setel * 15 * harga;
-            document.getElementById("detailUang").textContent = setel.toLocaleString("id-ID") + "×" + "15×" + harga.toLocaleString("id-ID");
-            document.getElementById("rupiah").textContent = "Rp " + harga.toLocaleString("id-ID") + "/kg";
+            document.getElementById("detailUang").textContent = setel.toLocaleString("id-ID") + "×" + "15×Rp" + harga.toLocaleString("id-ID");
+            // document.getElementById("rupiah").textContent = "Rp " + harga.toLocaleString("id-ID") + "/kg";
+            document.getElementById("rupiah").innerHTML = '<i class="fa-solid fa-coins"></i> Rp'+ harga.toLocaleString("id-ID") + '/kg';
             output.textContent = "Rp " + result.toLocaleString("id-ID");
         }
 
@@ -391,11 +397,13 @@
             const output = document.getElementById("kiloneEndog");
 
             if (input === "") {
-                output.textContent = "× 15 kg";
+                // output.textContent = "× 15 kg";
+                output.innerHTML = 'Setel <i class="fa-solid fa-egg"></i>'
             } else {
                 const stl = input;
                 const kilone = parseFloat(input.replace(/[,.]/g, "")) * 15;
-                output.textContent = kilone.toLocaleString("id-ID") + " Kg";
+                // output.textContent = kilone.toLocaleString("id-ID") + " Kg";
+                output.innerHTML = '<i class="fa-solid fa-egg"></i> '+ kilone.toLocaleString("id-ID") + 'kg'
             }
         }
 
