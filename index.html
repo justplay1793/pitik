@@ -62,7 +62,7 @@
             background: var(--panel);
             border: 1px solid var(--border);
             border-radius: 17px;
-            padding: 13px;
+            /* padding: 13px; */
             transition: border-color .2s;
         }
 
@@ -87,8 +87,7 @@
             outline: 0;
             background: transparent;
             color: var(--white);
-            font-family: inherit;
-            font-size: clamp(23px, 7vw, 31px);
+            font-size: 22pt;
             font-weight: 600;
             text-align: left;
         }
@@ -107,14 +106,14 @@
         }
 
         .result-card {
-            padding: 13px;
+            /* padding: 13px; */
             background: var(--panel);
             border: 1px solid var(--border);
             border-radius: 17px;
         }
 
         .unit-slider {
-            padding: 13px;
+            /* padding: 13px; */
             background: var(--panel);
             border: 1px solid var(--border);
             border-radius: 17px;
@@ -126,12 +125,10 @@
         }
 
         .unit-slider .form-range::-webkit-slider-thumb {
-            /* background: #eee; */
             background: var(--bs-warning-text-emphasis);
         }
 
         .unit-slider .form-range::-moz-range-thumb {
-            /* background: #eee; */
             background: var(--bs-warning-text-emphasis);
         }
 
@@ -160,11 +157,12 @@
 
             border: 0;
             border-radius: 50%;
-            background: #292c30;
+            /* background: #292c30; */
+            background: transparent;
             color: #b0b4bb;
 
-            font-family: Arial, sans-serif;
-            font-size: 19px;
+            /* font-family: Arial, sans-serif; */
+            font-size: 18pt;
             line-height: 1;
             cursor: pointer;
         }
@@ -174,14 +172,22 @@
         }
 
         .clear-field:active {
-            background: #454950;
+            /* background: #454950; */
+            background: transparent;
             color: white;
         }
 
+        .hps{
+            color: var(--bs-body-color);
+        }
+        .hps:active{
+            color: var(--bs-light);
+        }
+
         #anEtre::-webkit-slider-thumb {
-            width: 22px;
-            height: 22px;
-            margin-top: -7px;
+            width: 40px;
+            height: 20px;
+            margin-top: -6px;
             cursor: pointer;
         }
 
@@ -211,7 +217,7 @@
 <body class="container">
     <main>
 
-        <header class="d-flex justify-content-between align-items-center fs-5 mt-3 text-body">
+        <header class="d-flex justify-content-between align-items-center fs-5 mt-3 px-2 text-body">
             <span id="tanggal-hari-ini"></span>
             <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="6mm" height="6mm" version="1.1"
                 style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
@@ -229,7 +235,7 @@
         <form onsubmit="return false">
             <div class="field-grid gap-2">
 
-                <div class="field-card rounded-4">
+                <div class="field-card rounded-4 p-3">
                     <!-- <label for="setel" class="field-label text-body">Setel <i class="fa-solid fa-egg"></i></label> -->
                     <div class="field-label text-body" id="kiloneEndog"><i class="fa-solid fa-egg"></i> Setel</div>
                     <div class="field-input-wrap">
@@ -244,7 +250,7 @@
                     <!-- <div class="field-hint small text-body" id="kiloneEndog">× 15 kg</div> -->
                 </div>
 
-                <div class="field-card rounded-4">
+                <div class="field-card rounded-4 p-3">
                     <!-- <label for="harga" class="field-label text-body">Harga <i class="fa-solid fa-coins"></i></label> -->
                     <div class="field-label text-body" id="rupiah"><i class="fa-solid fa-coins"></i> Harga</div>
                     <div class="field-input-wrap">
@@ -260,7 +266,7 @@
 
             </div>
 
-            <section class="result-card rounded-4 my-2">
+            <section class="result-card rounded-4 my-2 p-3">
                 <div class="d-flex justify-content-between mb-1">
                     <span class="text-body"><i class="bi bi-cash-stack"></i> Uang</span>
                     <span id="detailUang" class="text-light"></span>
@@ -268,10 +274,10 @@
                 <output class="text-info fw-bold fs-1" id="total">-</output>
             </section>
 
-            <section class="unit-slider rounded-4">
+            <section class="unit-slider rounded-4 p-3">
                 <div class="d-flex justify-content-between align-items-center mb-1">
                     <span class="text-body col-auto"><i class="bi bi-inbox-fill"></i> EggTry</span>
-                    <input type="range" class="form-range mx-3" id="anEtre" min="7" max="11" step="1" value="8"
+                    <input type="range" class="form-range mx-3" id="anEtre" min="7" max="12" step="1" value="8"
                         oninput="etre()" />
                     <span id="etreValue" class="text-warning-emphasis fw-semibold text-end"
                         style="width: 21%;">8an</span>
@@ -282,13 +288,13 @@
 
         </form>
 
-        <div class="d-flex justify-content-between align-items-center mt-3 fw-bold">
-            <div class="text-body bg-transparent border-0" onclick="bersihKalEndog()" type="button">
+        <div class="d-flex justify-content-between align-items-center mt-3 px-3 fw-bold" style="font-size: 14pt;">
+            <div class="bg-transparent border-0 hps" onclick="bersihKalEndog()" type="button">
                 <i class="fa-solid fa-trash-can"></i>
                 HAPUS
             </div>
             <a tabindex="-1" href="https://justplay1793.github.io/pitik/kalpi.html"
-                class="text-body bg-transparent border-0 text-decoration-none text-end">Selengkapnya <i
+                class="hps bg-transparent border-0 text-decoration-none text-end">Lainnya <i
                     class="fa-solid fa-arrow-right"></i></a>
         </div>
 
@@ -342,12 +348,10 @@
             document.getElementById("harga").value = "";
             document.getElementById("anEtre").value = 8;
             document.getElementById("etreValue").textContent = "8an";
-            // document.getElementById("rupiah").textContent = "Harga/kg";
             document.getElementById("rupiah").innerHTML = '<i class="fa-solid fa-coins"></i> Harga';
             document.getElementById("total").textContent = "-";
             document.getElementById("detailUang").textContent = "";
             document.getElementById("etreTotal").textContent = "-";
-            // document.getElementById("kiloneEndog").textContent = "× 15 kg";
             document.getElementById("kiloneEndog").innerHTML = '<i class="fa-solid fa-egg"></i> Setel';
             toggleClear("setel");
             toggleClear("harga");
