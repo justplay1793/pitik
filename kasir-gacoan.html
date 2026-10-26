@@ -1,0 +1,396 @@
+<!-- kasir gacoan -->
+<!DOCTYPE html>
+<html lang="id" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Kasir Mie & Dimsum</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            color-scheme: dark;
+            --bs-body-bg: #09090b;
+            --bs-body-color: #f4f4f5;
+            --accent: #38bdf8;
+            --surface: #141417;
+            --border: #29292e;
+            --muted: #a1a1aa;
+        }
+
+        body {
+            min-height: 100vh;
+            /* background: radial-gradient(ellipse at top, #17202a 0%, #09090b 48%); */
+            background: #000000;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .app {
+            max-width: 540px;
+            margin: auto;
+            padding: 32px 16px;
+        }
+
+        .app-header {
+            margin-bottom: 28px;
+        }
+
+        .app-header h1 {
+            font-size: 26px;
+            font-weight: 750;
+            letter-spacing: -1px;
+        }
+
+        .app-header p {
+            color: var(--muted);
+            font-size: 14px;
+            margin-bottom: 0;
+        }
+
+        .menu-card {
+            background: rgba(20, 20, 23, .92);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 15px;
+            margin-bottom: 5px;
+        }
+
+        .menu-icon {
+            width: 44px;
+            height: 44px;
+            display: grid;
+            place-items: center;
+            border-radius: 14px;
+            background: #27272a;
+            font-size: 22px;
+        }
+
+        .menu-name {
+            font-size: 17px;
+            font-weight: 700;
+            margin-bottom: 3px;
+        }
+
+        .menu-price {
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .menu-total {
+            font-size: clamp(17px, 4.5vw, 21px);
+            font-weight: 700;
+            /* letter-spacing: -1px; */
+            white-space: nowrap;
+        }
+
+        .order-controls {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        .qty-btn {
+            width: 65px;
+            height: 44px;
+            flex-shrink: 0;
+            border: 0px solid #3f3f46;
+            border-radius: 14px;
+            background: #27272a;
+            color: #fff;
+            font-size: 16pt;
+            display: grid;
+            place-items: center;
+            transition: background .15s, transform .15s;
+        }
+
+        .qty-btn:active {
+            transform: scale(.94);
+        }
+
+        .qty-btn:hover {
+            background: #3f3f46;
+        }
+
+        .qty-number {
+            flex: 1;
+            min-width: 0;
+            text-align: center;
+        }
+
+        .qty-number strong {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .qty-number small {
+            display: block;
+            font-size: 11px;
+            color: var(--muted);
+            margin-top: 1px;
+        }
+
+        .summary {
+            background: linear-gradient(145deg, #17212a, #121418);
+            border: 1px solid #293b49;
+            border-radius: 22px;
+            padding: 20px;
+            margin-top: 5px;
+        }
+
+        .summary-label {
+            color: #a1a1aa;
+            font-size: 13px;
+        }
+
+        .summary-qty {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .summary-total {
+            font-size: clamp(25px, 7vw, 32px);
+            font-weight: 700;
+            /* letter-spacing: -1.5px; */
+            color: var(--accent);
+            overflow-wrap: anywhere;
+        }
+
+        .reset-btn {
+            width: 100%;
+            margin-top: 5px;
+            padding: 13px;
+            border-radius: 14px;
+            font-weight: 600;
+        }
+
+        .footer {
+            text-align: center;
+            color: #71717a;
+            font-size: 12px;
+            margin-top: 24px;
+        }
+
+        @media (max-width: 360px) {
+            .menu-card {
+                padding: 15px;
+            }
+
+            .order-controls {
+                gap: 8px;
+            }
+
+            .qty-btn {
+                width: 40px;
+                height: 42px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main class="app">
+
+        <header class="app-header d-none">
+            <div class="d-flex align-items-center gap-3 mb-3">
+                <div class="menu-icon">
+                    <i class="bi bi-calculator"></i>
+                </div>
+                <div>
+                    <h1 class="mb-1">Kasir Mie & Dimsum</h1>
+                    <p>Penghitung pesanan sederhana</p>
+                </div>
+            </div>
+        </header>
+
+        <!-- SECTION MIE -->
+        <section class="menu-card border-0">
+            <div class="d-flex justify-content-between align-items-center gap-3">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="menu-icon">🍜</div>
+                    <div>
+                        <div class="menu-name">Mie</div>
+                        <div class="menu-price">Rp14.000 / porsi</div>
+                    </div>
+                </div>
+
+                <div class="text-end">
+                    <div class="menu-price mb-1">Total harga</div>
+                    <div class="menu-total" id="mieTotal">Rp14.000</div>
+                </div>
+            </div>
+
+            <div class="order-controls">
+                <button class="qty-btn" onclick="ubahPorsi('mie', -1)"
+                    aria-label="Kurangi porsi mie">
+                    <i class="bi bi-dash"></i>
+                </button>
+
+                <div class="qty-number">
+                    <strong id="mieQty">1</strong>
+                    <small>porsi</small>
+                </div>
+
+                <button class="qty-btn" onclick="ubahPorsi('mie', 1)"
+                    aria-label="Tambah porsi mie">
+                    <i class="bi bi-plus"></i>
+                </button>
+            </div>
+            <div class="order-controls justify-content-between">
+                <button class="qty-btn" onclick="ubahPorsi('mie', -10)"
+                    aria-label="Kurangi porsi mie">
+                    -10
+                </button>
+                <button class="qty-btn" onclick="ubahPorsi('mie', -5)"
+                    aria-label="Kurangi porsi mie">
+                    -5
+                </button>
+                <button class="qty-btn" onclick="ubahPorsi('mie', 5)"
+                    aria-label="Tambah porsi mie">
+                    +5
+                </button>
+                <button class="qty-btn" onclick="ubahPorsi('mie', 10)"
+                    aria-label="Kurangi porsi mie">
+                    +10
+                </button>
+            </div>
+        </section>
+
+        <!-- SECTION DIMSUM -->
+        <section class="menu-card border-0">
+            <div class="d-flex justify-content-between align-items-center gap-3">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="menu-icon">🥟</div>
+                    <div>
+                        <div class="menu-name">Dimsum</div>
+                        <div class="menu-price">Rp13.000 / porsi</div>
+                    </div>
+                </div>
+
+                <div class="text-end">
+                    <div class="menu-price mb-1">Total harga</div>
+                    <div class="menu-total" id="dimsumTotal">Rp13.000</div>
+                </div>
+            </div>
+
+            <div class="order-controls">
+                <button class="qty-btn" onclick="ubahPorsi('dimsum', -1)"
+                    aria-label="Kurangi porsi dimsum">
+                    <i class="bi bi-dash"></i>
+                </button>
+
+                <div class="qty-number">
+                    <strong id="dimsumQty">1</strong>
+                    <small>porsi</small>
+                </div>
+
+                <button class="qty-btn" onclick="ubahPorsi('dimsum', 1)"
+                    aria-label="Tambah porsi dimsum">
+                    <i class="bi bi-plus"></i>
+                </button>
+            </div>
+            <div class="order-controls justify-content-between">
+                <button class="qty-btn" onclick="ubahPorsi('dimsum', -10)"
+                    aria-label="Kurangi porsi dimsum">
+                    -10
+                </button>
+                <button class="qty-btn" onclick="ubahPorsi('dimsum', -5)"
+                    aria-label="Kurangi porsi dimsum">
+                    -5
+                </button>
+                <button class="qty-btn" onclick="ubahPorsi('dimsum', 5)"
+                    aria-label="Kurangi porsi dimsum">
+                    +5
+                </button>
+                <button class="qty-btn" onclick="ubahPorsi('dimsum', 10)"
+                    aria-label="Kurangi porsi dimsum">
+                    +10
+                </button>
+            </div>
+        </section>
+
+        <!-- RINGKASAN -->
+        <section class="summary border-0">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <div class="summary-label mb-1">Total seluruh pesanan</div>
+                    <div class="summary-qty">
+                        <span id="totalQty">2</span>
+                        <span class="fs-6 fw-normal">porsi</span>
+                    </div>
+                </div>
+                <i class="bi bi-receipt fs-2 text-info"></i>
+            </div>
+
+            <hr class="border-secondary my-3">
+
+            <div class="summary-label mb-2">Total pembayaran</div>
+            <div class="summary-total" id="grandTotal">Rp27.000</div>
+        </section>
+
+        <!-- RESET -->
+        <button class="btn btn-outline-light reset-btn" onclick="resetKasir()">
+            <i class="bi bi-arrow-counterclockwise me-2"></i>
+            RESET
+        </button>
+
+        <footer class="footer d-none">
+            Kasir Mie & Dimsum
+        </footer>
+
+    </main>
+
+    <script>
+        const harga = {
+            mie: 14000,
+            dimsum: 13000
+        };
+
+        const porsi = {
+            mie: 0,
+            dimsum: 0
+        };
+
+        const rupiah = angka =>
+            'Rp' + angka.toLocaleString('id-ID');
+
+        function ubahPorsi(menu, perubahan) {
+            porsi[menu] = Math.max(0, porsi[menu] + perubahan);
+            hitungTotal();
+        }
+
+        function hitungTotal() {
+            let totalPorsi = 0;
+            let totalHarga = 0;
+
+            for (const menu of Object.keys(porsi)) {
+                const jumlah = porsi[menu];
+                const subtotal = jumlah * harga[menu];
+
+                document.getElementById(menu + 'Qty').textContent = jumlah;
+                document.getElementById(menu + 'Total').textContent =
+                    rupiah(subtotal);
+
+                totalPorsi += jumlah;
+                totalHarga += subtotal;
+            }
+
+            document.getElementById('totalQty').textContent = totalPorsi;
+            document.getElementById('grandTotal').textContent =
+                rupiah(totalHarga);
+        }
+
+        function resetKasir() {
+            porsi.mie = 0;
+            porsi.dimsum = 0;
+            hitungTotal();
+        }
+
+        // Hitung nilai awal
+        hitungTotal();
+    </script>
+</body>
+</html>
