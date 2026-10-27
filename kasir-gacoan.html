@@ -40,6 +40,11 @@
             /* background: rgba(20, 20, 23, .92); */
         }
 
+        .kesimpulan {
+            touch-action: manipulation;
+            background: linear-gradient(145deg, #17212a, #121418);
+        }
+
         .app {
             touch-action: manipulation;
             max-width: 540px;
@@ -96,32 +101,6 @@
             margin-top: 1px;
         }
 
-        .summary {
-            background: linear-gradient(145deg, #17212a, #121418);
-            border: 1px solid #293b49;
-            border-radius: 22px;
-            padding: 20px;
-            /* margin-top: 5px; */
-        }
-
-        .summary-label {
-            color: #a1a1aa;
-            font-size: 13px;
-        }
-
-        .summary-qty {
-            font-size: 24px;
-            font-weight: 700;
-        }
-
-        .summary-total {
-            font-size: clamp(25px, 7vw, 32px);
-            font-weight: 700;
-            /* letter-spacing: -1.5px; */
-            color: var(--accent);
-            overflow-wrap: anywhere;
-        }
-
         .tbl {
             transition: background .15s, transform .15s;
         }
@@ -175,33 +154,22 @@
         </div>
 
         <!-- RINGKASAN -->
-        <section class="summary border-0">
-            <div class="d-flex justify-content-between align-items-center">
-                <div>
-                    <div class="summary-label">Total Porsi</div>
-                    <div class="summary-qty">
-                        <span id="totalQty">0</span>
-                        <span class="fs-6 fw-normal">porsi</span>
-                    </div>
-                </div>
-            </div>
-
-            <hr class="border-secondary">
-
-            <div class="summary-label">Total Bayar</div>
-            <div class="summary-total" id="grandTotal">Rp0</div>
-
-            <hr class="border-secondary">
-
-            <div class="summary-label">Uang</div>
-            <div class="summary-total text-light" id="uang">Rp0</div>
-
-            <hr class="border-secondary">
-
-            <div class="summary-label">Kembalian</div>
-            <div class="summary-total text-success" id="kembali">Rp0</div>
-
-        </section>
+        <div class="kesimpulan d-flex justify-content-between px-3 pt-2 rounded-top-4">
+            <small>Total Porsi</small>
+            <small>Total Bayar</small>
+        </div>
+        <div class="kesimpulan d-flex justify-content-between px-3 pb-2 rounded-bottom-4 fs-2 fw-bold">
+            <div id="totalQty">0</div>
+            <span class="text-info" id="grandTotal">Rp0</span>
+        </div>
+        <div class="mt-1 kesimpulan d-flex justify-content-between px-3 pt-2 rounded-top-4">
+            <small>Uang</small>
+            <small>Kembalian</small>
+        </div>
+        <div class="kesimpulan d-flex justify-content-between px-3 pb-2 rounded-bottom-4 fs-2 fw-bold">
+            <span id="uang">0</span>
+            <span class="text-success" id="kembali">Rp0</span>
+        </div>
 
         <div class="tbl text-center my-3 fs-1 text-danger" onclick="resetKasir()" type="button">
             <i class="fa-solid fa-trash"></i>
