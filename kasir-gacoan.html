@@ -33,6 +33,11 @@
             font-family: 'JetBrains Mono', monospace;
         }
 
+        .bg-custom1 {
+            /* background: rgba(20, 20, 23, .92); */
+            background: linear-gradient(145deg, #17212a, #121418);
+        }
+
         .btn {
             touch-action: manipulation;
             background: linear-gradient(145deg, #17212a, #121418);
@@ -114,43 +119,17 @@
 <body>
     <main class="app p-3">
 
-        <div class="d-flex my-3 gap-1 fixed-bottom p-3">
-            <!-- Mie -->
-            <div class="d-grid w-100 p-2 rounded-4" style="background: rgba(20, 20, 23, .92);">
-                <div class="text-center fs-5">Mie</div>
-                <div class="order-controls my-2">
-                    <button class="qty-btn" onclick="ubahPorsi('mie', -1)" aria-label="Kurangi porsi mie">
-                        <i class="fa-solid fa-square-minus"></i>
-                    </button>
-
-                    <div class="qty-number">
-                        <strong id="mieQty">0</strong>
-                    </div>
-
-                    <button class="qty-btn" onclick="ubahPorsi('mie', 1)" aria-label="Tambah porsi mie">
-                        <i class="fa-solid fa-square-plus"></i>
-                    </button>
-                </div>
-                <div class="text-center" id="mieTotal">Rp0</div>
-            </div>
-            <!-- Dimsum -->
-            <div class="d-grid w-100 p-2 rounded-4" style="background: rgba(20, 20, 23, .92);">
-                <div class="text-center fs-5">Dimsum</div>
-                <div class="order-controls my-2">
-                    <button class="qty-btn" onclick="ubahPorsi('dimsum', -1)" aria-label="Kurangi porsi dimsum">
-                        <i class="fa-solid fa-square-minus"></i>
-                    </button>
-
-                    <div class="qty-number">
-                        <strong id="dimsumQty">1</strong>
-                    </div>
-
-                    <button class="qty-btn" onclick="ubahPorsi('dimsum', 1)" aria-label="Tambah porsi dimsum">
-                        <i class="fa-solid fa-square-plus"></i>
-                    </button>
-                </div>
-                <div class="text-center" id="dimsumTotal">Rp0</div>
-            </div>
+        <div class="text-center mb-3">
+            <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="7mm" height="7mm" version="1.1"
+                style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
+                viewBox="0 0 4233.32 4233.32" xmlns:xlink="http://www.w3.org/1999/xlink"
+                xmlns:xodm="http://www.corel.com/coreldraw/odm/2003">
+                <g id="Layer_x0020_1">
+                    <metadata id="CorelCorpID_0Corel-Layer" />
+                    <path style="fill: white;"
+                        d="M654.56 211.66c608.35,0 1216.66,0 1824.99,0 657.4,0 1194.44,537.01 1194.44,1194.42 0,568.06 -405.02,1059.88 -960.12,1171.23 -35.4,7.08 -34.77,6.42 -14.87,35.19 321.56,464.99 643.66,929.6 965.02,1394.72 10.84,15.69 11.71,14.4 -28.95,14.4 -200.86,0 -400.89,-0.16 -603.01,-0.16 -23.42,0 -45.37,-4.14 -64.4,-31.66 -314.1,-454.22 -628.46,-908.28 -942.65,-1362.43 -10.57,-15.26 -14.1,-16.73 -14.1,0.72l0 1298.29c0,52.61 -42.62,95.24 -95.22,95.24 -420.37,0 -840.74,0 -1261.13,0 -52.59,0 -95.25,-42.63 -95.24,-95.24 0,-1206.51 0,-2412.99 0,-3619.47 -0.01,-52.63 42.65,-95.25 95.24,-95.25zm1356.35 1810.61c0.48,51.91 42.48,93.9 94.42,94.35l374.22 0.02c390.32,0 710.57,-320.24 710.57,-710.56 0,-390.32 -320.25,-710.55 -710.57,-710.55l-1341.96 0c-51.94,0.45 -93.94,42.44 -94.42,94.38l0 2653.47c0.48,51.93 42.48,93.92 94.42,94.39l295.1 0c51.91,-0.47 93.9,-42.46 94.35,-94.39 0,-727.99 0,-1456.01 0,-2183.99 0,-52.6 42.65,-95.25 95.25,-95.25 294.33,0 588.65,0 882.98,0 52.62,0 95.25,42.65 95.25,95.25l0 293.36c0,52.61 -42.63,95.26 -95.25,95.26l-399.94 0c-51.94,0.48 -93.94,42.45 -94.42,94.38l0 279.88z" />
+                </g>
+            </svg>
         </div>
 
         <!-- RINGKASAN -->
@@ -168,17 +147,17 @@
         </div>
         <div class="kesimpulan d-flex justify-content-between px-3 pb-2 rounded-bottom-4 fs-2 fw-bold">
             <span id="uang">0</span>
-            <span class="text-success" id="kembali">Rp0</span>
+            <span class="text-success-emphasis" id="kembali">Rp0</span>
         </div>
 
-        <div class="tbl text-center my-3 fs-1 text-danger" onclick="resetKasir()" type="button">
-            <i class="fa-solid fa-trash"></i>
+        <div class="tbl text-center my-1 fs-1 text-danger" onclick="resetKasir()" type="button">
+            <i class="fa-solid fa-trash"></i> HAPUS
         </div>
 
         <!-- Uang -->
         <div class="d-flex mb-1 justify-content-center">
             <div class="btn-group w-100" role="group">
-                <button type="button" class="btn rounded-start-4 tbl fs-5" id="resetUang" onclick="resetUang()">
+                <button type="button" class="btn rounded-start-4 text-danger tbl fs-5" id="resetUang" onclick="resetUang()">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
                 <button type="button" class="btn tbl" onclick="tambahUang(1000)">1rb</button>
@@ -195,6 +174,92 @@
                 <button type="button" class="btn tbl" onclick="tambahUang(50000)">50rb</button>
                 <button type="button" class="btn rounded-end-4 tbl" onclick="tambahUang(100000)">100rb</button>
             </div>
+        </div>
+
+        <div class="mt-1">
+
+            <div class="d-flex gap-1">
+                <!-- Mie -->
+                <div class="d-grid w-100 p-2 bg-custom1 rounded-top-4">
+                    <div class="text-center fs-5">Mie</div>
+                    <div class="order-controls my-2">
+                        <button class="qty-btn" onclick="ubahPorsi('mie', -1)" aria-label="Kurangi porsi mie">
+                            <i class="fa-solid fa-square-minus"></i>
+                        </button>
+
+                        <div class="qty-number">
+                            <strong id="mieQty">0</strong>
+                        </div>
+
+                        <button class="qty-btn" onclick="ubahPorsi('mie', 1)" aria-label="Tambah porsi mie">
+                            <i class="fa-solid fa-square-plus"></i>
+                        </button>
+                    </div>
+                    <div class="text-center" id="mieTotal">Rp0</div>
+                </div>
+                <!-- Dimsum -->
+                <div class="d-grid w-100 p-2 bg-custom1 rounded-top-4">
+                    <div class="text-center fs-5">Dimsum</div>
+                    <div class="order-controls my-2">
+                        <button class="qty-btn" onclick="ubahPorsi('dimsum', -1)" aria-label="Kurangi porsi dimsum">
+                            <i class="fa-solid fa-square-minus"></i>
+                        </button>
+
+                        <div class="qty-number">
+                            <strong id="dimsumQty">1</strong>
+                        </div>
+
+                        <button class="qty-btn" onclick="ubahPorsi('dimsum', 1)" aria-label="Tambah porsi dimsum">
+                            <i class="fa-solid fa-square-plus"></i>
+                        </button>
+                    </div>
+                    <div class="text-center" id="dimsumTotal">Rp0</div>
+                </div>
+            </div>
+
+            <div class="d-flex gap-1">
+                <div class="d-grid w-100 p-2 bg-custom1 rounded-bottom-4 border-top">
+                    <div class="d-flex justify-content-between">
+                        <button class="bg-transparent tbl border-0" onclick="ubahPorsi('mie', -10)"
+                            aria-label="Kurangi porsi mie">
+                            -10
+                        </button>
+                        <button class="bg-transparent tbl border-0" onclick="ubahPorsi('mie', -5)"
+                            aria-label="Kurangi porsi mie">
+                            -5
+                        </button>
+                        <button class="bg-transparent tbl border-0" onclick="ubahPorsi('mie', 5)"
+                            aria-label="Tambah porsi mie">
+                            +5
+                        </button>
+                        <button class="bg-transparent tbl border-0" onclick="ubahPorsi('mie', 10)"
+                            aria-label="Kurangi porsi mie">
+                            +10
+                        </button>
+                    </div>
+                </div>
+                <div class="d-grid w-100 p-2 bg-custom1 rounded-bottom-4 border-top">
+                    <div class="d-flex justify-content-between">
+                        <button class="bg-transparent tbl border-0" onclick="ubahPorsi('dimsum', -10)"
+                            aria-label="Kurangi porsi dimsum">
+                            -10
+                        </button>
+                        <button class="bg-transparent tbl border-0" onclick="ubahPorsi('dimsum', -5)"
+                            aria-label="Kurangi porsi dimsum">
+                            -5
+                        </button>
+                        <button class="bg-transparent tbl border-0" onclick="ubahPorsi('dimsum', 5)"
+                            aria-label="Kurangi porsi dimsum">
+                            +5
+                        </button>
+                        <button class="bg-transparent tbl border-0" onclick="ubahPorsi('dimsum', 10)"
+                            aria-label="Kurangi porsi dimsum">
+                            +10
+                        </button>
+                    </div>
+                </div>
+            </div>
+
         </div>
 
     </main>
@@ -257,6 +322,7 @@
         // Menghitung uang dan kembalian
         function hitungPembayaran(totalHarga) {
             const kembali = Math.max(0, uangDiterima - totalHarga);
+            // const kembali = uangDiterima - totalHarga;
 
             document.getElementById('uang').textContent =
                 rupiah(uangDiterima);
