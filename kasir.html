@@ -1,0 +1,773 @@
+<!-- kasir all-in-one -->
+<!DOCTYPE html>
+<html lang="id" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Kasir All-In-One</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #090909;
+            --card: #151515;
+            --card2: #202020;
+            --border: #303030;
+            --text: #f5f5f5;
+            --muted: #929292;
+            --accent: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            padding: 16px;
+        }
+
+        .app {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .panel {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 16px;
+            margin-bottom: 12px;
+        }
+
+        .menu-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 14px;
+            margin-bottom: 10px;
+        }
+
+        .form-control {
+            background: var(--card2);
+            border: 1px solid var(--border);
+            color: var(--text);
+            border-radius: 12px;
+            font-family: inherit;
+            font-size: 14px;
+            min-height: 42px;
+        }
+
+        .form-control:focus {
+            background: var(--card2);
+            color: var(--text);
+            border-color: #777;
+            box-shadow: none;
+        }
+
+        .form-control::placeholder {
+            color: #777;
+        }
+
+        .btn {
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 600;
+            border-radius: 12px;
+            min-height: 42px;
+        }
+
+        .btn-dark-custom {
+            background: var(--card2);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+
+        .btn-dark-custom:hover {
+            background: #303030;
+            color: white;
+        }
+
+        .btn-light-custom {
+            background: #f5f5f5;
+            color: #111;
+            border: 1px solid #f5f5f5;
+        }
+
+        .btn-light-custom:hover {
+            background: #dcdcdc;
+            color: #111;
+        }
+
+        .btn-danger-custom {
+            background: #351919;
+            color: #ff8585;
+            border: 1px solid #572525;
+        }
+
+        .btn-danger-custom:hover {
+            background: #502020;
+            color: #fff;
+        }
+
+        .muted {
+            color: var(--muted);
+        }
+
+        .small-label {
+            color: var(--muted);
+            font-size: 11px;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .quantity {
+            font-size: 16px;
+            font-weight: 700;
+            min-width: 32px;
+            text-align: center;
+        }
+
+        .qty-btn {
+            width: 38px;
+            min-width: 38px;
+            height: 38px;
+            min-height: 38px;
+            padding: 0;
+            border-radius: 50%;
+            font-size: 16px;
+        }
+
+        .menu-subtotal {
+            font-size: 13px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .total-value {
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        .money-btn {
+            min-height: 44px;
+        }
+
+        .divider {
+            height: 1px;
+            background: var(--border);
+            margin: 14px 0;
+        }
+
+        .empty-state {
+            border: 1px dashed #414141;
+            border-radius: 18px;
+            padding: 28px 16px;
+            text-align: center;
+            color: var(--muted);
+        }
+
+        .empty-state i {
+            font-size: 28px;
+            margin-bottom: 12px;
+        }
+
+        input[type="number"] {
+            appearance: textfield;
+            -moz-appearance: textfield;
+        }
+
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- HEADER -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+            <div class="small-label mb-1">KASIR</div>
+            <h4 class="fw-bold mb-0">Menu & Transaksi</h4>
+        </div>
+
+        <div class="text-end">
+            <div class="small-label">JUMLAH MENU</div>
+            <div class="fw-bold" id="jumlahMenu">0</div>
+        </div>
+    </div>
+
+    <!-- DAFTAR MENU -->
+    <div id="daftarMenu"></div>
+
+    <!-- TAMBAH MENU -->
+    <button type="button"
+            class="btn btn-light-custom w-100 mb-3"
+            onclick="tambahMenu()">
+        <i class="fa-solid fa-plus me-2"></i>
+        Tambah Menu
+    </button>
+
+    <!-- TOTAL -->
+    <div class="panel">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <div class="small-label mb-1">TOTAL PESANAN</div>
+                <div class="muted" id="totalPorsi">0 porsi</div>
+            </div>
+
+            <div class="text-end">
+                <div class="small-label mb-1">TOTAL HARGA</div>
+                <div class="total-value" id="totalHarga">Rp0</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PEMBAYARAN -->
+    <div class="panel">
+        <div class="small-label mb-3">
+            <i class="fa-solid fa-money-bill-wave me-2"></i>
+            UANG DITERIMA
+        </div>
+
+        <div class="row g-2 mb-3">
+            <div class="col-4">
+                <button class="btn btn-dark-custom money-btn w-100"
+                        onclick="tambahUang(5000)">5.000</button>
+            </div>
+
+            <div class="col-4">
+                <button class="btn btn-dark-custom money-btn w-100"
+                        onclick="tambahUang(10000)">10.000</button>
+            </div>
+
+            <div class="col-4">
+                <button class="btn btn-dark-custom money-btn w-100"
+                        onclick="tambahUang(20000)">20.000</button>
+            </div>
+
+            <div class="col-4">
+                <button class="btn btn-dark-custom money-btn w-100"
+                        onclick="tambahUang(50000)">50.000</button>
+            </div>
+
+            <div class="col-4">
+                <button class="btn btn-dark-custom money-btn w-100"
+                        onclick="tambahUang(100000)">100.000</button>
+            </div>
+
+            <div class="col-4">
+                <button class="btn btn-danger-custom money-btn w-100"
+                        onclick="resetUang()">
+                    <i class="fa-solid fa-rotate-left"></i>
+                    Reset
+                </button>
+            </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="d-flex justify-content-between mb-2">
+            <span class="muted">Uang diterima</span>
+            <span class="fw-bold" id="uangDiterima">Rp0</span>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center">
+            <span class="muted">Kembalian</span>
+            <span class="fw-bold fs-5" id="kembalian">Rp0</span>
+        </div>
+    </div>
+
+    <!-- RESET TRANSAKSI -->
+    <button type="button"
+            class="btn btn-dark-custom w-100 mb-2"
+            onclick="resetKasir()">
+        <i class="fa-solid fa-rotate me-2"></i>
+        Reset Kasir
+    </button>
+
+    <!-- RESET LOCAL STORAGE -->
+    <button type="button"
+            class="btn btn-danger-custom w-100"
+            onclick="resetLocalStorage()">
+        <i class="fa-solid fa-trash-can me-2"></i>
+        Reset Local Storage
+    </button>
+
+    <div class="text-center muted mt-3" style="font-size: 11px;">
+        Data menu tersimpan di browser perangkat ini
+    </div>
+
+</div>
+
+<script>
+    // =========================================
+    // DATA
+    // =========================================
+
+    const STORAGE_KEY = 'kasir_dinamis_menu';
+
+    // Data yang disimpan di localStorage hanya:
+    // nama menu dan harga per porsi.
+    let menu = [];
+
+    // Data transaksi hanya disimpan di memori.
+    // Refresh halaman akan mengembalikannya ke 0.
+    let pesanan = [];
+    let uangDiterima = 0;
+
+
+    // =========================================
+    // FORMAT RUPIAH
+    // =========================================
+
+    function rupiah(angka) {
+        return 'Rp' + Math.max(0, angka).toLocaleString('id-ID');
+    }
+
+
+    // =========================================
+    // LOCAL STORAGE
+    // =========================================
+
+    function simpanMenu() {
+        try {
+            localStorage.setItem(
+                STORAGE_KEY,
+                JSON.stringify(menu)
+            );
+        } catch (error) {
+            alert(
+                'Menu gagal disimpan. Browser mungkin membatasi penyimpanan.'
+            );
+        }
+    }
+
+
+    function muatMenu() {
+        try {
+            const data = localStorage.getItem(STORAGE_KEY);
+
+            if (data) {
+                const parsed = JSON.parse(data);
+
+                if (Array.isArray(parsed)) {
+                    menu = parsed.map(item => ({
+                        nama: String(item.nama ?? ''),
+                        harga: Math.max(
+                            0,
+                            Number(item.harga) || 0
+                        )
+                    }));
+                }
+            }
+        } catch (error) {
+            menu = [];
+        }
+
+        // Jumlah pesanan tidak diambil dari localStorage.
+        pesanan = menu.map(() => 0);
+    }
+
+
+    // =========================================
+    // TAMBAH MENU
+    // =========================================
+
+    function tambahMenu() {
+        menu.push({
+            nama: '',
+            harga: 0
+        });
+
+        pesanan.push(0);
+
+        simpanMenu();
+        renderMenu();
+
+        // Fokus otomatis ke input nama menu yang baru.
+        const inputs = document.querySelectorAll('.input-nama');
+        inputs[inputs.length - 1]?.focus();
+    }
+
+
+    // =========================================
+    // HAPUS MENU
+    // =========================================
+
+    function hapusMenu(index) {
+        const nama = menu[index]?.nama || 'Menu ini';
+
+        // const konfirmasi = confirm(
+        //     `Hapus "${nama}" dari daftar menu?`
+        // );
+
+        // if (!konfirmasi) return;
+
+        menu.splice(index, 1);
+        pesanan.splice(index, 1);
+
+        simpanMenu();
+        renderMenu();
+    }
+
+
+    // =========================================
+    // RENDER MENU
+    // =========================================
+
+    function renderMenu() {
+        const container = document.getElementById('daftarMenu');
+
+        container.innerHTML = '';
+
+        document.getElementById('jumlahMenu').textContent = menu.length;
+
+        if (menu.length === 0) {
+            container.innerHTML = `
+                <div class="empty-state mb-3">
+                    <i class="fa-solid fa-utensils d-block"></i>
+                    <div class="fw-bold text-white mb-1">
+                        Belum ada menu
+                    </div>
+                    <div style="font-size:12px;">
+                        Tekan tombol Tambah Menu untuk memulai.
+                    </div>
+                </div>
+            `;
+        }
+
+        menu.forEach((item, index) => {
+            const card = document.createElement('div');
+
+            card.className = 'menu-card';
+
+            card.innerHTML = `
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="small-label">
+                        MENU ${index + 1}
+                    </div>
+
+                    <button type="button"
+                            class="btn btn-danger-custom"
+                            style="min-height:32px; padding:4px 10px; font-size:11px;"
+                            data-action="hapus"
+                            data-index="${index}">
+                        <i class="fa-solid fa-xmark me-1"></i>
+                        Tutup Menu
+                    </button>
+                </div>
+
+                <div class="mb-2">
+                    <input type="text"
+                           class="form-control input-nama"
+                           placeholder="Nama menu"
+                           value="${escapeHTML(item.nama)}"
+                           data-field="nama"
+                           data-index="${index}">
+                </div>
+
+                <div class="mb-3">
+                    <div class="small-label mb-2">
+                        HARGA PER PORSI
+                    </div>
+
+                    <input type="number"
+                           inputmode="numeric"
+                           class="form-control input-harga"
+                           placeholder="Masukkan harga"
+                           min="0"
+                           step="500"
+                           value="${item.harga || ''}"
+                           data-field="harga"
+                           data-index="${index}">
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="small-label mb-1">SUBTOTAL</div>
+                        <div class="menu-subtotal" id="subtotal-${index}">
+                            ${rupiah(0)}
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-center gap-2">
+                        <button type="button"
+                                class="btn btn-dark-custom qty-btn"
+                                data-action="ubah"
+                                data-index="${index}"
+                                data-nilai="-1">
+                            <i class="fa-solid fa-minus"></i>
+                        </button>
+
+                        <span class="quantity" id="qty-${index}">0</span>
+
+                        <button type="button"
+                                class="btn btn-light-custom qty-btn"
+                                data-action="ubah"
+                                data-index="${index}"
+                                data-nilai="1">
+                            <i class="fa-solid fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="d-flex gap-2 mt-3">
+                    <button type="button"
+                            class="btn btn-dark-custom flex-fill"
+                            data-action="ubah"
+                            data-index="${index}"
+                            data-nilai="-10">
+                        -10
+                    </button>
+
+                    <button type="button"
+                            class="btn btn-dark-custom flex-fill"
+                            data-action="ubah"
+                            data-index="${index}"
+                            data-nilai="-5">
+                        -5
+                    </button>
+
+                    <button type="button"
+                            class="btn btn-dark-custom flex-fill"
+                            data-action="ubah"
+                            data-index="${index}"
+                            data-nilai="5">
+                        +5
+                    </button>
+
+                    <button type="button"
+                            class="btn btn-dark-custom flex-fill"
+                            data-action="ubah"
+                            data-index="${index}"
+                            data-nilai="10">
+                        +10
+                    </button>
+                </div>
+            `;
+
+            container.appendChild(card);
+        });
+
+        hitungTotal();
+    }
+
+
+    // =========================================
+    // ESCAPE HTML
+    // =========================================
+
+    function escapeHTML(teks) {
+        return String(teks)
+            .replaceAll('&', '&amp;')
+            .replaceAll('<', '&lt;')
+            .replaceAll('>', '&gt;')
+            .replaceAll('"', '&quot;')
+            .replaceAll("'", '&#039;');
+    }
+
+
+    // =========================================
+    // EVENT INPUT MENU
+    // =========================================
+
+    document
+        .getElementById('daftarMenu')
+        .addEventListener('input', function(event) {
+
+            const input = event.target;
+
+            const index = Number(input.dataset.index);
+            const field = input.dataset.field;
+
+            if (!Number.isInteger(index) || !menu[index]) return;
+
+            if (field === 'nama') {
+                menu[index].nama = input.value;
+            }
+
+            if (field === 'harga') {
+                const nilai = Number(input.value);
+
+                menu[index].harga = Math.max(
+                    0,
+                    Number.isFinite(nilai) ? nilai : 0
+                );
+            }
+
+            simpanMenu();
+            hitungTotal();
+        });
+
+
+    // =========================================
+    // EVENT TOMBOL MENU
+    // =========================================
+
+    document
+        .getElementById('daftarMenu')
+        .addEventListener('click', function(event) {
+
+            const tombol = event.target.closest('[data-action]');
+
+            if (!tombol) return;
+
+            const action = tombol.dataset.action;
+            const index = Number(tombol.dataset.index);
+
+            if (action === 'hapus') {
+                hapusMenu(index);
+                return;
+            }
+
+            if (action === 'ubah') {
+                const perubahan = Number(tombol.dataset.nilai);
+
+                pesanan[index] = Math.max(
+                    0,
+                    pesanan[index] + perubahan
+                );
+
+                hitungTotal();
+            }
+        });
+
+
+    // =========================================
+    // HITUNG TOTAL
+    // =========================================
+
+    function hitungTotal() {
+        let totalPorsi = 0;
+        let totalHarga = 0;
+
+        menu.forEach((item, index) => {
+            const jumlah = pesanan[index] || 0;
+            const subtotal = jumlah * item.harga;
+
+            totalPorsi += jumlah;
+            totalHarga += subtotal;
+
+            const qtyElement = document.getElementById(`qty-${index}`);
+            const subtotalElement = document.getElementById(`subtotal-${index}`);
+
+            if (qtyElement) {
+                qtyElement.textContent = jumlah;
+            }
+
+            if (subtotalElement) {
+                subtotalElement.textContent = rupiah(subtotal);
+            }
+        });
+
+        document.getElementById('totalPorsi').textContent =
+            `${totalPorsi} porsi`;
+
+        document.getElementById('totalHarga').textContent =
+            rupiah(totalHarga);
+
+        hitungPembayaran(totalHarga);
+    }
+
+
+    // =========================================
+    // PEMBAYARAN
+    // =========================================
+
+    function tambahUang(nominal) {
+        uangDiterima += nominal;
+        hitungTotal();
+    }
+
+
+    function hitungPembayaran(totalHarga) {
+        const kembali = Math.max(
+            0,
+            uangDiterima - totalHarga
+        );
+
+        document.getElementById('uangDiterima').textContent =
+            rupiah(uangDiterima);
+
+        document.getElementById('kembalian').textContent =
+            rupiah(kembali);
+    }
+
+
+    function resetUang() {
+        uangDiterima = 0;
+        hitungTotal();
+    }
+
+
+    // =========================================
+    // RESET KASIR
+    // =========================================
+
+    function resetKasir() {
+        // const konfirmasi = confirm(
+        //     'Reset seluruh pesanan dan uang diterima?'
+        // );
+
+        // if (!konfirmasi) return;
+
+        pesanan = menu.map(() => 0);
+        uangDiterima = 0;
+
+        hitungTotal();
+    }
+
+
+    // =========================================
+    // RESET LOCAL STORAGE
+    // =========================================
+
+    function resetLocalStorage() {
+        // const konfirmasi = confirm(
+        //     'Hapus semua menu yang tersimpan di browser ini?'
+        // );
+
+        // if (!konfirmasi) return;
+
+        try {
+            // Hanya menghapus data milik aplikasi ini.
+            localStorage.removeItem(STORAGE_KEY);
+        } catch (error) {
+            alert('Gagal menghapus data localStorage.');
+        }
+
+        menu = [];
+        pesanan = [];
+        uangDiterima = 0;
+
+        renderMenu();
+    }
+
+
+    // =========================================
+    // MULAI APLIKASI
+    // =========================================
+
+    muatMenu();
+    renderMenu();
+
+</script>
+
+</body>
+</html>
