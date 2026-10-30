@@ -38,6 +38,16 @@
             padding: 16px;
         }
 
+        .glass {
+          background: rgba(0,0,0, 0.5); /* transparan */
+          backdrop-filter: blur(5px);
+          -webkit-backdrop-filter: blur(5px); /* Safari */
+          transition: background .15s, transform .15s;
+        }
+        .glass:active {
+            transform: scale(.7);
+        }
+
         .app {
             width: 100%;
             max-width: 600px;
@@ -88,6 +98,10 @@
             font-weight: 600;
             border-radius: 12px;
             min-height: 42px;
+            transition: background .15s, transform .15s;
+        }
+        .btn:active {
+            transform: scale(.7);
         }
 
         .btn-dark-custom {
@@ -372,6 +386,15 @@
                 </g>
             </svg>
         </div>
+
+        <!-- <div class="fixed-bottom glass text-center rounded-4 mb-1 mx-3"> -->
+            <button type="button" class="fixed-bottom glass rounded-pill border-0 text-light mb-1 mx-3 fs-1"
+                onclick="scrollUpDown()">
+                <i class="fa-solid fa-sort"></i>
+            </button>
+        <!-- </div> -->
+
+        <footer class="my-5 text-center text-black" id="footer">-</footer>
 
         <!-- <div style="height: 1000px;"></div> -->
 
@@ -843,6 +866,15 @@
 
         muatMenu();
         renderMenu();
+
+        function scrollUpDown() {
+            if (window.scrollY < 1) {
+                document.getElementById('footer').scrollIntoView({ behavior: 'smooth' });
+            }
+            else {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
 
     </script>
 
