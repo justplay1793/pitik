@@ -39,13 +39,11 @@
         }
 
         .glass {
-          background: rgba(0,0,0, 0.5); /* transparan */
-          backdrop-filter: blur(5px);
-          -webkit-backdrop-filter: blur(5px); /* Safari */
-          transition: background .15s, transform .15s;
-        }
-        .glass:active {
-            transform: scale(.7);
+            background: rgba(255, 255, 255, 0.1);
+            /* transparan */
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            /* Safari */
         }
 
         .app {
@@ -100,7 +98,15 @@
             min-height: 42px;
             transition: background .15s, transform .15s;
         }
+
         .btn:active {
+            transform: scale(.7);
+        }
+
+        #hps {
+            transition: background .15s, transform .15s;
+        }
+        #hps:active {
             transform: scale(.7);
         }
 
@@ -182,18 +188,18 @@
             min-height: 44px;
         }
 
-        .divider {
-            height: 1px;
-            background: var(--border);
-            margin: 14px 0;
-        }
-
         .empty-state {
-            border: 1px dashed #414141;
+            border: 3px dashed #414141;
             border-radius: 18px;
             padding: 28px 16px;
             text-align: center;
             color: var(--muted);
+            margin-top: 2rem;
+            transition: background .15s, transform .15s;
+        }
+
+        .empty-state:active {
+            transform: scale(.9);
         }
 
         .empty-state i {
@@ -223,120 +229,66 @@
     <div class="app">
 
         <!-- HEADER -->
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <div>
-                <div class="small-label">KASIR</div>
-                <h4 class="fw-bold">All-In-One</h4>
+        <div class="d-flex fixed-top justify-content-between align-items-center fs-6 px-3 py-2 bg-black">
+            <div type="button" class="bg-transparent btn-danger-custom border-0"
+                onclick="resetLocalStorage()" id="hps">
+                <i class="fa-solid fa-trash-can"></i> Hapus
             </div>
 
-            <div class="text-end">
-                <div class="small-label">JUMLAH MENU</div>
-                <h4 class="fw-bold" id="jumlahMenu">0</h4>
-            </div>
+            <span class="fw-bold" id="jumlahMenu">0</span>
         </div>
 
         <!-- DAFTAR MENU -->
-        <div id="daftarMenu"></div>
+        <div style="margin-top: 2rem;" id="daftarMenu"></div>
 
-        <!-- TAMBAH MENU -->
-        <!-- <button type="button" class="btn btn-light-custom w-100 mb-3" onclick="tambahMenu()">
-            <i class="fa-solid fa-plus"></i>
-            Tambah Menu
-        </button> -->
-
-        <div class="d-flex gap-1 my-2">
-            <button type="button" class="btn btn-dark-custom w-100 border-0 fs-6" onclick="resetKasir()">
-                <i class="fa-solid fa-rotate"></i>
-                Reset
-            </button>
-            <button type="button" class="btn btn-light-custom w-100 border-0 fs-6" onclick="tambahMenu()">
-                <i class="fa-solid fa-plus"></i>
-                Menu
-            </button>
-            <button type="button" class="btn btn-danger-custom w-100 border-0 fs-6" onclick="resetLocalStorage()">
-                <i class="fa-solid fa-trash-can"></i>
-                Hapus
-            </button>
-        </div>
-
-        <!-- <div class="fixed-bottom p-3"> -->
-
-        <!-- TOTAL -->
-        <!-- <div class="panel border-0">
-            <div class="d-flex justify-content-between align-items-center">
-                <div>
-                    <div class="small-label mb-1">TOTAL PESANAN</div>
-                    <div class="muted" id="totalPorsi">0 porsi</div>
-                </div>
-
-                <div class="text-end">
-                    <div class="small-label mb-1">TOTAL HARGA</div>
-                    <div class="total-value text-success-emphasis" id="totalHarga">Rp0</div>
-                </div>
-            </div>
-        </div> -->
+        <div class="border my-3"></div>
 
         <!-- PEMBAYARAN -->
         <div class="panel border-0">
-            <!-- <div class="d-flex mb-3 align-items-center justify-content-between">
-                <div class="small-label">
-                    <i class="fa-solid fa-money-bill-wave"></i>
-                    UANG DITERIMA
-                </div>
-                <button class="border-0 bg-transparent text-danger fs-5" onclick="resetUang()">
-                    <i class="fa-solid fa-rotate-left"></i>
-                </button>
-            </div> -->
-
-            <div class="row g-1 mb-1">
-                <div class="col-4">
-                    <button class="btn btn-dark-custom money-btn w-100 border-0"
+            <div class="row g-1">
+                <div class="col-3">
+                    <button class="btn btn-dark-custom money-btn w-100 border-0 fs-6"
                         onclick="tambahUang(1000)">1.000</button>
                 </div>
 
-                <div class="col-4">
-                    <button class="btn btn-dark-custom money-btn w-100 border-0"
+                <div class="col-3">
+                    <button class="btn btn-dark-custom money-btn w-100 border-0 fs-6"
                         onclick="tambahUang(2000)">2.000</button>
                 </div>
 
-                <div class="col-4">
-                    <button class="btn btn-dark-custom money-btn w-100 border-0"
+                <div class="col-3">
+                    <button class="btn btn-dark-custom money-btn w-100 border-0 fs-6"
                         onclick="tambahUang(5000)">5.000</button>
                 </div>
 
-                <div class="col-4">
-                    <button class="btn btn-dark-custom money-btn w-100 border-0"
-                        onclick="tambahUang(10000)">10.000</button>
+                <div class="col-3">
+                    <button class="btn btn-dark-custom money-btn w-100 border-0 fs-6"
+                        onclick="tambahUang(10000)">10rb</button>
                 </div>
 
-                <div class="col-4">
-                    <button class="btn btn-dark-custom money-btn w-100 border-0"
-                        onclick="tambahUang(20000)">20.000</button>
+                <div class="col-3">
+                    <button class="btn btn-dark-custom money-btn w-100 border-0 fs-6"
+                        onclick="tambahUang(20000)">20rb</button>
                 </div>
 
-                <div class="col-4">
-                    <button class="btn btn-dark-custom money-btn w-100 border-0"
-                        onclick="tambahUang(30000)">30.000</button>
+                <div class="col-3">
+                    <button class="btn btn-dark-custom money-btn w-100 border-0 fs-6"
+                        onclick="tambahUang(50000)">50rb</button>
                 </div>
 
-                <div class="col-4">
-                    <button class="btn btn-dark-custom money-btn w-100 border-0"
-                        onclick="tambahUang(50000)">50.000</button>
+                <div class="col-3">
+                    <button class="btn btn-dark-custom money-btn w-100 border-0 fs-6"
+                        onclick="tambahUang(100000)">100rb</button>
                 </div>
 
-                <div class="col-4">
-                    <button class="btn btn-dark-custom money-btn w-100 border-0"
-                        onclick="tambahUang(100000)">100.000</button>
-                </div>
-
-                <div class="col-4">
+                <div class="col-3">
                     <button class="btn btn-danger-custom money-btn border-0 w-100 fs-6" onclick="resetUang()">
                         <i class="fa-solid fa-rotate-left"></i>
                     </button>
                 </div>
             </div>
 
-            <!-- <div class="divider"></div> -->
+            <div class="border mt-2 mb-1"></div>
 
             <div class="d-flex justify-content-between align-items-center">
                 <span class="muted">Total Pesanan</span>
@@ -359,21 +311,6 @@
             </div>
         </div>
 
-        <!-- RESET -->
-        <!-- <div class="d-flex gap-1">
-                <button type="button" class="btn btn-dark-custom w-100 border-0" onclick="resetKasir()">
-                    <i class="fa-solid fa-rotate"></i>
-                    Reset Kasir
-                </button>
-
-                <button type="button" class="btn btn-danger-custom w-100 border-0" onclick="resetLocalStorage()">
-                    <i class="fa-solid fa-trash-can"></i>
-                    Hapus Data
-                </button>
-            </div> -->
-
-        <!-- </div> -->
-
         <div class="text-center mt-3">
             <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="7mm" height="7mm" version="1.1"
                 style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
@@ -387,16 +324,19 @@
             </svg>
         </div>
 
-        <!-- <div class="fixed-bottom glass text-center rounded-4 mb-1 mx-3"> -->
-            <button type="button" class="fixed-bottom glass rounded-pill border-0 text-light mb-1 mx-3 fs-1"
-                onclick="scrollUpDown()">
-                <i class="fa-solid fa-sort"></i>
+        <div class="d-flex fixed-bottom glass text-center rounded-pill mb-1 mx-3 justify-content-around">
+            <button type="button" class="btn w-100 fs-6" onclick="scrollUpDown()">
+                <i class="fa-solid fa-sort"></i> Scroll
             </button>
-        <!-- </div> -->
+            <button type="button" class="btn w-100 btn-light-custom fs-6" onclick="tambahMenu()">
+                <i class="fa-solid fa-plus"></i> Menu
+            </button>
+            <button type="button" class="btn w-100 fs-6" onclick="resetKasir()">
+                <i class="fa-solid fa-rotate"></i> Reset
+            </button>
+        </div>
 
         <footer class="my-5 text-center text-black" id="footer">-</footer>
-
-        <!-- <div style="height: 1000px;"></div> -->
 
     </div>
 
@@ -500,8 +440,8 @@
             renderMenu();
 
             // Fokus otomatis ke input nama menu yang baru.
-            // const inputs = document.querySelectorAll('.input-nama');
-            // inputs[inputs.length - 1]?.focus();
+            const inputs = document.querySelectorAll('.input-nama');
+            inputs[inputs.length - 1]?.focus();
         }
 
 
@@ -535,18 +475,15 @@
 
             container.innerHTML = '';
 
-            document.getElementById('jumlahMenu').textContent = menu.length;
+            document.getElementById('jumlahMenu').textContent = menu.length + " menu";
 
             if (menu.length === 0) {
                 container.innerHTML = `
-                <div class="empty-state mb-3">
-                    <i class="fa-solid fa-utensils d-block"></i>
+                <div class="empty-state mb-3" style="height: 11.15rem;" onclick="tambahMenu()" type="button">
+                    <i class="fa-solid fa-utensils d-block mt-4"></i>
                     <div class="fw-bold text-white">
-                        Belum ada menu
+                        Tambahkan menu...
                     </div>
-                    <!-- <div style="font-size:12px;">
-                        Tekan tombol Tambah Menu untuk memulai.
-                    </div> -->
                 </div>
             `;
             }
@@ -557,31 +494,17 @@
                 card.className = 'menu-card border-0 mb-1';
 
                 card.innerHTML = `
-                <!-- <div class="d-flex justify-content-between align-items-center mb-3">
-                    <div class="small-label">
-                        MENU ${index + 1}
-                    </div>
-
-                    <button type="button"
-                            class="btn btn-danger-custom border-0"
-                            style="min-height:32px; font-size: 10pt;"
-                            data-action="hapus"
-                            data-index="${index}">
-                        <i class="fa-solid fa-xmark" style=""></i> Tutup
-                    </button>
-                </div> -->
-
                 <div class="d-flex gap-1">
                     <input type="text"
-                           class="form-control input-nama border-0"
-                           placeholder="Nama menu..."
+                           class="form-control input-nama border-0 fs-6"
+                           placeholder="Menu..."
                            value="${escapeHTML(item.nama)}"
                            data-field="nama"
                            data-index="${index}">
                     <input type="number"
                            inputmode="numeric"
-                           class="form-control input-harga border-0"
-                           placeholder="Harga/porsi..."
+                           class="form-control input-harga border-0 fs-6"
+                           placeholder="Harga..."
                            min="0"
                            step="500"
                            value="${item.harga ? item.harga.toLocaleString("id-ID") : ''}"
@@ -600,7 +523,7 @@
                 <div class="d-flex justify-content-between align-items-center my-2">
                     <div>
                         <div class="small-label">SUBTOTAL</div>
-                        <div class="menu-subtotal fs-6" id="subtotal-${index}">
+                        <div class="menu-subtotal text-success-emphasis fs-5" id="subtotal-${index}">
                             ${rupiah(0)}
                         </div>
                     </div>
@@ -628,7 +551,7 @@
 
                 <div class="d-flex gap-1">
                     <button type="button"
-                            class="btn btn-dark-custom flex-fill border-0"
+                            class="btn btn-dark-custom flex-fill border-0 fs-6"
                             data-action="ubah"
                             data-index="${index}"
                             data-nilai="-10">
@@ -636,7 +559,7 @@
                     </button>
 
                     <button type="button"
-                            class="btn btn-dark-custom flex-fill border-0"
+                            class="btn btn-dark-custom flex-fill border-0 fs-6"
                             data-action="ubah"
                             data-index="${index}"
                             data-nilai="-5">
@@ -644,7 +567,7 @@
                     </button>
 
                     <button type="button"
-                            class="btn btn-dark-custom flex-fill border-0"
+                            class="btn btn-dark-custom flex-fill border-0 fs-6"
                             data-action="ubah"
                             data-index="${index}"
                             data-nilai="5">
@@ -652,7 +575,7 @@
                     </button>
 
                     <button type="button"
-                            class="btn btn-dark-custom flex-fill border-0"
+                            class="btn btn-dark-custom flex-fill border-0 fs-6"
                             data-action="ubah"
                             data-index="${index}"
                             data-nilai="10">
